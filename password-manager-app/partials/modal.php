@@ -93,11 +93,15 @@
                         <input type="text" class="form-control" id="username" name="username"placeholder="Enter Username">
                     </div>
                     <div class="form-group">
-                     <i class="fa-solid fa-lock"></i>
+    <i class="fa-solid fa-lock"></i>
+    <label for="password">Password</label>
 
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password"placeholder="Enter Password">
-                    </div>
+ 
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
+        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword3"></i>
+ 
+</div>
+
                     <div class="form-group">
                          <i class="fa-solid fa-link"></i>
                         <label for="link">Link</label>

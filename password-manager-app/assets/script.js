@@ -107,22 +107,33 @@ togglePassword.addEventListener("click", () => {
 });
 
 
+const togglePassword1 = document.getElementById("togglePassword1");
+const passwordInput = document.getElementById("password");
 
+togglePassword1.addEventListener("click", function () {
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
 
-
-$(function () {
-    if ($.fn.DataTable.isDataTable('#accountsTable')) {
-        $('#accountsTable').DataTable().clear().destroy(); // destroy old instance
-    }
-
-    $('#accountsTable').DataTable({
-        pageLength: 10,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: true,
-        paging: true
-    });
+    // Toggle icon between eye and eye-slash
+    this.classList.toggle("fa-eye");
+    this.classList.toggle("fa-eye-slash");
 });
+
+const togglePassword3 = document.getElementById("togglePassword1");
+const passwordInput1 = document.getElementById("password");
+
+togglePassword3.addEventListener("click", function () {
+    const type = passwordInput1.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput1.setAttribute("type", type);
+
+    // Toggle icon between eye and eye-slash
+    this.classList.toggle("fa-eye");
+    this.classList.toggle("fa-eye-slash");
+});
+
+
+
+
+
 
 

@@ -13,12 +13,17 @@
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Enter UserName">
                     </div>
-                    <div class="form-group">
-                        <i class="fa-solid fa-lock"></i>
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
-                        <small class="show-login-form link-show">No Account? Register Here!</small>
-                    </div>
+                   <div class="form-group position-relative">
+    <i class="fa-solid fa-lock"></i>
+    <label for="password">Password</label>
+    
+    <div class="position-relative">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
+        <i class="fa-solid fa-eye-slash right-icon" id="togglePassword1"></i>
+    </div>
+    
+    <small class="show-login-form link-show">No Account? Register Here!</small>
+</div>
                     <button type="submit" class="form-control btn btn-dark">Submit</button>
                 </form>
             </div>
