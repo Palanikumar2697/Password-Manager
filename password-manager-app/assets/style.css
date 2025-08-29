@@ -155,6 +155,31 @@ td.text-center {
 }
 
 
+.btn-add-account {
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: #fff;
+    border: none; 
+    padding: 18px 20px;
+    margin-right: 12px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+.btn-add-account:hover {
+    background: linear-gradient(135deg, #66bb6a, #388e3c);
+    transform: scale(1.05);
+}
+
+.add_accountbtn {
+    text-align: right;   /* moves the button to the right */
+    margin-bottom: 15px; /* optional spacing below */
+}
+
+
+
+
 
 
 

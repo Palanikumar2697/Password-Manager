@@ -53,10 +53,13 @@ include ('./partials/modal.php');
 <div class="main">
     <div class="accounts-container">
         <h4 class="text-center"><strong><?php echo $user_name; ?>'s Accounts</strong></h4>
+        
         <!-- Add Account Button -->
-        <button type="button" class="btn btn-dark mb-3 float-right" data-toggle="modal" data-target="#addAccountModal">
-            Add Account
-        </button>
+         <div class="add_accountbtn">
+        <button type="button" class="btn-add-account" data-toggle="modal" data-target="#addAccountModal">
+    ➕ Add Account
+</button>
+</div>
 
         <!-- All Accounts Table -->
         <div class="table-responsive">
