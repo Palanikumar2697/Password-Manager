@@ -60,7 +60,7 @@ include ('./partials/modal.php');
     ➕ Add Account
 </button>
 </div>
-
+       
         <!-- All Accounts Table -->
         <div class="table-responsive">
             <table id="accountsTable" class="table table-hover task-list" >
@@ -121,6 +121,7 @@ include ('./partials/modal.php');
                     ?>
                 </tbody>
             </table>
+        
         </div>
     </div>
 </div>

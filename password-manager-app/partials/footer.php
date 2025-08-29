@@ -34,6 +34,21 @@ $(document).ready(function () {
     }
 });
 
+$(document).ready(function () {
+    $('#accountsTable').DataTable({
+        "scrollX": true,             // horizontal scroll if too wide
+        "autoWidth": false,
+        "responsive": true,
+        "pageLength": 10,
+        "lengthMenu": [10, 25, 50, 100]
+    });
+});
+
+
+
+
+
+
 </script>
 
 
