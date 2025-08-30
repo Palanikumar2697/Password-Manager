@@ -25,10 +25,13 @@
                         ?>
                         <input type="text" class="form-control" id="userID" name="tbl_user_id" value="<?php echo $userID ?>" hidden>
                         <div class="form-group">
+                             <i class="fa-solid fa-user"></i>
                             <label for="name">Name</label>
+                           
                             <input type="text" class="form-control user-detail" id="name" name="name" value="<?php echo $name ?>" disabled>
                         </div>
                         <div class="form-group">
+                            <i class="fa-solid fa-phone"></i>
     <label for="phoneNumber">Phone Number</label>
     <input 
         type="text" 
@@ -45,22 +48,47 @@
 </div>
 
                         <div class="form-group">
+                            <i class="fa-solid fa-envelope"></i>
                             <label for="emailAddress">Email Address</label>
                             <input type="text" class="form-control user-detail" id="emailAddress" name="email_address" value="<?php echo $emailAddress ?>" disabled>
                         </div>
                         <div class="form-group">
+                            <i class="fa-solid fa-circle-user"></i>
                             <label for="createUsername">Username</label>
                             <input type="text" class="form-control user-detail" id="createUsername" name="username" value="<?php echo $username ?>" disabled>
                         </div>
                         <div class="form-group">
+                            <i class="fa-solid fa-lock"></i>
                             <label for="createPassword">Password</label>
                             <input type="text" class="form-control user-detail" id="createPassword" name="password" value="<?php echo $password ?>" disabled>
                         </div>
     
-                        <button type="submit" class="col-3 form-control btn btn-danger" id="deleteButton" style="display:none;" onclick="deleteUser(<?php echo $userID ?>)">Delete Account</button>
-                        <button type="submit" class="col-3 form-control btn btn-dark float-right" id="saveButton" style="display:none;">Save Changes</button>
-                        <button type="button" class="col-2 mr-2 form-control btn btn-secondary float-right" id="cancelButton" style="display:none;" onclick="cancelEditDetails(this)">Cancel</button>
-                        <button type="button" class="col-3 form-control btn btn-dark float-right" id="editButton" onclick="editDetails(this)">Edit Details</button>
+                       <!-- Delete -->
+<button type="submit" class="col-3 form-control btn btn-danger" 
+        id="deleteButton" style="display:none;" 
+        onclick="deleteUser(<?php echo $userID ?>)">
+    <i class="fas fa-trash-alt me-2"></i> Delete Account
+</button>
+
+<!-- Save -->
+<button type="submit" class="col-3 form-control btn btn-dark float-right" 
+        id="saveButton" style="display:none;">
+    <i class="fas fa-save me-2"></i> Save Changes
+</button>
+
+<!-- Cancel -->
+<button type="button" class="col-2 mr-2 form-control btn btn-secondary float-right" 
+        id="cancelButton" style="display:none;" 
+        onclick="cancelEditDetails(this)">
+    <i class="fas fa-times-circle me-2"></i> Cancel
+</button>
+
+<!-- Edit -->
+<button type="button" class="col-3 form-control btn btn-dark float-right" 
+        id="editButton" onclick="editDetails(this)">
+    <i class="fas fa-edit me-2"></i> Edit Details
+</button>
+
                     <?php
                     }
                     ?>
