@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins',Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
+
+
 
 body {
     
@@ -212,56 +212,10 @@ height: auto;      /* grows with table content */
 .dataTables_wrapper {
     width: 100%;
 }
-/* Remove background for normal state */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    background: none !important;
-    border: none !important;
-    color: #007bff !important;
-    margin: 0 3px;
-    padding: 6px 12px;
-    cursor: pointer;
-}
 
-/* Active page (current) */
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background: #007bff !important;
-    color: white !important;
-    border-radius: 6px;
-    font-weight: bold;
-}
 
-/* Hover effect */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: #f1f1f1 !important;
-    color: #007bff !important;
-}
 
-/* Remove background when clicked (active state) */
-.dataTables_wrapper .dataTables_paginate .paginate_button:active {
-    background: none !important;
-    box-shadow: none !important;
-}
-/* Search label text */
-.dataTables_wrapper .dataTables_filter label {
-    font-weight: bold;
-    color: #444;
-}
 
-/* Search input box */
-.dataTables_wrapper .dataTables_filter input {
-    border: 2px solid black;
-    border-radius: 25px;    /* Rounded pill style */
-    padding: 6px 12px;
-    margin-left: 8px;
-    outline: none;
-    transition: 0.3s;
-}
-
-/* Focus effect */
-.dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.4);
-}
 .btn-add-account i {
     margin-right: 8px;   /* Space between icon and text */
     font-size: 18px;     /* Adjust icon size */
@@ -313,6 +267,156 @@ height: auto;      /* grows with table content */
     background: #a71d2a;
     transform: translateY(-2px);
 }
+
+/* Reset all paginate buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    box-shadow: none !important;
+    font-weight: 500;
+    color: #333 !important;
+    background: #f1f1f1 !important;
+    transition: 0.3s;
+    margin: 0 4px;
+}
+
+/* Numbers (1,2,3...) → small roundish pill */
+.dataTables_wrapper .dataTables_paginate .paginate_button:not(.previous):not(.next) {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 25px;   /* pill shape */
+    padding: 0 12px;       /* small padding inside */
+}
+
+/* Previous & Next → wider pills */
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next {
+    height: 36px;
+    border-radius: 25px;   /* pill shape */
+    padding: 0 20px;
+    min-width: 70px;
+}
+
+/* Hover effect */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+   
+    color: #fff !important;
+}
+
+/* Active number */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+   
+    color: #fff !important;
+}
+/* Search label text */
+.dataTables_wrapper .dataTables_filter label {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Search input box */
+.dataTables_wrapper .dataTables_filter input {
+    width: 220px;          /* set custom width */
+    height: 40px; 
+    border: 3px solid black;
+    border-radius: 50px;   /* pill style */
+    padding: 10px 16px;
+    margin-left: 8px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+    
+}
+
+/* Hover effect */
+.dataTables_wrapper .dataTables_filter input:hover {
+    border-color: #999;
+}
+
+/* Focus effect */
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.4);
+}
+
+/* Optional: move search box to right */
+.dataTables_wrapper .dataTables_filter {
+    text-align: right;
+}
+
+.password-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px 40px 10px 36px; /* extra left padding for lock icon */
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-container input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+/* Lock icon inside input (left side) */
+.input-container .input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #555;
+}
+
+/* Eye icon inside input (right side) */
+.input-container .toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    color: #555;
+    transition: 0.3s;
+}
+
+.input-container .toggle-password:hover {
+    color: #007bff;
+}
+.password-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #333;
+}
+
+.password-label i {
+    font-size: 15px;
+    color: #555;
+}
+.input-container input {
+    padding-left: 12px;  /* 👈 normal padding */
+}
+
 
 
 

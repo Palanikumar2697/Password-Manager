@@ -118,6 +118,19 @@ togglePassword1.addEventListener("click", function () {
     this.classList.toggle("fa-eye");
     this.classList.toggle("fa-eye-slash");
 });
+const togglePassword2 = document.getElementById("togglePassword2");
+const passwordInput1 = document.getElementById("password");
+
+togglePassword2.addEventListener("click", function () {
+    const type = passwordInput1.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput1.setAttribute("type", type);
+
+    // Toggle icon between eye and eye-slash
+    this.classList.toggle("fa-eye");
+    this.classList.toggle("fa-eye-slash");
+});
+
+
 
 
 

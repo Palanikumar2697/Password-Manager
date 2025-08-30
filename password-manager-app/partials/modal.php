@@ -92,15 +92,17 @@
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" name="username"placeholder="Enter Username">
                     </div>
-                    <div class="form-group">
-    <i class="fa-solid fa-lock"></i>
-    <label for="password">Password</label>
-
- 
+         <div class="form-group password-wrapper">
+    <label class="password-label">
+        <i class="fa-solid fa-lock"></i> Password
+    </label>
+    <div class="input-container">
         <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
-        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword3"></i>
- 
+        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword2"></i>
+    </div>
 </div>
+
+
 
                     <div class="form-group">
                          <i class="fa-solid fa-link"></i>
