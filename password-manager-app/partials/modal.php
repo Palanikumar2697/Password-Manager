@@ -98,7 +98,7 @@
     </label>
     <div class="input-container">
         <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
-        <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword2"></i>
+        
     </div>
 </div>
 

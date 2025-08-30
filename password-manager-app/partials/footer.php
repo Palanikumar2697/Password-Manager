@@ -26,6 +26,7 @@
 
 $(document).ready(function() {
     $('#accountsTable').DataTable({
+        "order": [[0, "desc"]],
         paging: true,
         pageLength: 10,
         lengthMenu: [10, 25, 50,100],
@@ -33,7 +34,8 @@ $(document).ready(function() {
         searching: true,
         language: {
             search: "_INPUT_",
-            searchPlaceholder: "Search accounts..."
+            searchPlaceholder: "Search accounts...",
+           
         }
     });
 });
