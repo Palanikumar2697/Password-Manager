@@ -54,11 +54,10 @@ include ('./partials/modal.php');
     <div class="accounts-container">
         <h4 class="text-center"><strong><?php echo $user_name; ?>'s Accounts</strong></h4>
         
-        <!-- Add Account Button -->
-         <div class="add_accountbtn">
-        <button type="button" class="btn-add-account" data-toggle="modal" data-target="#addAccountModal">
-    ➕ Add Account
-</button>
+   <div class="add_accountbtn">
+    <button type="button" class="btn-add-account" data-toggle="modal" data-target="#addAccountModal">
+        <i class="fa-solid fa-users"></i> Add Account
+    </button>
 </div>
        
         <!-- All Accounts Table -->
@@ -102,18 +101,20 @@ include ('./partials/modal.php');
                         <td id="link-<?= $accountID ?>"><a href="<?php echo $link ?>" target="_blank"><?php echo $link ?></a></td>
                         <td id="description-<?= $accountID ?>"><?php echo $description ?></td>
                         <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <!-- Edit Button -->
-                                <button class="btn btn-sm btn-primary px-3 py-1 rounded-pill" 
-                                    id="editBtn" onclick="update_account(<?php echo $accountID ?>)" title="Edit">
-                                    <i class="fa-solid fa-pencil fa-sm"></i> <span>Edit</span>
-                                </button>
-                                <!-- Delete Button -->
-                                <button class="btn btn-sm btn-danger px-3 py-1 rounded-pill ml-1" 
-                                    id="deleteBtn" onclick="delete_account(<?php echo $accountID ?>)" title="Delete">
-                                    <i class="fa-solid fa-trash fa-sm"></i> <span>Delete</span>
-                                </button>
-                            </div>
+                          <div class="action-buttons">
+    <!-- Edit Button -->
+    <button class="btn btn-edit" onclick="update_account(<?php echo $accountID ?>)" title="Edit">
+        <i class="fa-solid fa-pen"></i> Edit
+    </button>
+
+    <!-- Delete Button -->
+    <button class="btn btn-delete" onclick="delete_account(<?php echo $accountID ?>)" title="Delete">
+        <i class="fa-solid fa-trash"></i> Delete
+    </button>
+</div>
+
+
+
                         </td>
                     </tr>
                     <?php
