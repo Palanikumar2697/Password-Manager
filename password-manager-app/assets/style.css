@@ -144,14 +144,14 @@ td.text-center {
 }
 
 #editBtn {
-    width: 90px;   /* set button width */
+    width: 95px;   /* set button width */
     height: 35px;  /* set button height */
     font-size: 14px; /* adjust text size */
     padding: 5px 10px; /* inner spacing */
 }
 
 #deleteBtn {
-    width: 90px;
+    width: 95px;
     height: 35px;
     font-size: 14px;
     padding: 5px 10px;
@@ -211,6 +211,58 @@ height: auto;      /* grows with table content */
 .dataTables_wrapper {
     width: 100%;
 }
+/* Remove background for normal state */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: none !important;
+    border: none !important;
+    color: #007bff !important;
+    margin: 0 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+/* Active page (current) */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #007bff !important;
+    color: white !important;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* Hover effect */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #f1f1f1 !important;
+    color: #007bff !important;
+}
+
+/* Remove background when clicked (active state) */
+.dataTables_wrapper .dataTables_paginate .paginate_button:active {
+    background: none !important;
+    box-shadow: none !important;
+}
+/* Search label text */
+.dataTables_wrapper .dataTables_filter label {
+    font-weight: bold;
+    color: #444;
+}
+
+/* Search input box */
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ccc;
+    border-radius: 20px;    /* Rounded pill style */
+    padding: 6px 12px;
+    margin-left: 8px;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Focus effect */
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.4);
+}
+
+
 
 
 

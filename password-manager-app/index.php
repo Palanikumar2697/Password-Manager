@@ -17,7 +17,7 @@
     <i class="fa-solid fa-lock"></i>
     <label for="password">Password</label>
     
-    <div class="position-relative">
+    <div class="position-relative">     
         <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
         <i class="fa-solid fa-eye-slash right-icon" id="togglePassword1"></i>
     </div>

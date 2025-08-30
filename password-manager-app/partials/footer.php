@@ -15,41 +15,31 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- DataTables CSS with Bootstrap 5 -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
-    <!-- DataTables Init -->
+<!-- DataTables JS with Bootstrap 5 -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
     <script>
-$(document).ready(function () {
-    if (!$.fn.DataTable.isDataTable('#accountsTable')) {
-        $('#accountsTable').DataTable({
-            pageLength: 10,       // default 10 rows
-            lengthChange: true,   // "Show entries" dropdown
-            searching: true,      // Search box enabled
-            ordering: true,       // Enable column sorting
-            info: true,           // Show "Showing 1 to 10 of X entries"
-            paging: true,         // Enable pagination
-            dom: '<"row"<"col-sm-6"l><"col-sm-6"f>>' + // Top: left=length, right=filter
-                 'rt' +                                  // Table
-                 '<"row"<"col-sm-5"i><"col-sm-7"p>>'    // Bottom: left=info, right=pagination
-        });
-    }
-});
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('#accountsTable').DataTable({
-        "scrollX": true,             // horizontal scroll if too wide
-        "autoWidth": false,
-        "responsive": true,
-        "pageLength": 10,
-        "lengthMenu": [10, 25, 50, 100]
+        paging: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50,100],
+        ordering: true,
+        searching: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search accounts..."
+        }
     });
 });
-
-
-
-
-
-
 </script>
+
+
 
 
 </body>
