@@ -192,34 +192,24 @@ function delete_account(accountId, accountName) {
 </script>
 
 
-<?php if (isset($_GET['status']) && isset($_GET['msg'])): ?>
+<?php if (!empty($_SESSION['flash_status']) && !empty($_SESSION['flash_msg'])): ?>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    let status = "<?= htmlspecialchars($_GET['status']) ?>";
-    let msg = "<?= htmlspecialchars($_GET['msg']) ?>";
-
-    // Update modal style based on status
-    let modalHeader = document.querySelector("#statusModal .modal-header");
-    modalHeader.classList.remove("bg-success", "bg-danger", "bg-warning");
-
-    if (status === "success") {
-        modalHeader.classList.add("bg-success");
-    } else if (status === "danger") {
-        modalHeader.classList.add("bg-danger");
-    } else if (status === "warning") {
-        modalHeader.classList.add("bg-warning");
-    }
-
-    // Set message
-    document.getElementById("statusMessage").innerText = msg;
-
-    // Show modal
-    $("#statusModal").modal("show");
-});
+    document.addEventListener("DOMContentLoaded", function () {
+        Swal.fire({
+            icon: "<?= $_SESSION['flash_status'] ?>", // success | error | warning | info
+            title: "<?= $_SESSION['flash_msg'] ?>",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    });
 </script>
-
-
+<?php
+    // ✅ Clear the flash so it shows only once
+    unset($_SESSION['flash_status']);
+    unset($_SESSION['flash_msg']);
+?>
 <?php endif; ?>
+
 
 
 
