@@ -204,6 +204,46 @@
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p id="deleteMessage">Are you sure you want to delete this account?</p>
+      </div>
+
+      <div class="modal-footer">
+        <!-- This gets updated dynamically -->
+        <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+function openDeleteModal(accountID) {
+    // Update the confirm button href with the correct account id
+    document.getElementById("confirmDeleteBtn").href = "./endpoint/delete-account.php?account=" + accountID;
+
+    // Show the delete confirmation modal
+    var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    deleteModal.show();
+}
+</script>
+
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const phoneInput = document.getElementById("phoneNumber");

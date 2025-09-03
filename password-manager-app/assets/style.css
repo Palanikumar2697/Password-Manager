@@ -10,15 +10,18 @@ body {
     
     background-color: rgb(210, 210, 210) !important;
 }
-
 .main {
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* keep table aligned to top instead of center */
-    min-height: 100vh;       /* page at least fills screen */
-    height: auto;            /* grow as needed */
-    padding: 20px;           /* prevent content sticking to navbar */
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    width: 100%;       /* use full width of screen */
+    max-width: 100%;   /* don’t restrict width */
+    margin: 0 auto;
 }
+
+
 
 .login-container {
     max-width: 600px;                /* Responsive max width */
@@ -67,7 +70,7 @@ body {
 }
 
 .accounts-container, .user-details {
-    width: 80%;
+    width: 100%;
     background-color: rgb(240, 240, 240);
     padding: 40px;
     border: 2px solid;
@@ -229,7 +232,6 @@ text-align: center;
 
 
 
-
 .btn-add-account i {
     margin-right: 8px;   /* Space between icon and text */
     font-size: 18px;     /* Adjust icon size */
@@ -240,6 +242,7 @@ text-align: center;
 .action-buttons {
     display: flex;
     gap: 12px;   /* space between buttons */
+    white-space: nowrap; /* prevent buttons from wrapping or cutting */
 }
 
 .btn-edit, .btn-delete {
@@ -453,6 +456,26 @@ text-align: center;
   padding: 8px 18px;              /* nice spacing */
   font-weight: 500;
 }
+
+/* Add space around table headers */
+table.dataTable thead th {
+    padding-left: 15px;
+    padding-right: 15px;
+    white-space: nowrap; /* prevent text from breaking into 2 lines */
+}
+table.dataTable thead th {
+    letter-spacing: 1px; /* adjust value */
+}
+table.dataTable thead th {
+    padding: 12px 18px;   /* top/bottom 12px, left/right 18px */
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    text-align: center;   /* keep aligned */
+}
+
+
+
+
 
 
 

@@ -76,12 +76,29 @@ function cancelEditDetails(button) {
     document.getElementById('cancelButton').style.display = "none";
 }
 
-// Delete user
-function deleteUser(id) {
-    if (confirm("Do you want to delete this user? The registered accounts on this user will also be deleted.")) {
-        window.location = "./endpoint/delete-user.php?user=" + id;
+function openDeleteModal(type, id) {
+    if (!id || id === 0) {
+        alert("❌ Invalid request. No ID found.");
+        return;
     }
+
+    let url = "";
+
+    if (type === "account") {
+        url = "./endpoint/delete.php?account=" + id;
+        document.getElementById("deleteMessage").innerText =
+            "Are you sure you want to delete this account?";
+    } else if (type === "user") {
+        url = "./endpoint/delete.php?user=" + id;
+        document.getElementById("deleteMessage").innerText =
+            "Are you sure you want to delete your user account?";
+    }
+
+    document.getElementById("confirmDeleteBtn").href = url;
+    $('#deleteConfirmModal').modal('show');
 }
+
+
 
 // Show password
 function togglePasswordVisibility(accountID) {
@@ -118,6 +135,8 @@ togglePassword1.addEventListener("click", function () {
     this.classList.toggle("fa-eye");
     this.classList.toggle("fa-eye-slash");
 });
+
+
 
 
 

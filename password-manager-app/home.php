@@ -21,7 +21,6 @@ include ('./partials/header.php');
 include ('./partials/modal.php');
 ?>
 
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
     <a class="navbar-brand ml-4" href="home.php">Password Manager App</a>
     <div class="form-inline my-2 my-lg-0 ml-auto">
@@ -54,15 +53,15 @@ include ('./partials/modal.php');
     <div class="accounts-container">
         <h4 class="text-center"><strong><?php echo $user_name; ?>'s Accounts</strong></h4>
         
-   <div class="add_accountbtn">
-    <button type="button" class="btn-add-account" data-toggle="modal" data-target="#addAccountModal">
-        <i class="fa-solid fa-users"></i> Add Account
-    </button>
-</div>
+        <div class="add_accountbtn">
+            <button type="button" class="btn-add-account" data-toggle="modal" data-target="#addAccountModal">
+                <i class="fa-solid fa-users"></i> Add Account
+            </button>
+        </div>
        
         <!-- All Accounts Table -->
         <div class="table-responsive">
-            <table id="accountsTable" class="table table-hover task-list" >
+            <table id="accountsTable" class="table table-hover task-list">
                 <thead class="text-center">
                     <tr class="center1">
                         <th scope="col">ID</th>
@@ -73,48 +72,54 @@ include ('./partials/modal.php');
                         <th style="display:none;"></th>
                         <th scope="col">URL</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Created By</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
                     <?php 
-                    $stmt = $conn->prepare("SELECT * FROM `tbl_accounts`");
+                    // ✅ Updated query with JOIN to fetch creator's name
+                    $stmt = $conn->prepare("
+                        SELECT a.*, u.name AS created_by_name
+                        FROM tbl_accounts a
+                        LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
+                    ");
                     $stmt->execute();
-                    $result = $stmt->fetchAll();
+                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($result as $row) {
-                        $accountID = $row['tbl_account_id'];
-                         $created_at=$row['created_at'];
+                        $accountID   = $row['tbl_account_id'];
+                        $created_at  = $row['created_at'];
                         $accountName = $row['account_name'];
-                        $username = $row['username'];
-                        $password = $row['password'];
-                        $link = $row['link'];
+                        $username    = $row['username'];
+                        $password    = $row['password'];
+                        $link        = $row['link'];
                         $description = $row['description'];
+                        $created_by  = $row['created_by_name']; // ✅ username instead of ID
                     ?>
                     <tr class="text-center1">
                         <td id="accountID-<?= $accountID ?>"><?php echo $accountID ?></td>
-                         <td id="created_at-<?= $created_at ?>"><?php echo $created_at ?></td>
+                        <td id="created_at-<?= $accountID ?>"><?php echo $created_at ?></td>
                         <td id="accountName-<?= $accountID ?>"><?php echo $accountName ?></td>
                         <td id="username-<?= $accountID ?>"><?php echo $username ?></td>
                         <td id="password-<?= $accountID ?>" style="display:none;"><?php echo $password ?></td>
-                        <td><input class="password-input" type="password" value="<?php echo $password ?>" onclick="togglePasswordVisibility(<?php echo $accountID ?>)" id="password-input-<?= $accountID ?>" readonly></td>
+                        <td>
+                            <input class="password-input" type="password" value="<?php echo $password ?>" onclick="togglePasswordVisibility(<?php echo $accountID ?>)" id="password-input-<?= $accountID ?>" readonly>
+                        </td>
                         <td id="link-<?= $accountID ?>"><a href="<?php echo $link ?>" target="_blank"><?php echo $link ?></a></td>
                         <td id="description-<?= $accountID ?>"><?php echo $description ?></td>
+                        <td id="created_by-<?= $accountID ?>"><?php echo $created_by ?></td>
                         <td class="text-center">
-                          <div class="action-buttons">
-    <!-- Edit Button -->
-    <button class="btn btn-edit" onclick="update_account(<?php echo $accountID ?>)" title="Edit">
-        <i class="fa-solid fa-pen"></i> Edit
-    </button>
-
-    <!-- Delete Button -->
-    <button class="btn btn-delete" onclick="delete_account(<?php echo $accountID ?>)" title="Delete">
-        <i class="fa-solid fa-trash"></i> Delete
-    </button>
-</div>
-
-
-
+                            <div class="action-buttons">
+                                <!-- Edit Button -->
+                                <button class="btn btn-edit" onclick="update_account(<?php echo $accountID ?>)" title="Edit">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="btn btn-delete" onclick="openDeleteModal(<?php echo $accountID ?>)" title="Delete">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <?php
@@ -122,12 +127,36 @@ include ('./partials/modal.php');
                     ?>
                 </tbody>
             </table>
-        
         </div>
     </div>
 </div>
 
+<!-- ✅ Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this account?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-
+<script>
+function openDeleteModal(accountId) {
+    document.getElementById('confirmDeleteBtn').href = './endpoint/delete-account.php?id=' + accountId;
+    $('#deleteConfirmModal').modal('show');
+}
+</script>
 
 <?php include('./partials/footer.php') ?>
