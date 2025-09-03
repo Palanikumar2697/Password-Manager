@@ -1,5 +1,5 @@
 <?php
-session_start();
+    session_start();
 include ('./conn/conn.php');
 
 // Check if the user is logged in
@@ -78,13 +78,14 @@ include ('./partials/modal.php');
                 </thead>
                 <tbody class="text-center">
                     <?php 
-                    // ✅ Updated query with JOIN to fetch creator's name
+                    // ✅ Only fetch logged-in user's accounts
                     $stmt = $conn->prepare("
                         SELECT a.*, u.name AS created_by_name
                         FROM tbl_accounts a
                         LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
+                        WHERE a.tbl_user_id = :user_id
                     ");
-                    $stmt->execute();
+                    $stmt->execute(['user_id' => $user_id]);
                     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($result as $row) {
@@ -95,7 +96,7 @@ include ('./partials/modal.php');
                         $password    = $row['password'];
                         $link        = $row['link'];
                         $description = $row['description'];
-                        $created_by  = $row['created_by_name']; // ✅ username instead of ID
+                        $created_by  = $row['created_by_name'];
                     ?>
                     <tr class="text-center1">
                         <td id="accountID-<?= $accountID ?>"><?php echo $accountID ?></td>
@@ -115,10 +116,11 @@ include ('./partials/modal.php');
                                 <button class="btn btn-edit" onclick="update_account(<?php echo $accountID ?>)" title="Edit">
                                     <i class="fa-solid fa-pen"></i> Edit
                                 </button>
-                                <!-- Delete Button -->
-                                <button class="btn btn-delete" onclick="openDeleteModal(<?php echo $accountID ?>)" title="Delete">
-                                    <i class="fa-solid fa-trash"></i> Delete
-                                </button>
+                               <button class="btn btn-delete" 
+        onclick="delete_account(<?php echo $accountID ?>, '<?php echo addslashes($accountName) ?>')">
+    <i class="fa-solid fa-trash"></i> Delete
+</button>
+
                             </div>
                         </td>
                     </tr>
@@ -130,7 +132,6 @@ include ('./partials/modal.php');
         </div>
     </div>
 </div>
-
 <!-- ✅ Delete Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -141,7 +142,7 @@ include ('./partials/modal.php');
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="deleteMessage">
         Are you sure you want to delete this account?
       </div>
       <div class="modal-footer">
@@ -152,11 +153,77 @@ include ('./partials/modal.php');
   </div>
 </div>
 
+<!-- ✅ Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Status</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="statusMessage">
+        <!-- Success/Warning/Error message goes here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <script>
-function openDeleteModal(accountId) {
-    document.getElementById('confirmDeleteBtn').href = './endpoint/delete-account.php?id=' + accountId;
+function delete_account(accountId, accountName) {
+    // Update modal content with account name
+    document.getElementById("deleteMessage").innerText =
+        "Are you sure you want to delete account: \"" + accountName + "\"?";
+
+    // Set delete link dynamically
+    document.getElementById("confirmDeleteBtn").href =
+        "./endpoint/delete-account.php?id=" + accountId;
+
+    // Show modal
     $('#deleteConfirmModal').modal('show');
 }
 </script>
 
+
+<?php if (isset($_GET['status']) && isset($_GET['msg'])): ?>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let status = "<?= htmlspecialchars($_GET['status']) ?>";
+    let msg = "<?= htmlspecialchars($_GET['msg']) ?>";
+
+    // Update modal style based on status
+    let modalHeader = document.querySelector("#statusModal .modal-header");
+    modalHeader.classList.remove("bg-success", "bg-danger", "bg-warning");
+
+    if (status === "success") {
+        modalHeader.classList.add("bg-success");
+    } else if (status === "danger") {
+        modalHeader.classList.add("bg-danger");
+    } else if (status === "warning") {
+        modalHeader.classList.add("bg-warning");
+    }
+
+    // Set message
+    document.getElementById("statusMessage").innerText = msg;
+
+    // Show modal
+    $("#statusModal").modal("show");
+});
+</script>
+
+
+<?php endif; ?>
+
+
+
 <?php include('./partials/footer.php') ?>
+
+
+

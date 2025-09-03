@@ -136,6 +136,13 @@ togglePassword1.addEventListener("click", function () {
     this.classList.toggle("fa-eye-slash");
 });
 
+<script>
+function delete_account(accountId) {
+    // Direct redirect for delete
+    window.location.href = "./endpoint/delete-account.php?id=" + accountId;
+}
+</script>
+
 
 
 
