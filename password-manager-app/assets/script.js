@@ -17,30 +17,10 @@ function showRegistration() {
 }
 showRegistrationForm.addEventListener("click", showRegistration);
 
-// View user
-function view_user(id) {
-    $("#viewUserModal").modal("show");
 
-}
 
-// Update account
-function update_account(id) {
-    $("#updateAccountModal").modal("show");
 
-    let updateAccountID = $("#accountID-" + id).text();
-    let updateAccountName = $("#accountName-" + id).text();
-    let updateUsername = $("#username-" + id).text();
-    let updatePassword = $("#password-" + id).text();
-    let updateLink = $("#link-" + id).text();
-    let updateDescription = $("#description-" + id).text();
 
-    $("#updateAccountID").val(updateAccountID);
-    $("#updateAccountName").val(updateAccountName);
-    $("#updateUsername").val(updateUsername);
-    $("#updatePassword").val(updatePassword);
-    $("#updateLink").val(updateLink);
-    $("#updateDescription").val(updateDescription);
-}
 
 // Delete account
 function delete_account(id) {
@@ -109,32 +89,6 @@ function togglePasswordVisibility(accountID) {
         passwordInput.type = "password";
     }
 }
-
-
-const togglePassword = document.getElementById("togglePassword");
-const password = document.getElementById("createPassword");
-
-togglePassword.addEventListener("click", () => {
-  const type = password.getAttribute("type") === "password" ? "text" : "password";
-  password.setAttribute("type", type);
-
-  // Toggle eye ↔ eye-slash
-  togglePassword.classList.toggle("fa-eye");
-  togglePassword.classList.toggle("fa-eye-slash");
-});
-
-
-const togglePassword1 = document.getElementById("togglePassword1");
-const passwordInput = document.getElementById("password");
-
-togglePassword1.addEventListener("click", function () {
-    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-
-    // Toggle icon between eye and eye-slash
-    this.classList.toggle("fa-eye");
-    this.classList.toggle("fa-eye-slash");
-});
 
 <script>
 function delete_account(accountId) {
