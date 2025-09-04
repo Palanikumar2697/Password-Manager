@@ -1,71 +1,66 @@
 
 <!-- View User Modal -->
-<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="userModal" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-
-      <!-- Modal Header -->
+      
       <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="userModalLabel">User Details</h5>
+        <h5 class="modal-title" id="userModal">User Details</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
       </div>
 
-      <!-- Modal Body -->
-      <div class="modal-body">
-        <form id="updateUserForm" action="./endpoint/update-user.php" method="POST">
+      <!-- ✅ Form starts here -->
+      <form action="./endpoint/update-user.php" method="POST">
+        <div class="modal-body">
 
-          <!-- Hidden ID -->
           <input type="hidden" id="userID" name="tbl_user_id">
 
-          <div class="mb-3">
-            <label class="form-label"><i class="fa-solid fa-user"></i> Name</label>
-            <input type="text" class="form-control user-detail" id="name" name="name" disabled>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name" name="name" class="form-control user-detail" disabled>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label"><i class="fa-solid fa-phone"></i> Phone Number</label>
-            <input type="text" class="form-control user-detail" id="phoneNumber" name="phone_number" disabled>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control user-detail" disabled>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label"><i class="fa-solid fa-envelope"></i> Email Address</label>
-            <input type="text" class="form-control user-detail" id="emailAddress" name="email_address" disabled>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="emailAddress" name="emailAddress" class="form-control user-detail" disabled>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label"><i class="fa-solid fa-circle-user"></i> Username</label>
-            <input type="text" class="form-control user-detail" id="createUsername" name="username" disabled>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="createUsername" name="username" class="form-control user-detail" disabled>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
-            <input type="text" class="form-control user-detail" id="createPassword" name="password" disabled>
-          </div>
+       <div class="form-group">
+  <label>Password</label>
+  <div class="input-group">
+    <input type="password" id="createPassword" name="password" class="form-control user-detail" disabled>
+    <span class="input-group-text toggle-password" style="cursor: pointer;">
+  <i class="fa-solid fa-eye-slash"></i>  <!-- 👈 start with eye-slash -->
+</span>
+  </div>
+</div>
 
-          <!-- Action Buttons -->
-          <div class="d-flex justify-content-between flex-wrap gap-2">
-            <button type="button" class="btn btn-danger d-none" id="deleteButton" onclick="deleteUser()">
-              <i class="fas fa-trash-alt me-2"></i> Delete Account
-            </button>
 
-            <button type="submit" class="btn btn-success d-none" id="saveButton">
-              <i class="fas fa-save me-2"></i> Save Changes
-            </button>
+        </div>
 
-            <button type="button" class="btn btn-secondary d-none" id="cancelButton" onclick="cancelEditDetails()">
-              <i class="fas fa-times-circle me-2"></i> Cancel
-            </button>
-
-            <button type="button" class="btn btn-dark" id="editButton" onclick="editDetails()">
-              <i class="fas fa-edit me-2"></i> Edit Details
-            </button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-footer">
+          <button type="button" id="editButton" class="btn btn-primary" onclick="editDetails()">Edit</button>
+          <button type="submit" id="saveButton" class="btn btn-success d-none">Save</button>
+          <button type="button" id="cancelButton" class="btn btn-secondary d-none" onclick="cancelEditDetails()">Cancel</button>
+        </div>
+      </form>
+      <!-- ✅ Form ends here -->
 
     </div>
   </div>
 </div>
+
 
 
 
@@ -100,9 +95,9 @@
   <label for="password" class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
   <div class="input-group">
     <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
-    <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
-      <i class="fa-solid fa-eye"></i>
-    </span>
+     <span class="input-group-text toggle-password" style="cursor: pointer;">
+  <i class="fa-solid fa-eye-slash"></i>  <!-- 👈 start with eye-slash -->
+</span>
   </div>
 </div>
 
@@ -175,9 +170,9 @@
   <label for="updatePassword" class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
   <div class="input-group">
     <input type="password" class="form-control" id="updatePassword" name="password" placeholder="Enter Password" required>
-    <span class="input-group-text toggle-password" style="cursor: pointer;">
-      <i class="fa-solid fa-eye"></i>
-    </span>
+     <span class="input-group-text toggle-password" style="cursor: pointer;">
+  <i class="fa-solid fa-eye-slash"></i>  <!-- 👈 start with eye-slash -->
+</span>
   </div>
 </div>
 
@@ -255,6 +250,35 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<script>
+function view_user(userId) {
+    console.log("Opening View User Modal for ID:", userId);
+
+    // Get hidden values (from home.php spans)
+    let name      = document.getElementById("userName-" + userId)?.innerText.trim();
+    let phone     = document.getElementById("userPhone-" + userId)?.innerText.trim();
+    let email     = document.getElementById("userEmail-" + userId)?.innerText.trim();
+    let username  = document.getElementById("userUsername-" + userId)?.innerText.trim();
+    let password  = document.getElementById("userPassword-" + userId)?.innerText.trim();
+
+    if (!name || !email) {
+        console.warn("⚠️ Could not fetch user data for ID:", userId);
+        alert("User details not found. Please check hidden spans in PHP.");
+        return;
+    }
+
+    // Fill form fields inside modal
+    document.getElementById("userID").value = userId;
+    document.getElementById("name").value = name;
+    document.getElementById("phoneNumber").value = phone;
+    document.getElementById("emailAddress").value = email;
+    document.getElementById("createUsername").value = username;
+    document.getElementById("createPassword").value = password;
+
+    // ✅ Show correct modal
+    $("#viewUserModal").modal("show");
+}
+</script>
 
 
 <script>
@@ -264,12 +288,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
-    } else {
-      passwordInput.type = "password";
       icon.classList.remove("fa-eye-slash");
       icon.classList.add("fa-eye");
+    } else {
+      passwordInput.type = "password";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
     }
   });
 </script>
@@ -282,15 +306,59 @@ document.querySelectorAll('.toggle-password').forEach(toggle => {
 
     if (input.type === "password") {
       input.type = "text";
-      icon.classList.replace("fa-eye", "fa-eye-slash");
+      icon.classList.replace("fa-eye-slash", "fa-eye");
     } else {
       input.type = "password";
-      icon.classList.replace("fa-eye-slash", "fa-eye");
+      icon.classList.replace("fa-eye", "fa-eye-slash");
     }
   });
 });
 
 </script>
+<script>
+document.querySelectorAll('.toggle-password').forEach(toggle => {
+  toggle.addEventListener('click', function () {
+    const input = this.closest('.input-group').querySelector('input');
+    const icon = this.querySelector("i");
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    }
+  });
+});
+</script>
+
+<script>
+function editDetails() {
+  // Enable all fields
+  document.querySelectorAll(".user-detail").forEach(input => {
+    input.removeAttribute("disabled");
+  });
+
+  // Toggle buttons
+  document.getElementById("editButton").classList.add("d-none");
+  document.getElementById("saveButton").classList.remove("d-none");
+  document.getElementById("cancelButton").classList.remove("d-none");
+}
+</script>
+<script>
+function cancelEditDetails() {
+  // Disable all fields again
+  document.querySelectorAll(".user-detail").forEach(input => {
+    input.setAttribute("disabled", true);
+  });
+
+  // Reset buttons
+  document.getElementById("editButton").classList.remove("d-none");
+  document.getElementById("saveButton").classList.add("d-none");
+  document.getElementById("cancelButton").classList.add("d-none");
+}
+</script>
+
 
 
 

@@ -1,63 +1,62 @@
 <?php
 include('../conn/conn.php');
-
 session_start();
+
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $accountID   = $_POST['tbl_account_id']; 
-        $accountName = $_POST['account_name'];
-        $username    = $_POST['username'];
-        $password    = $_POST['password'];
-        $link        = $_POST['link'];
-        $description = $_POST['description'];
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        // Get POST data safely
+        $name         = $_POST['name'] ?? '';
+        $phoneNumber  = $_POST['phoneNumber'] ?? '';
+        $emailAddress = $_POST['emailAddress'] ?? '';
+        $username     = $_POST['username'] ?? '';
+        $password     = $_POST['password'] ?? '';
 
         try {
-            $stmt = $conn->prepare("SELECT `tbl_account_id` FROM `tbl_accounts` WHERE `tbl_account_id` = :accountID AND `tbl_user_id` = :user_id");
-            $stmt->execute([
-                'accountID' => $accountID,
-                'user_id'   => $user_id
-            ]);
-            $accountExists = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Check if this user exists
+            $stmt = $conn->prepare("SELECT tbl_user_id FROM tbl_user WHERE tbl_user_id = :user_id");
+            $stmt->execute(['user_id' => $user_id]);
+            $userExists = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!empty($accountExists)) {
+            if ($userExists) {
                 $conn->beginTransaction();
 
                 $updateStmt = $conn->prepare("
-                    UPDATE `tbl_accounts` 
-                    SET `account_name` = :account_name, 
-                        `username` = :username, 
-                        `password` = :password, 
-                        `link` = :link, 
-                        `description` = :description
-                    WHERE `tbl_account_id` = :accountID 
-                      AND `tbl_user_id` = :user_id
+                    UPDATE tbl_user 
+                    SET name = :name,
+                        phone_number = :phoneNumber,
+                        email_address = :emailAddress,
+                        username = :username,
+                        password = :password
+                    WHERE tbl_user_id = :user_id
                 ");
-                $updateStmt->bindParam(':account_name', $accountName, PDO::PARAM_STR);
-                $updateStmt->bindParam(':username', $username, PDO::PARAM_STR);
-                $updateStmt->bindParam(':password', $password, PDO::PARAM_STR);
-                $updateStmt->bindParam(':link', $link, PDO::PARAM_STR);
-                $updateStmt->bindParam(':description', $description, PDO::PARAM_STR);
-                $updateStmt->bindParam(':accountID', $accountID, PDO::PARAM_INT);
-                $updateStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                $updateStmt->execute();
+
+                $updateStmt->execute([
+                    ':name'         => $name,
+                    ':phoneNumber'  => $phoneNumber,
+                    ':emailAddress' => $emailAddress,
+                    ':username'     => $username,
+                    ':password'     => $password, // ⚠️ should be hashed in production
+                    ':user_id'      => $user_id
+                ]);
 
                 $conn->commit();
 
                 $title    = "Update Status";
-                $message  = "✅ Account Updated Successfully. Redirecting to Home...";
+                $message  = "✅ User details updated successfully. Redirecting to Home...";
                 $type     = "success";
                 $redirect = "../home.php";
 
             } else {
                 $title    = "Update Status";
-                $message  = "⚠️ Account not found or does not belong to the current user.";
+                $message  = "⚠️ User not found.";
                 $type     = "warning";
                 $redirect = "../home.php";
             }
 
         } catch (PDOException $e) {
+            $conn->rollBack();
             $title    = "Database Error";
             $message  = "❌ " . $e->getMessage();
             $type     = "danger";
@@ -66,14 +65,14 @@ if (isset($_SESSION['user_id'])) {
 
     } else {
         $title    = "Update Failed";
-        $message  = "❌ Account Update Failed!";
+        $message  = "❌ Invalid request.";
         $type     = "danger";
         $redirect = "../home.php";
     }
 
 } else {
     $title    = "Authentication Required";
-    $message  = "⚠️ User not logged in. Please log in before updating an account.";
+    $message  = "⚠️ Please log in before updating profile.";
     $type     = "warning";
     $redirect = "../index.php";
 }

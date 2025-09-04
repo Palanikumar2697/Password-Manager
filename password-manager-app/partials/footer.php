@@ -26,17 +26,17 @@
 <!-- Your custom script -->
 <script src="http://localhost/PM/password-manager-app/assets/script.js"></script>
 <script>
-$(document).ready(function() {
+$(document).ready(function () {
     $('#accountsTable').DataTable({
-        order: [[0, "desc"]],
-        paging: true,
-        pageLength: 10,
-        lengthMenu: [10, 25, 50, 100],
-        searching: true,
-        language: {
-            search: "_INPUT_",
-            searchPlaceholder: "Search accounts..."
+        "pagingType": "simple_numbers", // Bootstrap 5 styled pagination
+        "language": {
+            "paginate": {
+                "previous": "<i class='bi bi-chevron-left'></i>",
+                "next": "<i class='bi bi-chevron-right'></i>"
+            }
         }
     });
+});
+
 });
 </script>

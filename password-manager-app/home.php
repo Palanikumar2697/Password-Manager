@@ -1,25 +1,37 @@
 <?php
-    session_start();
+session_start();
 include ('./conn/conn.php');
+
+$userRow = null;
+$user_name = "My Account";
 
 // Check if the user is logged in
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
-
-    // Fetch the user's name from the database
-    $stmt = $conn->prepare("SELECT `name` FROM `tbl_user` WHERE `tbl_user_id` = :user_id");
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->execute();
-    
-    if ($stmt->rowCount() > 0) {
-        $row = $stmt->fetch();
-        $user_name = $row['name'];
-    }
+// ✅ Fetch the full user details
+$stmt = $conn->prepare("SELECT * FROM `tbl_user` WHERE `tbl_user_id` = :user_id");
+$stmt->bindParam(':user_id', $user_id);
+$stmt->execute();
 }
+if ($stmt->rowCount() > 0) {
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user_name = $row['name'];
+}
+
 
 include ('./partials/header.php');
 include ('./partials/modal.php');
 ?>
+
+<?php if (!empty($row)) : ?>
+  <!-- Hidden values used for the "View User" modal -->
+  <span id="userName-<?php echo $row['tbl_user_id']; ?>" class="d-none"><?php echo htmlspecialchars($row['name']); ?></span>
+  <span id="userPhone-<?php echo $row['tbl_user_id']; ?>" class="d-none"><?php echo htmlspecialchars($row['phone_number']); ?></span>
+  <span id="userEmail-<?php echo $row['tbl_user_id']; ?>" class="d-none"><?php echo htmlspecialchars($row['email_address']); ?></span>
+  <span id="userUsername-<?php echo $row['tbl_user_id']; ?>" class="d-none"><?php echo htmlspecialchars($row['username']); ?></span>
+  <span id="userPassword-<?php echo $row['tbl_user_id']; ?>" class="d-none"><?php echo htmlspecialchars($row['password']); ?></span>
+<?php endif; ?>
+
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary px-3">
   <a class="navbar-brand" href="home.php">Password Manager App</a>
@@ -30,10 +42,8 @@ include ('./partials/modal.php');
          href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
          style="text-decoration: none; color: #eee;">
          
-        <!-- User Icon -->
         <i class="fa-solid fa-circle-user me-2" style="font-size: 1.4rem;"></i>
 
-        <!-- Dynamic Username -->
         <?php if (isset($user_name)) { ?>
           Welcome, <strong><?php echo $user_name; ?></strong>
         <?php } else { ?>
@@ -41,18 +51,13 @@ include ('./partials/modal.php');
         <?php } ?>
       </a>
 
-      <!-- Dark Dropdown -->
       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow">
-        <!-- View Account -->
         <li>
           <a class="dropdown-item" style="cursor: pointer;" onclick="view_user(<?php echo $user_id ?>)">
             <i class="fa-regular fa-user"></i> View Account
           </a>
         </li>
-
         <li><hr class="dropdown-divider"></li>
-
-        <!-- Log Out -->
         <li>
           <a class="dropdown-item" href="index.php">
             <i class="fa-solid fa-lock"></i> Log Out
@@ -234,39 +239,9 @@ function update_account(id) {
     }
 }
 </script>
-<script>
-function view_user(userId) {
-    let myModal = new bootstrap.Modal(document.getElementById('viewUserModal'));
-    myModal.show();
 
-    resetUserModal();
 
-    // Clear old data
-    document.getElementById("userID").value = "";
-    document.getElementById("name").value = "";
-    document.getElementById("phoneNumber").value = "";
-    document.getElementById("emailAddress").value = "";
-    document.getElementById("createUsername").value = "";
-    document.getElementById("createPassword").value = "";
 
-    // Fetch fresh data
-    fetch("./endpoint/get-user.php?id=" + userId)
-        .then(res => res.json())
-        .then(data => {
-            if (data) {
-                document.getElementById("userID").value          = data.tbl_user_id;
-                document.getElementById("name").value            = data.name;
-                document.getElementById("phoneNumber").value     = data.phone_number;   // ✅ match DB
-                document.getElementById("emailAddress").value    = data.email_address;  // ✅ match DB
-                document.getElementById("createUsername").value  = data.username;
-                document.getElementById("createPassword").value  = data.password;
-            } else {
-                console.error("No user found!");
-            }
-        })
-        .catch(err => console.error("Error loading user:", err));
-}
-</script>
 
 
 <?php if (!empty($_SESSION['flash_status']) && !empty($_SESSION['flash_msg'])): ?>
