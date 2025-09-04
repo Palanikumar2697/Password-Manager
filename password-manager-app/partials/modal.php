@@ -16,6 +16,7 @@
 
           <input type="hidden" id="userID" name="tbl_user_id">
 
+        
           <div class="form-group">
             <label>Name</label>
             <input type="text" id="name" name="name" class="form-control user-detail" disabled>
@@ -36,15 +37,21 @@
             <input type="text" id="createUsername" name="username" class="form-control user-detail" disabled>
           </div>
 
-       <div class="form-group">
+   <div class="form-group">
   <label>Password</label>
   <div class="input-group">
-    <input type="password" id="createPassword" name="password" class="form-control user-detail" disabled>
-    <span class="input-group-text toggle-password" style="cursor: pointer;">
-  <i class="fa-solid fa-eye-slash"></i>  <!-- 👈 start with eye-slash -->
-</span>
+    <input type="password" 
+           id="createPassword" 
+           name="password" 
+           class="form-control user-detail" 
+           disabled>
+    <button class="btn btn-outline-secondary toggle-password" type="button">
+      <i class="fa-solid fa-eye-slash"></i>
+    </button>
   </div>
 </div>
+
+
 
 
         </div>
@@ -91,17 +98,22 @@
             <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required>
           </div>
 
-     <div class="mb-3">
-  <label for="password" class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
+    <div class="mb-3">
+  <label for="password" class="form-label">
+    <i class="fa-solid fa-lock"></i> Password
+  </label>
   <div class="input-group">
-    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
-     <span class="input-group-text toggle-password" style="cursor: pointer;">
-  <i class="fa-solid fa-eye-slash"></i>  <!-- 👈 start with eye-slash -->
-</span>
+    <input type="password" 
+           class="form-control password-field" 
+           id="password"
+           name="password" 
+           placeholder="Enter Password" 
+           required>
+    <button class="btn btn-outline-secondary toggle-password" type="button">
+      <i class="fa-solid fa-eye-slash"></i>
+    </button>
   </div>
 </div>
-
-
 
           <div class="mb-3">
             <label for="link" class="form-label"><i class="fa-solid fa-link"></i> Link</label>
@@ -166,15 +178,23 @@
             </label>
             <input type="text" name="username" id="updateUsername" class="form-control" required>
           </div>
-<div class="mb-3">
-  <label for="updatePassword" class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
+ <div class="mb-3">
+  <label for="password" class="form-label">
+    <i class="fa-solid fa-lock"></i> Password
+  </label>
   <div class="input-group">
-    <input type="password" class="form-control" id="updatePassword" name="password" placeholder="Enter Password" required>
-     <span class="input-group-text toggle-password" style="cursor: pointer;">
-  <i class="fa-solid fa-eye-slash"></i>  <!-- 👈 start with eye-slash -->
-</span>
+    <input type="password" 
+           class="form-control password-field" 
+           id="password"
+           name="password" 
+           placeholder="Enter Password" 
+           required>
+    <button class="btn btn-outline-secondary toggle-password" type="button">
+      <i class="fa-solid fa-eye-slash"></i>
+    </button>
   </div>
 </div>
+
 
 
           <div class="mb-3">
@@ -249,12 +269,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
-
 <script>
 function view_user(userId) {
     console.log("Opening View User Modal for ID:", userId);
 
-    // Get hidden values (from home.php spans)
+    // Get hidden values
     let name      = document.getElementById("userName-" + userId)?.innerText.trim();
     let phone     = document.getElementById("userPhone-" + userId)?.innerText.trim();
     let email     = document.getElementById("userEmail-" + userId)?.innerText.trim();
@@ -267,18 +286,22 @@ function view_user(userId) {
         return;
     }
 
-    // Fill form fields inside modal
+    // Fill modal fields
     document.getElementById("userID").value = userId;
     document.getElementById("name").value = name;
     document.getElementById("phoneNumber").value = phone;
     document.getElementById("emailAddress").value = email;
     document.getElementById("createUsername").value = username;
-    document.getElementById("createPassword").value = password;
 
-    // ✅ Show correct modal
+    // ✅ Only if password field exists
+    let passInput = document.getElementById("createPassword");
+    if (passInput) passInput.value = password;
+
+    // Show modal
     $("#viewUserModal").modal("show");
-}
-</script>
+
+}</script>
+
 
 
 <script>

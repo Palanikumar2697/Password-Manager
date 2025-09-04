@@ -25,18 +25,31 @@
 
 <!-- Your custom script -->
 <script src="http://localhost/PM/password-manager-app/assets/script.js"></script>
+
 <script>
 $(document).ready(function () {
-    $('#accountsTable').DataTable({
-        "pagingType": "simple_numbers", // Bootstrap 5 styled pagination
-        "language": {
-            "paginate": {
-                "previous": "<i class='bi bi-chevron-left'></i>",
-                "next": "<i class='bi bi-chevron-right'></i>"
-            }
+    // ✅ Initialize DataTable only once
+    if (!$.fn.DataTable.isDataTable('#accountsTable')) {
+        $('#accountsTable').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 25, 50],
+            "ordering": true,
+            "searching": true
+        });
+    }
+
+    // ✅ Password toggle (works on dynamically loaded rows too)
+    $(document).on("click", ".toggle-password", function () {
+        const input = $(this).closest(".input-group").find("input");
+        const icon = $(this).find("i");
+
+        if (input.attr("type") === "password") {
+            input.attr("type", "text");
+            icon.removeClass("fa-eye-slash").addClass("fa-eye");
+        } else {
+            input.attr("type", "password");
+            icon.removeClass("fa-eye").addClass("fa-eye-slash");
         }
     });
-});
-
 });
 </script>

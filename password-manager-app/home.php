@@ -71,37 +71,37 @@ include ('./partials/modal.php');
 
 
 
-<div class="main">
-    <div class="accounts-container">
-        <h4 class="text-center"><strong><?php echo $user_name; ?>'s Accounts</strong></h4>
-        
-        <div class="add_accountbtn">
-     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
-        <i class="fa-solid fa-users"></i> 
-  Add Account
-</button>    
+<div class="container-fluid py-4">
+    <div class="accounts-container card shadow-lg p-4 rounded-3">
+        <h4 class="text-center mb-4">
+            <strong><?php echo $user_name; ?>'s Accounts</strong>
+        </h4>
+
+        <!-- Add Account Button -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
+                <i class="fa-solid fa-users me-2"></i> Add Account
+            </button>
         </div>
-       
+
         <!-- All Accounts Table -->
         <div class="table-responsive">
-            <table id="accountsTable" class="table table-hover task-list">
-                <thead class="text-center">
-                    <tr class="center1">
+            <table id="accountsTable" class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Date</th>
                         <th scope="col">Account Name</th>
                         <th scope="col">Username</th>
                         <th scope="col">Password</th>
-                        <th style="display:none;"></th>
                         <th scope="col">URL</th>
                         <th scope="col">Description</th>
                         <th scope="col">Created By</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody class="text-center">
+                <tbody>
                     <?php 
-                    // ✅ Only fetch logged-in user's accounts
                     $stmt = $conn->prepare("
                         SELECT a.*, u.name AS created_by_name
                         FROM tbl_accounts a
@@ -121,40 +121,45 @@ include ('./partials/modal.php');
                         $description = $row['description'];
                         $created_by  = $row['created_by_name'];
                     ?>
-                    <tr class="text-center1">
-                        <td id="accountID-<?= $accountID ?>"><?php echo $accountID ?></td>
-                        <td id="created_at-<?= $accountID ?>"><?php echo $created_at ?></td>
-                        <td id="accountName-<?= $accountID ?>"><?php echo $accountName ?></td>
-                        <td id="username-<?= $accountID ?>"><?php echo $username ?></td>
-                        <td id="password-<?= $accountID ?>" style="display:none;"><?php echo $password ?></td>
-                        <td>
-                            <input class="password-input" type="password" value="<?php echo $password ?>" onclick="togglePasswordVisibility(<?php echo $accountID ?>)" id="password-input-<?= $accountID ?>" readonly>
-                        </td>
-                        <td id="link-<?= $accountID ?>"><a href="<?php echo $link ?>" target="_blank"><?php echo $link ?></a></td>
-                        <td id="description-<?= $accountID ?>"><?php echo $description ?></td>
-                        <td id="created_by-<?= $accountID ?>"><?php echo $created_by ?></td>
-                        <td class="text-center">
-                            <div class="action-buttons">
-                                <!-- Edit Button -->
-                                <button class="btn btn-edit" onclick="update_account(<?php echo $accountID ?>)" title="Edit">
-                                    <i class="fa-solid fa-pen"></i> Edit
-                                </button>
-                               <button class="btn btn-delete" 
-        onclick="delete_account(<?php echo $accountID ?>, '<?php echo addslashes($accountName) ?>')">
-    <i class="fa-solid fa-trash"></i> Delete
-</button>
+                    <tr>
+                        <td><?= $accountID ?></td>
+                        <td><?= $created_at ?></td>
+                        <td><?= $accountName ?></td>
+                        <td><?= $username ?></td>
+                       <td>
+    
+  <div class="input-group input-group-sm">
+        <input type="password" 
+               class="form-control text-center password-field" 
+               value="<?= htmlspecialchars($password) ?>" 
+               readonly>
+        <button class="btn btn-outline-secondary toggle-password" type="button">
+            <i class="fa-solid fa-eye-slash"></i>
+        </button>
+  </div>
+</td>
 
+                        <td><a href="<?= $link ?>" target="_blank" class="text-decoration-none"><?= $link ?></a></td>
+                        <td><?= $description ?></td>
+                        <td><?= $created_by ?></td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <button class="btn btn-sm btn-warning" onclick="update_account(<?= $accountID ?>)" title="Edit">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="delete_account(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
-                    <?php
-                    }
-                    ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 <!-- ✅ Delete Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
