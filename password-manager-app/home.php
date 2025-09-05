@@ -128,15 +128,17 @@ include ('./partials/modal.php');
                         <td><?= $username ?></td>
                        <td>
     
-  <div class="input-group input-group-sm">
-        <input type="password" 
-               class="form-control text-center password-field" 
-               value="<?= htmlspecialchars($password) ?>" 
-               readonly>
-        <button class="btn btn-outline-secondary toggle-password" type="button">
-            <i class="fa-solid fa-eye-slash"></i>
-        </button>
-  </div>
+  <div class="position-relative input-group-sm">
+  <input type="password" 
+         class="form-control text-center password-field pe-5" 
+         value="<?= htmlspecialchars($password) ?>" 
+         readonly>
+
+  <i class="fa-solid fa-eye-slash toggle-password"
+     style="position: absolute; top: 50%; right: 12px; 
+            transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+</div>
+
 </td>
 
                         <td><a href="<?= $link ?>" target="_blank" class="text-decoration-none"><?= $link ?></a></td>
@@ -145,11 +147,13 @@ include ('./partials/modal.php');
                         <td>
                             <div class="d-flex justify-content-center gap-2">
                                 <button class="btn btn-sm btn-warning" onclick="update_account(<?= $accountID ?>)" title="Edit">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="delete_account(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+    Edit <i class="fa-solid fa-pen ms-1"></i>
+</button>
+
+<button class="btn btn-sm btn-danger" onclick="delete_account(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
+    Delete <i class="fa-solid fa-trash ms-1"></i>
+</button>
+
                             </div>
                         </td>
                     </tr>

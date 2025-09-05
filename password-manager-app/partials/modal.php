@@ -3,11 +3,10 @@
 <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="userModal" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      
+
       <div class="modal-header bg-dark text-white">
         <h5 class="modal-title" id="userModal">User Details</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-
       </div>
 
       <!-- ✅ Form starts here -->
@@ -16,57 +15,67 @@
 
           <input type="hidden" id="userID" name="tbl_user_id">
 
-        
-          <div class="form-group">
-            <label>Name</label>
+          <div class="form-group mb-3">
+            <label class="form-label">
+              <i class="fa-solid fa-user me-2"></i> Name
+            </label>
             <input type="text" id="name" name="name" class="form-control user-detail" disabled>
           </div>
 
-          <div class="form-group">
-            <label>Phone</label>
+          <div class="form-group mb-3">
+            <label class="form-label">
+              <i class="fa-solid fa-phone me-2"></i> Phone
+            </label>
             <input type="text" id="phoneNumber" name="phoneNumber" class="form-control user-detail" disabled>
           </div>
 
-          <div class="form-group">
-            <label>Email</label>
+          <div class="form-group mb-3">
+            <label class="form-label">
+              <i class="fa-solid fa-envelope me-2"></i> Email
+            </label>
             <input type="email" id="emailAddress" name="emailAddress" class="form-control user-detail" disabled>
           </div>
 
-          <div class="form-group">
-            <label>Username</label>
+          <div class="form-group mb-3">
+            <label class="form-label">
+              <i class="fa-solid fa-user-tag me-2"></i> Username
+            </label>
             <input type="text" id="createUsername" name="username" class="form-control user-detail" disabled>
           </div>
 
-   <div class="form-group">
-  <label>Password</label>
-  <div class="input-group">
-    <input type="password" 
-           id="createPassword" 
-           name="password" 
-           class="form-control user-detail" 
-           disabled>
-    <button class="btn btn-outline-secondary toggle-password" type="button">
-      <i class="fa-solid fa-eye-slash"></i>
-    </button>
-  </div>
-</div>
-
-
-
+          <div class="form-group mb-3">
+            <label class="form-label">
+              <i class="fa-solid fa-lock me-2"></i> Password
+            </label>
+            <div class="input-group">
+              <input type="password" id="createPassword" name="password" class="form-control user-detail" disabled>
+              <button class="btn btn-outline-secondary toggle-password" type="button">
+                <i class="fa-solid fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
 
         </div>
 
         <div class="modal-footer">
-          <button type="button" id="editButton" class="btn btn-primary" onclick="editDetails()">Edit</button>
-          <button type="submit" id="saveButton" class="btn btn-success d-none">Save</button>
-          <button type="button" id="cancelButton" class="btn btn-secondary d-none" onclick="cancelEditDetails()">Cancel</button>
-        </div>
+  <button type="button" id="editButton" class="btn btn-primary" onclick="editDetails()">
+    <i class="fa-solid fa-pen"></i> Edit
+  </button>
+  <button type="submit" id="saveButton" class="btn btn-success d-none">
+    <i class="fa-solid fa-floppy-disk"></i> Save
+  </button>
+  <button type="button" id="cancelButton" class="btn btn-secondary d-none" onclick="cancelEditDetails()">
+    <i class="fa-solid fa-xmark"></i> Cancel
+  </button>
+</div>
+
       </form>
       <!-- ✅ Form ends here -->
 
     </div>
   </div>
 </div>
+
 
 
 
@@ -355,32 +364,7 @@ document.querySelectorAll('.toggle-password').forEach(toggle => {
 });
 </script>
 
-<script>
-function editDetails() {
-  // Enable all fields
-  document.querySelectorAll(".user-detail").forEach(input => {
-    input.removeAttribute("disabled");
-  });
 
-  // Toggle buttons
-  document.getElementById("editButton").classList.add("d-none");
-  document.getElementById("saveButton").classList.remove("d-none");
-  document.getElementById("cancelButton").classList.remove("d-none");
-}
-</script>
-<script>
-function cancelEditDetails() {
-  // Disable all fields again
-  document.querySelectorAll(".user-detail").forEach(input => {
-    input.setAttribute("disabled", true);
-  });
-
-  // Reset buttons
-  document.getElementById("editButton").classList.remove("d-none");
-  document.getElementById("saveButton").classList.add("d-none");
-  document.getElementById("cancelButton").classList.add("d-none");
-}
-</script>
 
 
 

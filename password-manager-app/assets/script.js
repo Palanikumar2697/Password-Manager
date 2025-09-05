@@ -1,82 +1,68 @@
-const loginForm = document.querySelector('.login-form');
-const registrationForm = document.querySelector('.registration-form');
-const showLoginForm = document.querySelector('.show-login-form');
-const showRegistrationForm = document.querySelector('.show-registration-form');
-
-// registrationForm.style.display = "none";
-
-function showLogin() {
-    loginForm.style.display = "none";
-    registrationForm.style.display = "";
-}
-showLoginForm.addEventListener("click", showLogin);
-
-function showRegistration() {
-    loginForm.style.display = "";
-    registrationForm.style.display = "none";
-}
-showRegistrationForm.addEventListener("click", showRegistration);
 
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  const loginForm        = document.querySelector('.login-form');
+  const registrationForm = document.querySelector('.registration-form');
+  const toRegisterLink   = document.querySelector('.show-login-form');          // "No Account? Register Here!"
+  const toLoginLink      = document.querySelector('.show-registration-form');   // "Already have an account? Log in here!"
+
+  if (!loginForm || !registrationForm) return;
+
+  // Show login by default
+  loginForm.style.display = 'block';
+  registrationForm.style.display = 'none';
+
+  // When clicking "No Account? Register Here!" → show Registration form
+  if (toRegisterLink) {
+    toRegisterLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      registrationForm.style.display = 'block';
+    });
+  }
+
+  // When clicking "Already have an account? Log in here!" → show Login form
+  if (toLoginLink) {
+    toLoginLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      registrationForm.style.display = 'none';
+      loginForm.style.display = 'block';
+    });
+  }
+});
 
 
+function editDetails() {
+  // Enable inputs
+  document.querySelectorAll("#viewUserModal .user-detail").forEach(el => {
+    el.removeAttribute("disabled");
+    el.removeAttribute("readonly");
+  });
 
-// Delete account
-function delete_account(id) {
-    if (confirm("Do you want to delete this account?")) {
-        window.location = "./endpoint/delete-account.php?account=" + id;
-    }
-}
-
-// Enable and disable editing
-function editDetails(button) {
-    const form = button.form;
-    const inputElements = form.querySelectorAll('.user-detail');
-    for (var i = 0; i < inputElements.length; i++) {
-        inputElements[i].disabled = !inputElements[i].disabled;
-    }
-
-    document.getElementById('editButton').style.display = "none";
-    document.getElementById('saveButton').style.display = "";
-    document.getElementById('deleteButton').style.display = "";
-    document.getElementById('cancelButton').style.display = "";
-}
-
-function cancelEditDetails(button) {
-    const form = button.form;
-    const inputElements = form.querySelectorAll('.user-detail');
-    for (var i = 0; i < inputElements.length; i++) {
-        inputElements[i].disabled = !inputElements[i].disabled;
-    }
-
-    document.getElementById('editButton').style.display = "";
-    document.getElementById('deleteButton').style.display = "none";
-    document.getElementById('saveButton').style.display = "none";
-    document.getElementById('cancelButton').style.display = "none";
+  // Show Save + Cancel, hide Edit
+  document.getElementById("editButton").classList.add("d-none");
+  document.getElementById("saveButton").classList.remove("d-none");
+  document.getElementById("cancelButton").classList.remove("d-none");
 }
 
-function openDeleteModal(type, id) {
-    if (!id || id === 0) {
-        alert("❌ Invalid request. No ID found.");
-        return;
-    }
+function cancelEditDetails() {
+  // Re-disable inputs
+  document.querySelectorAll("#viewUserModal .user-detail").forEach(el => {
+    el.setAttribute("disabled", "");
+    el.setAttribute("readonly", "");
+  });
 
-    let url = "";
-
-    if (type === "account") {
-        url = "./endpoint/delete.php?account=" + id;
-        document.getElementById("deleteMessage").innerText =
-            "Are you sure you want to delete this account?";
-    } else if (type === "user") {
-        url = "./endpoint/delete.php?user=" + id;
-        document.getElementById("deleteMessage").innerText =
-            "Are you sure you want to delete your user account?";
-    }
-
-    document.getElementById("confirmDeleteBtn").href = url;
-    $('#deleteConfirmModal').modal('show');
+  // Reset buttons
+  document.getElementById("editButton").classList.remove("d-none");
+  document.getElementById("saveButton").classList.add("d-none");
+  document.getElementById("cancelButton").classList.add("d-none");
 }
+
+
+
+
+
 
 
 
@@ -90,12 +76,12 @@ function togglePasswordVisibility(accountID) {
     }
 }
 
-<script>
+
 function delete_account(accountId) {
     // Direct redirect for delete
     window.location.href = "./endpoint/delete-account.php?id=" + accountId;
 }
-</script>
+
 
 
 

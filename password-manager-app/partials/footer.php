@@ -37,19 +37,24 @@ $(document).ready(function () {
             "searching": true
         });
     }
+}); // ✅ missing bracket fixed here
+</script>
+<script>
+document.addEventListener("click", function (e) {
+  const toggle = e.target.closest(".toggle-password");
+  if (!toggle) return;
 
-    // ✅ Password toggle (works on dynamically loaded rows too)
-    $(document).on("click", ".toggle-password", function () {
-        const input = $(this).closest(".input-group").find("input");
-        const icon = $(this).find("i");
+  const wrapper = toggle.closest(".position-relative, .input-group");
+  const input = wrapper ? wrapper.querySelector("input") : null;
+  if (!input) return;
 
-        if (input.attr("type") === "password") {
-            input.attr("type", "text");
-            icon.removeClass("fa-eye-slash").addClass("fa-eye");
-        } else {
-            input.attr("type", "password");
-            icon.removeClass("fa-eye").addClass("fa-eye-slash");
-        }
-    });
+  if (input.type === "password") {
+    input.type = "text";
+    toggle.classList.replace("fa-eye-slash", "fa-eye");
+  } else {
+    input.type = "password";
+    toggle.classList.replace("fa-eye", "fa-eye-slash");
+  }
 });
 </script>
+
