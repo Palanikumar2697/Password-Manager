@@ -43,17 +43,22 @@
             <input type="text" id="createUsername" name="username" class="form-control user-detail" disabled>
           </div>
 
-          <div class="form-group mb-3">
-            <label class="form-label">
-              <i class="fa-solid fa-lock me-2"></i> Password
-            </label>
-            <div class="input-group">
-              <input type="password" id="createPassword" name="password" class="form-control user-detail" disabled>
-              <button class="btn btn-outline-secondary toggle-password" type="button">
-                <i class="fa-solid fa-eye-slash"></i>
-              </button>
-            </div>
-          </div>
+          <div class="mb-3">
+  <label for="updatePassword" class="form-label">
+    <i class="fa-solid fa-lock"></i> Password
+  </label>
+  <div class="input-group">
+    <input type="password" 
+           class="form-control" 
+           id="createPassword"
+           name="password" 
+           placeholder="Enter Password" 
+           required>
+    <button class="btn btn-outline-secondary toggle-password" type="button">
+      <i class="fa-solid fa-eye-slash"></i>
+    </button>
+  </div>
+</div>
 
         </div>
 
@@ -75,11 +80,6 @@
     </div>
   </div>
 </div>
-
-
-
-
-
 
 
 <!-- Add Account Modal -->
@@ -153,99 +153,72 @@
 </div>
 
 
-        
+  
 
-
-
-
-<!-- Update Account Modal (Bootstrap 5) -->
+<!-- Update Account Modal -->
 <div class="modal fade" id="updateAccountModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form method="POST" action="./endpoint/update-account.php">
 
-        <!-- Header -->
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">Update Account</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">Update Account</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-        <!-- Body -->
+      <form action="./endpoint/update-account.php" method="POST" autocomplete="off">
         <div class="modal-body">
-          <input type="hidden" name="tbl_account_id" id="updateAccountID">
+          <input type="hidden" id="updateAccountID" name="tbl_account_id">
 
           <div class="mb-3">
-            <label for="updateAccountName" class="form-label">
-              <i class="fa-solid fa-user"></i> Account Name
-            </label>
-            <input type="text" name="account_name" id="updateAccountName" class="form-control" required>
+            <label for="updateAccountName" class="form-label">Account Name</label>
+            <input type="text" id="updateAccountName" name="account_name" class="form-control" autocomplete="off">
           </div>
 
           <div class="mb-3">
-            <label for="updateUsername" class="form-label">
-              <i class="fa-solid fa-users"></i> Username
-            </label>
-            <input type="text" name="username" id="updateUsername" class="form-control" required>
+            <label for="updateUsername" class="form-label">Username</label>
+            <input type="text" id="updateUsername" name="username" class="form-control" autocomplete="off">
           </div>
- <div class="mb-3">
-  <label for="password" class="form-label">
-    <i class="fa-solid fa-lock"></i> Password
-  </label>
+
+          <div class="mb-3">
+  <label for="updatePassword" class="form-label">Password</label>
   <div class="input-group">
     <input type="password" 
-           class="form-control password-field" 
-           id="password"
+           id="updatePassword" 
            name="password" 
-           placeholder="Enter Password" 
-           required>
-    <button class="btn btn-outline-secondary toggle-password" type="button">
+           class="form-control" 
+           autocomplete="off"> <!-- ✅ allow JS to set value -->
+    <button type="button" class="btn btn-outline-secondary toggle-password">
       <i class="fa-solid fa-eye-slash"></i>
     </button>
   </div>
 </div>
 
 
-
           <div class="mb-3">
-            <label for="updateLink" class="form-label">
-              <i class="fa-solid fa-link"></i> Link
-            </label>
-            <input type="text" name="link" id="updateLink" class="form-control">
+            <label for="updateLink" class="form-label">URL</label>
+            <input type="url" id="updateLink" name="link" class="form-control" autocomplete="off">
           </div>
 
           <div class="mb-3">
-            <label for="updateDescription" class="form-label">
-              <i class="fa-solid fa-file-alt"></i> Description
-            </label>
-            <textarea name="description" id="updateDescription" class="form-control" rows="3"></textarea>
+            <label for="updateDescription" class="form-label">Description</label>
+            <textarea id="updateDescription" name="description" class="form-control"></textarea>
           </div>
 
           <div class="mb-3">
-            <label for="updateCreatedAt" class="form-label">
-              <i class="fa-solid fa-calendar"></i> Date & Time
-            </label>
-            <input type="datetime-local" name="created_at" id="updateCreatedAt" class="form-control" required>
+            <label for="updateCreatedAt" class="form-label">Created At</label>
+            <input type="datetime-local" id="updateCreatedAt" name="created_at" class="form-control">
           </div>
         </div>
 
-        <!-- Footer -->
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Save Changes</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
-
       </form>
+
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -302,14 +275,16 @@ function view_user(userId) {
     document.getElementById("emailAddress").value = email;
     document.getElementById("createUsername").value = username;
 
-    // ✅ Only if password field exists
+    // ✅ FIX: use correct ID for password input
     let passInput = document.getElementById("createPassword");
     if (passInput) passInput.value = password;
 
     // Show modal
     $("#viewUserModal").modal("show");
+}
+</script>
 
-}</script>
+
 
 
 

@@ -69,8 +69,6 @@ include ('./partials/modal.php');
 </nav>
 
 
-
-
 <div class="container-fluid py-4">
     <div class="accounts-container card shadow-lg p-4 rounded-3">
         <h4 class="text-center mb-4">
@@ -101,64 +99,94 @@ include ('./partials/modal.php');
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
-                    $stmt = $conn->prepare("
-                        SELECT a.*, u.name AS created_by_name
-                        FROM tbl_accounts a
-                        LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
-                        WHERE a.tbl_user_id = :user_id
-                    ");
-                    $stmt->execute(['user_id' => $user_id]);
-                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+<?php 
+$stmt = $conn->prepare("
+    SELECT a.*, u.name AS created_by_name
+    FROM tbl_accounts a
+    LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
+    WHERE a.tbl_user_id = :user_id
+");
+$stmt->execute(['user_id' => $user_id]);
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($result as $row) {
-                        $accountID   = $row['tbl_account_id'];
-                        $created_at  = $row['created_at'];
-                        $accountName = $row['account_name'];
-                        $username    = $row['username'];
-                        $password    = $row['password'];
-                        $link        = $row['link'];
-                        $description = $row['description'];
-                        $created_by  = $row['created_by_name'];
-                    ?>
-                    <tr>
-                        <td><?= $accountID ?></td>
-                        <td><?= $created_at ?></td>
-                        <td><?= $accountName ?></td>
-                        <td><?= $username ?></td>
-                       <td>
-    
+foreach ($result as $row) {
+    $accountID   = $row['tbl_account_id'];
+    $created_at  = $row['created_at'];
+    $accountName = $row['account_name'];
+    $username    = $row['username'];
+    $password    = $row['password'];
+    $link        = $row['link'];
+    $description = $row['description'];
+    $created_by  = $row['created_by_name'];
+?>
+<tr>
+    <!-- ID -->
+    <td id="accountID-<?= $accountID ?>"><?= $accountID ?></td>
+
+    <!-- Created At -->
+    <td id="created_at-<?= $accountID ?>"><?= htmlspecialchars($created_at) ?></td>
+
+    <!-- Account Name -->
+    <td id="accountName-<?= $accountID ?>"><?= htmlspecialchars($accountName) ?></td>
+
+    <!-- Username -->
+    <td id="username-<?= $accountID ?>"><?= htmlspecialchars($username) ?></td>
+
+    <!-- Password column -->
+<td>
   <div class="position-relative input-group-sm">
-  <input type="password" 
-         class="form-control text-center password-field pe-5" 
-         value="<?= htmlspecialchars($password) ?>" 
-         readonly>
+    <input type="password" 
+           class="form-control text-center pe-5" 
+           value="<?= htmlspecialchars($password) ?>" 
+           readonly>
 
-  <i class="fa-solid fa-eye-slash toggle-password"
-     style="position: absolute; top: 50%; right: 12px; 
-            transform: translateY(-50%); cursor: pointer; color: #666;"></i>
-</div>
+    <i class="fa-solid fa-eye-slash toggle-password"
+       style="position: absolute; top: 50%; right: 12px; 
+              transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+  </div>
 
+  <!-- hidden span with actual password -->
+  <span id="password-<?= $accountID ?>" 
+        class="d-none" 
+        data-password="<?= htmlspecialchars($password) ?>"></span>
 </td>
 
-                        <td><a href="<?= $link ?>" target="_blank" class="text-decoration-none"><?= $link ?></a></td>
-                        <td><?= $description ?></td>
-                        <td><?= $created_by ?></td>
-                        <td>
-                            <div class="d-flex justify-content-center gap-2">
-                                <button class="btn btn-sm btn-warning" onclick="update_account(<?= $accountID ?>)" title="Edit">
-    Edit <i class="fa-solid fa-pen ms-1"></i>
-</button>
 
-<button class="btn btn-sm btn-danger" onclick="delete_account(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
-    Delete <i class="fa-solid fa-trash ms-1"></i>
-</button>
+    <!-- URL -->
+    <td id="link-<?= $accountID ?>">
+        <a href="<?= htmlspecialchars($link) ?>" target="_blank" class="text-decoration-none">
+            <?= htmlspecialchars($link) ?>
+        </a>
+    </td>
 
-                            </div>
-                        </td>
-                    </tr>
-                    <?php } ?>
-                </tbody>
+    <!-- Description -->
+    <td id="description-<?= $accountID ?>"><?= htmlspecialchars($description) ?></td>
+
+    <!-- Created By -->
+    <td><?= htmlspecialchars($created_by) ?></td>
+
+    <!-- Action Buttons -->
+    <td>
+        <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-sm btn-warning"
+                    onclick="update_account(<?= $accountID ?>)" 
+                    title="Edit">
+                Edit <i class="fa-solid fa-pen ms-1"></i>
+            </button>
+
+            <button class="btn btn-sm btn-danger"
+                    onclick="delete_account(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
+                    title="Delete">
+                Delete <i class="fa-solid fa-trash ms-1"></i>
+            </button>
+        </div>
+    </td>
+</tr>
+
+</tr>
+<?php } ?>
+</tbody>
+
             </table>
         </div>
     </div>
@@ -221,33 +249,40 @@ function delete_account(accountId, accountName) {
     $('#deleteConfirmModal').modal('show');
 }
 </script>
-
 <script>
 function update_account(id) {
-    $("#updateAccountModal").modal("show");
+    let modal = new bootstrap.Modal(document.getElementById("updateAccountModal"));
+    modal.show();
 
+    // ✅ Read values from table
     let updateAccountID   = $("#accountID-" + id).text().trim();
     let updateAccountName = $("#accountName-" + id).text().trim();
     let updateUsername    = $("#username-" + id).text().trim();
-    let updatePassword    = $("#password-" + id).text().trim();
+    let updatePassword    = $("#password-" + id).data("password"); // ✅ FIXED
     let updateLink        = $("#link-" + id).text().trim();
     let updateDescription = $("#description-" + id).text().trim();
-    let updateCreatedAt   = $("#created_at-" + id).text().trim(); // ✅ get created_at
+    let updateCreatedAt   = $("#created_at-" + id).text().trim();
 
+    console.log("Password from span:", updatePassword); // 👀 DEBUG
+
+    // ✅ Fill modal fields
     $("#updateAccountID").val(updateAccountID);
     $("#updateAccountName").val(updateAccountName);
     $("#updateUsername").val(updateUsername);
-    $("#updatePassword").val(updatePassword);
+    $("#updatePassword").val(updatePassword);   // 👈 should now populate
     $("#updateLink").val(updateLink);
     $("#updateDescription").val(updateDescription);
 
-    // ✅ format datetime for input[type="datetime-local"]
+    // ✅ Format datetime
     if (updateCreatedAt) {
         let formatted = updateCreatedAt.replace(" ", "T").slice(0, 16);
         $("#updateCreatedAt").val(formatted);
     }
 }
 </script>
+
+
+
 
 
 

@@ -61,11 +61,6 @@ function cancelEditDetails() {
 
 
 
-
-
-
-
-
 // Show password
 function togglePasswordVisibility(accountID) {
     var passwordInput = document.getElementById("password-input-" + accountID);

@@ -20,8 +20,8 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <!-- Your custom script -->
 <script src="http://localhost/PM/password-manager-app/assets/script.js"></script>
@@ -57,4 +57,38 @@ document.addEventListener("click", function (e) {
   }
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".toggle-password").forEach(icon => {
+        icon.addEventListener("click", function () {
+            const input = this.previousElementSibling; // the <input type="password">
+            if (input.type === "password") {
+                input.type = "text";
+                this.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                input.type = "password";
+                this.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        });
+    });
+});
+</script>
 
+<script>
+// Password show/hide toggle (table + modal)
+document.addEventListener("click", function (e) {
+  if (e.target.closest(".toggle-password")) {
+    const button = e.target.closest(".toggle-password");
+    const input = button.parentElement.querySelector("input");
+    const icon = button.querySelector("i");
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    }
+  }
+});
+</script>
