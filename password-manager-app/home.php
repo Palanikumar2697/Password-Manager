@@ -171,14 +171,16 @@ foreach ($result as $row) {
             <button class="btn btn-sm btn-warning"
                     onclick="update_account(<?= $accountID ?>)" 
                     title="Edit">
-                Edit <i class="fa-solid fa-pen ms-1"></i>
+                 <i class="fa-solid fa-pen ms-1"></i>
             </button>
 
-            <button class="btn btn-sm btn-danger"
-                    onclick="delete_account(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
-                    title="Delete">
-                Delete <i class="fa-solid fa-trash ms-1"></i>
-            </button>
+         <button class="btn btn-sm btn-outline-danger rounded-pill"
+        onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
+        title="Delete">
+    <i class="fa-solid fa-trash me-1"></i>
+</button>
+
+
         </div>
     </td>
 </tr>
@@ -191,26 +193,6 @@ foreach ($result as $row) {
         </div>
     </div>
 </div>
-
-<!-- ✅ Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title">Confirm Delete</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="deleteMessage">
-        Are you sure you want to delete this account?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <!-- ✅ Status Modal -->
 <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -232,21 +214,11 @@ foreach ($result as $row) {
   </div>
 </div>
 
-
-
-
 <script>
-function delete_account(accountId, accountName) {
-    // Update modal content with account name
-    document.getElementById("deleteMessage").innerText =
-        "Are you sure you want to delete account: \"" + accountName + "\"?";
-
-    // Set delete link dynamically
-    document.getElementById("confirmDeleteBtn").href =
-        "./endpoint/delete-account.php?id=" + accountId;
-
-    // Show modal
-    $('#deleteConfirmModal').modal('show');
+function confirmDelete(accountId, accountName) {
+    if (confirm(`Are you sure you want to delete account: "${accountName}"?`)) {
+        window.location.href = `./endpoint/delete-account.php?id=${accountId}`;
+    }
 }
 </script>
 <script>
@@ -281,7 +253,13 @@ function update_account(id) {
 }
 </script>
 
-
+<?php if (!empty($_SESSION['flash_msg'])): ?>
+    <div class="alert alert-<?= $_SESSION['flash_status'] ?> alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['flash_msg']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['flash_msg'], $_SESSION['flash_status']); ?>
+<?php endif; ?>
 
 
 

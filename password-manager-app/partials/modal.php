@@ -107,22 +107,23 @@
             <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required>
           </div>
 
-    <div class="mb-3">
+ <div class="mb-3 position-relative">
   <label for="password" class="form-label">
     <i class="fa-solid fa-lock"></i> Password
   </label>
-  <div class="input-group">
-    <input type="password" 
-           class="form-control password-field" 
-           id="password"
-           name="password" 
-           placeholder="Enter Password" 
-           required>
-    <button class="btn btn-outline-secondary toggle-password" type="button">
-      <i class="fa-solid fa-eye-slash"></i>
-    </button>
-  </div>
+  
+  <input type="password" 
+         class="form-control pe-5 password-field" 
+         id="password"
+         name="password" 
+         placeholder="Enter Password" 
+         required>
+
+  <!-- Eye icon inside input -->
+  <i class="fa-solid fa-eye-slash toggle-password"
+     style="position: absolute; top: 70%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
 </div>
+
 
           <div class="mb-3">
             <label for="link" class="form-label"><i class="fa-solid fa-link"></i> Link</label>
@@ -179,18 +180,21 @@
             <input type="text" id="updateUsername" name="username" class="form-control" autocomplete="off">
           </div>
 
-          <div class="mb-3">
-  <label for="updatePassword" class="form-label">Password</label>
-  <div class="input-group">
-    <input type="password" 
-           id="updatePassword" 
-           name="password" 
-           class="form-control" 
-           autocomplete="off"> <!-- ✅ allow JS to set value -->
-    <button type="button" class="btn btn-outline-secondary toggle-password">
-      <i class="fa-solid fa-eye-slash"></i>
-    </button>
-  </div>
+    <div class="mb-3 position-relative">
+  <label for="updatePassword" class="form-label">
+    <i class="fa-solid fa-lock"></i> Password
+  </label>
+
+  <input type="password" 
+         class="form-control pe-5 password-field" 
+         id="updatePassword"
+         name="password" 
+         placeholder="Enter Password" 
+         required>
+
+  <!-- Eye icon inside input -->
+  <i class="fa-solid fa-eye-slash toggle-password"
+     style="position: absolute; top: 70%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
 </div>
 
 
@@ -284,6 +288,22 @@ function view_user(userId) {
 }
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('.toggle-password').forEach(icon => {
+    icon.addEventListener('click', function () {
+      const input = this.previousElementSibling; // input before icon
+      if (input.type === "password") {
+        input.type = "text";
+        this.classList.replace("fa-eye-slash", "fa-eye");
+      } else {
+        input.type = "password";
+        this.classList.replace("fa-eye", "fa-eye-slash");
+      }
+    });
+  });
+});
+</script>
 
 
 
@@ -305,23 +325,7 @@ function view_user(userId) {
   });
 </script>
 
-<script>
-document.querySelectorAll('.toggle-password').forEach(toggle => {
-  toggle.addEventListener('click', function () {
-    const input = this.previousElementSibling; // the <input> before the eye icon
-    const icon = this.querySelector("i");
 
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.replace("fa-eye-slash", "fa-eye");
-    } else {
-      input.type = "password";
-      icon.classList.replace("fa-eye", "fa-eye-slash");
-    }
-  });
-});
-
-</script>
 <script>
 document.querySelectorAll('.toggle-password').forEach(toggle => {
   toggle.addEventListener('click', function () {
