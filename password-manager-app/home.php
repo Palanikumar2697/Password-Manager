@@ -136,19 +136,22 @@ if ($result) {
         <!-- Password column -->
 <td class="password-cell">
   <div class="position-relative input-group-sm">
+    <!-- Masked password input -->
     <input type="password" 
            class="form-control text-center password-field" 
            value="••••••" 
-           readonly>
+           readonly
+           id="input-<?= $accountID ?>"
+           data-target="<?= $accountID ?>"
+           style="cursor: pointer;">
   </div>
 
-  <!-- hidden span with actual password -->
+  <!-- Hidden actual password -->
   <span id="password-<?= $accountID ?>" 
-      class="d-none real-password" 
-      data-password="<?= htmlspecialchars($password) ?>">
-</span>
-
+        class="d-none real-password" 
+        data-password="<?= htmlspecialchars($password) ?>"></span>
 </td>
+
 
 
 
@@ -312,27 +315,7 @@ function update_account(id) {
 </script>
 
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".password-cell").forEach(cell => {
-    const input = cell.querySelector(".password-field");
-    const realPassword = cell.querySelector(".real-password")?.textContent;
 
-    if (realPassword) {
-      cell.addEventListener("click", function () {
-        if (input.type === "password") {
-          input.type = "text";
-          input.value = realPassword;   // show actual password
-        } else {
-          input.type = "password";
-          input.value = "••••••";       // mask it back
-        }
-      });
-    }
-  });
-});
-
-</script>
 
 
 <?php if (!empty($_SESSION['flash_msg'])): ?>

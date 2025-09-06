@@ -43,6 +43,43 @@ $(document).ready(function () {
 
 
 
+<script>
+document.querySelectorAll('.toggle-password').forEach(icon => {
+    icon.addEventListener('click', function () {
+        let input = this.previousElementSibling; // get the input just before the icon
+        if (input.type === "password") {
+            input.type = "text";
+            this.classList.remove("fa-eye-slash");
+            this.classList.add("fa-eye");
+        } else {
+            input.type = "password";
+            this.classList.remove("fa-eye");
+            this.classList.add("fa-eye-slash");
+        }
+    });
+});
+</script>
+
+<script>
+document.querySelectorAll('.password-field').forEach(input => {
+    input.addEventListener('click', () => {
+        const accountID = input.dataset.target;
+        const realPassword = document.getElementById('password-' + accountID).dataset.password;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            input.value = realPassword;
+        } else {
+            input.type = 'password';
+            input.value = '••••••';
+        }
+    });
+});
+</script>
+
+
+
+
 
 
 

@@ -47,17 +47,11 @@
   <label for="updatePassword" class="form-label">
     <i class="fa-solid fa-lock"></i> Password
   </label>
-  <div class="input-group">
-    <input type="password" 
-           class="form-control" 
-           id="createPassword"
-           name="password" 
-           placeholder="Enter Password" 
-           required>
-    <button class="btn btn-outline-secondary toggle-password" type="button">
-      <i class="fa-solid fa-eye-slash"></i>
-    </button>
-  </div>
+ <div class="position-relative">
+  <input type="password" class="form-control" id="createPassword" name="password" placeholder="Enter Password">
+  <i class="fa-solid fa-eye-slash toggle-password"
+     style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+</div>
 </div>
 
         </div>
@@ -112,16 +106,11 @@
     <i class="fa-solid fa-lock"></i> Password
   </label>
   
-  <input type="password" 
-         class="form-control pe-5 password-field" 
-         id="password"
-         name="password" 
-         placeholder="Enter Password" 
-         required>
-
-  <!-- Eye icon inside input -->
+   <div class="position-relative">
+  <input type="password" class="form-control" id="Password" name="password" placeholder="Enter Password">
   <i class="fa-solid fa-eye-slash toggle-password"
-     style="position: absolute; top: 70%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+     style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+</div>
 </div>
 
 
@@ -189,16 +178,11 @@
     <i class="fa-solid fa-lock me-1"></i> Password
   </label>
 
-  <input type="password" 
-         class="form-control pe-5 password-field" 
-         id="updatePassword"
-         name="password" 
-         placeholder="Enter Password" 
-         required>
-
-  <!-- Eye icon inside input -->
+ <div class="position-relative">
+  <input type="password" class="form-control" id="updatePassword" name="password" placeholder="Enter Password">
   <i class="fa-solid fa-eye-slash toggle-password"
-     style="position: absolute; top: 70%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+     style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+</div>
 </div>
 
 
@@ -303,23 +287,7 @@ function view_user(userId) {
 }
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".toggle-password").forEach(icon => {
-    icon.addEventListener("click", function () {
-      const input = this.previousElementSibling; // always the input before icon
 
-      if (input.type === "password") {
-        input.type = "text";
-        this.classList.replace("fa-eye-slash", "fa-eye");
-      } else {
-        input.type = "password";
-        this.classList.replace("fa-eye", "fa-eye-slash");
-      }
-    });
-  });
-});
-</script>
 
 
 

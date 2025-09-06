@@ -4,536 +4,216 @@
   font-family: 'Ubuntu', sans-serif;
 }
 
-
-
 body {
-    
-    background-color: rgb(210, 210, 210) !important;
+  background-color: rgb(210, 210, 210) !important;
 }
+
+/* ====== Layout ====== */
 .main {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 20px;
-    width: 100%;       /* use full width of screen */
-    max-width: 100%;   /* don’t restrict width */
-    margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  width: 100%;
+  margin: 0 auto;
 }
-
-
 
 .login-container {
-    max-width: 600px;                /* Responsive max width */
-    width: 100%;                     /* Full width on small screens */
-    margin: 80px auto;               /* Center horizontally & add top space */
-    padding: 40px 30px;              /* Balanced padding */
-    background: #fff;                /* White background */
-    border: 2px solid #ddd;          /* Subtle border */
-    border-radius: 12px;             /* Softer rounded corners */
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1); /* Light shadow */
-}
-
-/* Optional: Style for inputs inside */
-.login-container input {
-    width: 100%;
-    padding: 10px 14px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    transition: 0.3s;
-}
-
-.login-container input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.4);
-}
-
-
-
-.lock-icon {
-    font-size: 50px;
-    margin-left: 43%;
-    margin-bottom: 20px;
-}
-
-.link-show {
-    text-decoration: underline;
-    color: rgb(0, 0, 210);
-    cursor: pointer;
-}
-
-.link-show:hover {
-    text-decoration: none;
-    color: rgb(90, 90, 90);
-}
-
-.accounts-container, .user-details {
-    width: 100%;
-    background-color: rgb(240, 240, 240);
-    padding: 40px;
-    border: 2px solid;
-    border-radius: 10px;
-    height: 850px;
-}
-
-.task-list {
-    font-size: 16px;
-    max-height: 600px !important;
-    height: 600px !important;
-    min-width: 80rem !important;
-}
-
-
-
-table.dataTable tbody tr {
-    background-color:rgb(240, 240, 240) !important;
-    font-size: 15px;
-}
-
-.table button {
-    width: 40px;
-    font-size: 17px;
-}
-
-.password-input {
-    border: none;
-    background-color: transparent;
-    text-align: center;
-    cursor: pointer;
-}
-
-
-.password-wrapper {
-  position: relative;
-  width: 100%; /* or set a fixed width if needed */
-}
-
-.password-wrapper input {
+  max-width: 600px;
   width: 100%;
-  
+  margin: 80px auto;
+  padding: 40px 30px;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* ====== Inputs ====== */
+.login-container input,
+.input-container input {
+  width: 100%;
+  padding: 10px 14px;
+  margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
 }
 
-
-
-/* Eye / Eye-slash icon on the right */
-.password-wrapper .right-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: black;
-}
-
-.dropdown-item i {
-  margin-right: 8px;
-}
-
-tr.text-center td {
-    text-align: center;       /* centers text/buttons horizontally */
-    vertical-align: middle;   /* centers vertically */
-    padding: 8px 12px;        /* spacing inside cells */
-}
-tr.center th {
-    text-align: center;   /* center header text horizontally */
-    vertical-align: middle; /* center vertically */
-  
-}
-
-
-td.text-center {
- 
-    text-align: center;
-    vertical-align: auto;
-}
- .btn i {
-   
-        color: black !important;
-    }
-
-/* Center align action buttons */
-.table td {
-    vertical-align: middle; /* aligns button vertically in the row */
-}
-
-
-
-.btn-add-account {
-    background: linear-gradient(135deg, #4caf50, #2e7d32);
-    color: #fff;
-    border: none; 
-    padding: 12px 12px;
-    margin-right: 12px;
-    font-size: 16px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-.btn-add-account:hover {
-    background: linear-gradient(135deg, #66bb6a, #388e3c);
-    transform: scale(1.05);
-}
-
-.add_accountbtn {
-    text-align: right;   /* moves the button to the right */
-    margin-bottom: 15px; /* optional spacing below */
-    
-}
-
-.accounts-container{
-   
-   min-height: 100vh; /* ensures at least full screen */
-height: auto;      /* grows with table content */
-text-align: center; 
-    
-}
-
-.accounts-container h4 {
-    background-color: goldenrod;
-    color: white;
-    padding: 8px 25px;
-    border-radius: 50px;   /* pill shape */
-    display: inline-block; /* so pill hugs text */
-    font-weight: 600;
-    font-size: 16px;
-    text-align: center;
-    margin: 20px auto;     /* 👈 centers horizontally */
-}
-
-
-.position-relative {
-    position: relative;
-}
-
-#togglePassword1 {
-    position: absolute;
-    top: 50%;
-    right: 10px;   /* distance from right side */
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #6c757d; /* grayish */
-}
-.table-responsive {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: auto; /* lets height expand */
-}
-
-.dataTables_wrapper {
-    width: 100%;
-}
-
-
-
-.btn-add-account i {
-    margin-right: 8px;   /* Space between icon and text */
-    font-size: 18px;     /* Adjust icon size */
-}
-
-
-/* Wrapper for spacing */
-.action-buttons {
-    display: flex;
-    gap: 12px;   /* space between buttons */
-    white-space: nowrap; /* prevent buttons from wrapping or cutting */
-}
-
-.btn-edit, .btn-delete {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center; 
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 100px;   /* keeps them long enough for text */
-    height: 38px;       /* balanced height */
-    border-radius: 50px; /* 👈 makes pill shape */
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-    padding: 0 20px;    /* extra padding for pill look */
-    white-space: nowrap;
-}
-
-
-
-
-/* Edit */
-.btn-edit {
-    background: #007bff;
-    color: #fff;
-}
-.btn-edit:hover {
-    background: #0056b3;
-    transform: translateY(-2px);
-}
-
-/* Delete */
-.btn-delete {
-    background: #dc3545;
-    color: #fff;
-}
-.btn-delete:hover {
-    background: #a71d2a;
-    transform: translateY(-2px);
-}
-
-/* Reset all paginate buttons */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none !important;
-    box-shadow: none !important;
-    font-weight: 500;
-    color: #333 !important;
-    background: #f1f1f1 !important;
-    transition: 0.3s;
-    margin: 0 4px;
-}
-
-/* Numbers (1,2,3...) → small roundish pill */
-.dataTables_wrapper .dataTables_paginate .paginate_button:not(.previous):not(.next) {
-    min-width: 36px;
-    height: 36px;
-    border-radius: 25px;   /* pill shape */
-    padding: 0 12px;       /* small padding inside */
-}
-
-/* Previous & Next → wider pills */
-.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
-.dataTables_wrapper .dataTables_paginate .paginate_button.next {
-    height: 36px;
-    border-radius: 25px;   /* pill shape */
-    padding: 0 20px;
-    min-width: 70px;
-}
-
-/* Hover effect */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-   
-    color: #fff !important;
-}
-
-/* Active number */
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-   
-    color: #fff !important;
-}
-/* Search label text */
-.dataTables_wrapper .dataTables_filter label {
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
-}
-
-/* Search input box */
-.dataTables_wrapper .dataTables_filter input {
-    width: 220px;          /* set custom width */
-    height: 40px; 
-    border: 3px solid black;
-    border-radius: 50px;   /* pill style */
-    padding: 10px 16px;
-    margin-left: 8px;
-    outline: none;
-    transition: 0.3s;
-    font-size: 14px;
-    
-}
-
-/* Hover effect */
-.dataTables_wrapper .dataTables_filter input:hover {
-    border-color: #999;
-}
-
-/* Focus effect */
-.dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.4);
-}
-
-/* Optional: move search box to right */
-.dataTables_wrapper .dataTables_filter {
-    text-align: right;
-}
-
-.password-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-family: 'Poppins', sans-serif;
+.login-container input:focus,
+.input-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0,123,255,0.4);
 }
 
 .input-container {
-    position: relative;
-    width: 100%;
+  position: relative;
 }
 
-.input-container input {
-    width: 100%;
-    padding: 10px 40px 10px 36px; /* extra left padding for lock icon */
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    transition: 0.3s;
-}
-
-.input-container input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.3);
-}
-
-/* Lock icon inside input (left side) */
 .input-container .input-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #555;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #555;
 }
 
-/* Eye icon inside input (right side) */
 .input-container .toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 16px;
-    color: #555;
-    transition: 0.3s;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+  transition: 0.3s;
 }
 
 .input-container .toggle-password:hover {
-    color: #007bff;
-}
-.password-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    font-size: 14px;
-    color: #333;
+  color: #007bff;
 }
 
-.password-label i {
-    font-size: 15px;
-    color: #555;
+/* ====== Accounts Section ====== */
+.accounts-container {
+  min-height: 100vh;
+  height: auto;
+  text-align: center;
+  background-color: rgb(240, 240, 240);
+  padding: 40px;
+  border: 2px solid;
+  border-radius: 10px;
 }
-.input-container input {
-    padding-left: 12px;  /* 👈 normal padding */
+
+.accounts-container h4 {
+  background-color: goldenrod;
+  color: white;
+  padding: 8px 25px;
+  border-radius: 50px;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 20px auto;
 }
-/* Style for "Showing X to Y of Z entries" */
+
+/* ====== Table ====== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table.dataTable thead th {
+  padding: 12px 18px;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+table.dataTable tbody tr {
+  background-color: rgb(240, 240, 240) !important;
+  font-size: 15px;
+}
+
+.table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px 12px;
+}
+
+/* ====== DataTables custom ====== */
+.dataTables_wrapper {
+  width: 100%;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  text-align: right;
+}
+
+.dataTables_wrapper .dataTables_filter label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  width: 220px;
+  height: 40px;
+  border: 3px solid black;
+  border-radius: 50px;
+  padding: 10px 16px;
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0,123,255,0.4);
+}
+
 .dataTables_wrapper .dataTables_info {
-    font-size: 16px;
-    font-weight: 500;
-    color: #444;
-    background: goldenrod;  /* light background */
-    padding: 6px 12px;
-    border-radius: 25px;   /* pill style */
-    display: inline-block; /* keeps pill tight */
-    margin-top: 10px;
-}
-.dataTables_wrapper .dataTables_info {
-    text-align: center;
-    display: block; /* full width */
-    margin: 15px auto;
-    width: fit-content;
-    
-}
-.btn {
-  border-radius: 50px !important; /* pill shape */
-  padding: 8px 18px;              /* nice spacing */
+  font-size: 16px;
   font-weight: 500;
+  color: #444;
+  background: goldenrod;
+  padding: 6px 12px;
+  border-radius: 25px;
+  margin: 15px auto;
+  display: block;
+  width: fit-content;
 }
 
-/* Add space around table headers */
-table.dataTable thead th {
-    padding-left: 15px;
-    padding-right: 15px;
-    white-space: nowrap; /* prevent text from breaking into 2 lines */
-}
-table.dataTable thead th {
-    letter-spacing: 1px; /* adjust value */
-}
-table.dataTable thead th {
-    padding: 12px 18px;   /* top/bottom 12px, left/right 18px */
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-    text-align: center;   /* keep aligned */
-}
-/* Common button styles */
-.table-actions .btn {
-    min-width: 85px;            /* keep consistent width */
-    font-size: 0.85rem;         /* smaller text */
-    font-weight: 500;           /* make text slightly bolder */
-    border-radius: 50px;        /* pill shape */
-    padding: 6px 12px;          /* balanced spacing */
-    transition: all 0.2s ease;  /* smooth hover effect */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border: none;
+  background: #f1f1f1;
+  border-radius: 25px;
+  margin: 0 4px;
+  padding: 6px 12px;
+  transition: 0.3s;
 }
 
-/* Edit button */
-.table-actions .btn-warning {
-    background-color: #ffc107;
-    border: none;
-    color: #212529;
-}
-.table-actions .btn-warning:hover {
-    background-color: #e0a800;
-    color: #fff;
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: #007bff;
+  color: #fff !important;
 }
 
-/* Delete button */
-.table-actions .btn-outline-danger {
-    border: 1.5px solid #dc3545;
-    color: #dc3545;
-    background: transparent;
-}
-.table-actions .btn-outline-danger:hover {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-/* Icon spacing fix */
-.table-actions i {
-    font-size: 0.85rem;
-    vertical-align: middle;
+/* ====== Buttons ====== */
+.btn {
+  border-radius: 50px !important;
+  padding: 8px 18px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
+.btn-add-account {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
 
+.btn-add-account:hover {
+  background: linear-gradient(135deg, #66bb6a, #388e3c);
+  transform: scale(1.05);
+}
 
+.btn-edit {
+  background: #007bff;
+  color: #fff;
+}
 
+.btn-edit:hover {
+  background: #0056b3;
+}
 
+.btn-delete {
+  background: #dc3545;
+  color: #fff;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.btn-delete:hover {
+  background: #a71d2a;
+}

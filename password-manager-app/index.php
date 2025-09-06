@@ -23,7 +23,7 @@
                         <i class="fa-solid fa-lock me-2"></i> Password
                     </label>
                              <div class="position-relative">
-  <input type="password" class="form-control" id="createPassword" name="password" placeholder="Enter Password">
+  <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter Password">
   <i class="fa-solid fa-eye-slash toggle-password"
      style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
 </div>
@@ -76,7 +76,7 @@
                         <i class="fa-solid fa-lock me-2"></i> Password
                     </label>
                   <div class="position-relative">
-  <input type="password" class="form-control" id="createPassword" name="password" placeholder="Enter Password">
+  <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Enter Password">
   <i class="fa-solid fa-eye-slash toggle-password"
      style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
 </div>
@@ -91,5 +91,6 @@
         </div>
     </div>
 </div>
+
 
 <?php include('./partials/footer.php') ?>
