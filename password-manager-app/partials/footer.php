@@ -22,7 +22,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
 <!-- Your custom script -->
 <script src="http://localhost/PM/password-manager-app/assets/script.js"></script>
 

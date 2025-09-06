@@ -2,6 +2,10 @@
 include('../conn/conn.php');
 session_start();
 
+header('Content-Type: application/json'); // ✅ tell browser we return JSON
+
+$response = ['status' => 'error', 'message' => 'Something went wrong'];
+
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 
@@ -29,27 +33,30 @@ if (isset($_SESSION['user_id'])) {
 
                 $conn->commit();
 
-                // ✅ Flash success message with account name
-                $_SESSION['flash_status'] = "success";
-                $_SESSION['flash_msg'] = "Account \"{$accountName}\" deleted successfully!";
+                $response = [
+                    'status'  => 'success',
+                    'message' => "Account \"{$accountName}\" deleted successfully!",
+                    'id'      => $accountID
+                ];
             } else {
-                $_SESSION['flash_status'] = "warning";
-                $_SESSION['flash_msg'] = "Account not found or does not belong to you.";
+                $response = [
+                    'status'  => 'warning',
+                    'message' => "Account not found or does not belong to you."
+                ];
             }
         } catch (PDOException $e) {
             if ($conn->inTransaction()) $conn->rollBack();
-            $_SESSION['flash_status'] = "error";
-            $_SESSION['flash_msg'] = "Database Error: " . $e->getMessage();
+            $response = [
+                'status'  => 'error',
+                'message' => "Database Error: " . $e->getMessage()
+            ];
         }
     } else {
-        $_SESSION['flash_status'] = "error";
-        $_SESSION['flash_msg'] = "Invalid account ID!";
+        $response = ['status' => 'error', 'message' => 'Invalid account ID!'];
     }
 } else {
-    $_SESSION['flash_status'] = "warning";
-    $_SESSION['flash_msg'] = "Please log in before deleting an account.";
+    $response = ['status' => 'warning', 'message' => 'Please log in before deleting an account.'];
 }
 
-header("Location: ../home.php");
+echo json_encode($response); // ✅ send JSON back
 exit();
-?>

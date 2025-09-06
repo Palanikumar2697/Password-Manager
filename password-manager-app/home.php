@@ -109,84 +109,88 @@ $stmt = $conn->prepare("
 $stmt->execute(['user_id' => $user_id]);
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($result as $row) {
-    $accountID   = $row['tbl_account_id'];
-    $created_at  = $row['created_at'];
-    $accountName = $row['account_name'];
-    $username    = $row['username'];
-    $password    = $row['password'];
-    $link        = $row['link'];
-    $description = $row['description'];
-    $created_by  = $row['created_by_name'];
+if ($result) {
+    foreach ($result as $row) {
+        $accountID   = $row['tbl_account_id'];
+        $created_at  = $row['created_at'];
+        $accountName = $row['account_name'];
+        $username    = $row['username'];
+        $password    = $row['password'];
+        $link        = $row['link'];
+        $description = $row['description'];
+        $created_by  = $row['created_by_name'];
 ?>
-<tr>
-    <!-- ID -->
-    <td id="accountID-<?= $accountID ?>"><?= $accountID ?></td>
+    <tr id="row-<?= $accountID ?>">
+        <!-- ID -->
+        <td id="accountID-<?= $accountID ?>"><?= $accountID ?></td>
 
-    <!-- Created At -->
-    <td id="created_at-<?= $accountID ?>"><?= htmlspecialchars($created_at) ?></td>
+        <!-- Created At -->
+        <td id="created_at-<?= $accountID ?>"><?= htmlspecialchars($created_at) ?></td>
 
-    <!-- Account Name -->
-    <td id="accountName-<?= $accountID ?>"><?= htmlspecialchars($accountName) ?></td>
+        <!-- Account Name -->
+        <td id="accountName-<?= $accountID ?>"><?= htmlspecialchars($accountName) ?></td>
 
-    <!-- Username -->
-    <td id="username-<?= $accountID ?>"><?= htmlspecialchars($username) ?></td>
+        <!-- Username -->
+        <td id="username-<?= $accountID ?>"><?= htmlspecialchars($username) ?></td>
 
-    <!-- Password column -->
-<td>
-  <div class="position-relative input-group-sm">
-    <input type="password" 
-           class="form-control text-center pe-5" 
-           value="<?= htmlspecialchars($password) ?>" 
-           readonly>
+        <!-- Password column -->
+        <td>
+            <div class="position-relative input-group-sm">
+                <input type="password" 
+                       class="form-control text-center pe-5" 
+                       value="<?= htmlspecialchars($password) ?>" 
+                       readonly>
 
-    <i class="fa-solid fa-eye-slash toggle-password"
-       style="position: absolute; top: 50%; right: 12px; 
-              transform: translateY(-50%); cursor: pointer; color: #666;"></i>
-  </div>
+                <i class="fa-solid fa-eye-slash toggle-password"
+                   style="position: absolute; top: 50%; right: 12px; 
+                          transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+            </div>
 
-  <!-- hidden span with actual password -->
-  <span id="password-<?= $accountID ?>" 
-        class="d-none" 
-        data-password="<?= htmlspecialchars($password) ?>"></span>
-</td>
+            <!-- hidden span with actual password -->
+            <span id="password-<?= $accountID ?>" 
+                  class="d-none" 
+                  data-password="<?= htmlspecialchars($password) ?>"></span>
+        </td>
 
+        <!-- URL -->
+        <td id="link-<?= $accountID ?>">
+            <a href="<?= htmlspecialchars($link) ?>" target="_blank" class="text-decoration-none">
+                <?= htmlspecialchars($link) ?>
+            </a>
+        </td>
 
-    <!-- URL -->
-    <td id="link-<?= $accountID ?>">
-        <a href="<?= htmlspecialchars($link) ?>" target="_blank" class="text-decoration-none">
-            <?= htmlspecialchars($link) ?>
-        </a>
-    </td>
+        <!-- Description -->
+        <td id="description-<?= $accountID ?>"><?= htmlspecialchars($description) ?></td>
 
-    <!-- Description -->
-    <td id="description-<?= $accountID ?>"><?= htmlspecialchars($description) ?></td>
+        <!-- Created By -->
+        <td><?= htmlspecialchars($created_by) ?></td>
 
-    <!-- Created By -->
-    <td><?= htmlspecialchars($created_by) ?></td>
+        <!-- Action Buttons -->
+        <td>
+            <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-sm btn-warning"
+                        onclick="update_account(<?= $accountID ?>)" 
+                        title="Edit">
+                     <i class="fa-solid fa-pen ms-1"></i>
+                </button>
 
-    <!-- Action Buttons -->
-    <td>
-        <div class="d-flex justify-content-center gap-2">
-            <button class="btn btn-sm btn-warning"
-                    onclick="update_account(<?= $accountID ?>)" 
-                    title="Edit">
-                 <i class="fa-solid fa-pen ms-1"></i>
-            </button>
-
-         <button class="btn btn-sm btn-outline-danger rounded-pill"
-        onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
-        title="Delete">
-    <i class="fa-solid fa-trash me-1"></i>
-</button>
-
-
-        </div>
-    </td>
-</tr>
-
-</tr>
+                <button class="btn btn-sm btn-outline-danger rounded-pill"
+                        onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
+                        title="Delete">
+                    <i class="fa-solid fa-trash me-1"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+<?php 
+    }
+} else { 
+?>
+    <tr>
+        <td colspan="9" class="text-center">No accounts found</td>
+    </tr>
 <?php } ?>
+
 </tbody>
 
             </table>
@@ -214,13 +218,66 @@ foreach ($result as $row) {
   </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <b id="deleteAccountName"></b>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-function confirmDelete(accountId, accountName) {
-    if (confirm(`Are you sure you want to delete account: "${accountName}"?`)) {
-        window.location.href = `./endpoint/delete-account.php?id=${accountId}`;
-    }
+function confirmDelete(id, accountName) {
+    Swal.fire({
+        title: "Delete Account?",
+        text: `Are you sure you want to delete "${accountName}"?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#d33"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ✅ Correct path to match your folder structure
+            fetch("endpoint/delete-account.php?id=" + id)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: data.message,
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // ✅ Instantly remove deleted row from table
+                        document.getElementById("row-" + data.id)?.remove();
+                    } else {
+                        Swal.fire("Oops!", data.message, data.status);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire("Error", "Something went wrong!", "error");
+                });
+        }
+    });
 }
 </script>
+
+
 <script>
 function update_account(id) {
     let modal = new bootstrap.Modal(document.getElementById("updateAccountModal"));
@@ -262,6 +319,20 @@ function update_account(id) {
 <?php endif; ?>
 
 
+<?php if (isset($_SESSION['flash_status']) && isset($_SESSION['flash_msg'])): ?>
+    <div class="alert alert-<?php 
+        echo ($_SESSION['flash_status'] === 'success') ? 'success' : 
+             (($_SESSION['flash_status'] === 'warning') ? 'warning' : 'danger'); 
+    ?> alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['flash_msg']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php 
+        // ✅ Clear flash after showing once
+        unset($_SESSION['flash_status']);
+        unset($_SESSION['flash_msg']);
+    ?>
+<?php endif; ?>
 
 
 
