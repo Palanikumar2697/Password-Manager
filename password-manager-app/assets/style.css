@@ -472,6 +472,43 @@ table.dataTable thead th {
     letter-spacing: 0.5px;
     text-align: center;   /* keep aligned */
 }
+/* Common button styles */
+.table-actions .btn {
+    min-width: 85px;            /* keep consistent width */
+    font-size: 0.85rem;         /* smaller text */
+    font-weight: 500;           /* make text slightly bolder */
+    border-radius: 50px;        /* pill shape */
+    padding: 6px 12px;          /* balanced spacing */
+    transition: all 0.2s ease;  /* smooth hover effect */
+}
+
+/* Edit button */
+.table-actions .btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: #212529;
+}
+.table-actions .btn-warning:hover {
+    background-color: #e0a800;
+    color: #fff;
+}
+
+/* Delete button */
+.table-actions .btn-outline-danger {
+    border: 1.5px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+}
+.table-actions .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Icon spacing fix */
+.table-actions i {
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
 
 
 

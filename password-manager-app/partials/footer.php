@@ -37,72 +37,14 @@ $(document).ready(function () {
         });
     }
 }); // ✅ missing bracket fixed here
-</script>
-<script>
-document.addEventListener("click", function (e) {
-  const toggle = e.target.closest(".toggle-password");
-  if (!toggle) return;
 
-  const wrapper = toggle.closest(".position-relative, .input-group");
-  const input = wrapper ? wrapper.querySelector("input") : null;
-  if (!input) return;
-
-  if (input.type === "password") {
-    input.type = "text";
-    toggle.classList.replace("fa-eye-slash", "fa-eye");
-  } else {
-    input.type = "password";
-    toggle.classList.replace("fa-eye", "fa-eye-slash");
-  }
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".toggle-password").forEach(icon => {
-        icon.addEventListener("click", function () {
-            const input = this.previousElementSibling; // the <input type="password">
-            if (input.type === "password") {
-                input.type = "text";
-                this.classList.replace("fa-eye-slash", "fa-eye");
-            } else {
-                input.type = "password";
-                this.classList.replace("fa-eye", "fa-eye-slash");
-            }
-        });
-    });
-});
-</script>
-
-<script>
-// Password show/hide toggle (table + modal)
-document.addEventListener("click", function (e) {
-  if (e.target.closest(".toggle-password")) {
-    const button = e.target.closest(".toggle-password");
-    const input = button.parentElement.querySelector("input");
-    const icon = button.querySelector("i");
-
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.replace("fa-eye-slash", "fa-eye");
-    } else {
-      input.type = "password";
-      icon.classList.replace("fa-eye", "fa-eye-slash");
-    }
-  }
-});
-</script>
-<script>
-document.querySelectorAll('.toggle-password').forEach(icon => {
-  icon.addEventListener('click', function () {
-    const input = this.previousElementSibling; // the input just before the icon
-    if (input.type === "password") {
-      input.type = "text";
-      this.classList.replace("fa-eye-slash", "fa-eye");
-    } else {
-      input.type = "password";
-      this.classList.replace("fa-eye", "fa-eye-slash");
-    }
-  });
-});
 
 </script>
+
+
+
+
+
+
+
+

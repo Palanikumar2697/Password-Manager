@@ -134,23 +134,24 @@ if ($result) {
         <td id="username-<?= $accountID ?>"><?= htmlspecialchars($username) ?></td>
 
         <!-- Password column -->
-        <td>
-            <div class="position-relative input-group-sm">
-                <input type="password" 
-                       class="form-control text-center pe-5" 
-                       value="<?= htmlspecialchars($password) ?>" 
-                       readonly>
+<td class="password-cell">
+  <div class="position-relative input-group-sm">
+    <input type="password" 
+           class="form-control text-center password-field" 
+           value="••••••" 
+           readonly>
+  </div>
 
-                <i class="fa-solid fa-eye-slash toggle-password"
-                   style="position: absolute; top: 50%; right: 12px; 
-                          transform: translateY(-50%); cursor: pointer; color: #666;"></i>
-            </div>
+  <!-- hidden span with actual password -->
+  <span id="password-<?= $accountID ?>" 
+      class="d-none real-password" 
+      data-password="<?= htmlspecialchars($password) ?>">
+</span>
 
-            <!-- hidden span with actual password -->
-            <span id="password-<?= $accountID ?>" 
-                  class="d-none" 
-                  data-password="<?= htmlspecialchars($password) ?>"></span>
-        </td>
+</td>
+
+
+
 
         <!-- URL -->
         <td id="link-<?= $accountID ?>">
@@ -167,20 +168,21 @@ if ($result) {
 
         <!-- Action Buttons -->
         <td>
-            <div class="d-flex justify-content-center gap-2">
-                <button class="btn btn-sm btn-warning"
-                        onclick="update_account(<?= $accountID ?>)" 
-                        title="Edit">
-                     <i class="fa-solid fa-pen ms-1"></i>
-                </button>
+    <div class="d-flex justify-content-center gap-2 table-actions">
+        <button class="btn btn-sm btn-warning"
+                onclick="update_account(<?= $accountID ?>)" 
+                title="Edit">
+             <i class="fa-solid fa-pen me-1"></i>Edit
+        </button>
 
-                <button class="btn btn-sm btn-outline-danger rounded-pill"
-                        onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
-                        title="Delete">
-                    <i class="fa-solid fa-trash me-1"></i>
-                </button>
-            </div>
-        </td>
+        <button class="btn btn-sm btn-outline-danger"
+                onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" 
+                title="Delete">
+            <i class="fa-solid fa-trash me-1"></i>Delete
+        </button>
+    </div>
+</td>
+
     </tr>
 <?php 
     }
@@ -277,7 +279,6 @@ function confirmDelete(id, accountName) {
 }
 </script>
 
-
 <script>
 function update_account(id) {
     let modal = new bootstrap.Modal(document.getElementById("updateAccountModal"));
@@ -287,28 +288,52 @@ function update_account(id) {
     let updateAccountID   = $("#accountID-" + id).text().trim();
     let updateAccountName = $("#accountName-" + id).text().trim();
     let updateUsername    = $("#username-" + id).text().trim();
-    let updatePassword    = $("#password-" + id).data("password"); // ✅ FIXED
+    let updatePassword    = $("#password-" + id).attr("data-password"); // ✅ FIXED
     let updateLink        = $("#link-" + id).text().trim();
     let updateDescription = $("#description-" + id).text().trim();
     let updateCreatedAt   = $("#created_at-" + id).text().trim();
 
+    console.log("Password span selector:", "#password-" + id);
     console.log("Password from span:", updatePassword); // 👀 DEBUG
 
     // ✅ Fill modal fields
     $("#updateAccountID").val(updateAccountID);
     $("#updateAccountName").val(updateAccountName);
     $("#updateUsername").val(updateUsername);
-    $("#updatePassword").val(updatePassword);   // 👈 should now populate
+    $("#updatePassword").val(updatePassword);   
     $("#updateLink").val(updateLink);
     $("#updateDescription").val(updateDescription);
 
-    // ✅ Format datetime
     if (updateCreatedAt) {
         let formatted = updateCreatedAt.replace(" ", "T").slice(0, 16);
         $("#updateCreatedAt").val(formatted);
     }
 }
 </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".password-cell").forEach(cell => {
+    const input = cell.querySelector(".password-field");
+    const realPassword = cell.querySelector(".real-password")?.textContent;
+
+    if (realPassword) {
+      cell.addEventListener("click", function () {
+        if (input.type === "password") {
+          input.type = "text";
+          input.value = realPassword;   // show actual password
+        } else {
+          input.type = "password";
+          input.value = "••••••";       // mask it back
+        }
+      });
+    }
+  });
+});
+
+</script>
+
 
 <?php if (!empty($_SESSION['flash_msg'])): ?>
     <div class="alert alert-<?= $_SESSION['flash_status'] ?> alert-dismissible fade show" role="alert">

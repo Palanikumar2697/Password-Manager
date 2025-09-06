@@ -167,22 +167,26 @@
       </div>
 
       <form action="./endpoint/update-account.php" method="POST" autocomplete="off">
-        <div class="modal-body">
-          <input type="hidden" id="updateAccountID" name="tbl_account_id">
+  <div class="modal-body">
+    <input type="hidden" id="updateAccountID" name="tbl_account_id">
 
-          <div class="mb-3">
-            <label for="updateAccountName" class="form-label">Account Name</label>
-            <input type="text" id="updateAccountName" name="account_name" class="form-control" autocomplete="off">
-          </div>
+    <div class="mb-3">
+      <label for="updateAccountName" class="form-label">
+        <i class="fa-solid fa-address-book me-1"></i> Account Name
+      </label>
+      <input type="text" id="updateAccountName" name="account_name" class="form-control" autocomplete="off">
+    </div>
 
-          <div class="mb-3">
-            <label for="updateUsername" class="form-label">Username</label>
-            <input type="text" id="updateUsername" name="username" class="form-control" autocomplete="off">
-          </div>
+    <div class="mb-3">
+      <label for="updateUsername" class="form-label">
+        <i class="fa-solid fa-user me-1"></i> Username
+      </label>
+      <input type="text" id="updateUsername" name="username" class="form-control" autocomplete="off">
+    </div>
 
-    <div class="mb-3 position-relative">
+   <div class="mb-3 position-relative">
   <label for="updatePassword" class="form-label">
-    <i class="fa-solid fa-lock"></i> Password
+    <i class="fa-solid fa-lock me-1"></i> Password
   </label>
 
   <input type="password" 
@@ -198,27 +202,38 @@
 </div>
 
 
-          <div class="mb-3">
-            <label for="updateLink" class="form-label">URL</label>
-            <input type="url" id="updateLink" name="link" class="form-control" autocomplete="off">
-          </div>
+    <div class="mb-3">
+      <label for="updateLink" class="form-label">
+        <i class="fa-solid fa-link me-1"></i> URL
+      </label>
+      <input type="url" id="updateLink" name="link" class="form-control" autocomplete="off">
+    </div>
 
-          <div class="mb-3">
-            <label for="updateDescription" class="form-label">Description</label>
-            <textarea id="updateDescription" name="description" class="form-control"></textarea>
-          </div>
+    <div class="mb-3">
+      <label for="updateDescription" class="form-label">
+        <i class="fa-solid fa-file-lines me-1"></i> Description
+      </label>
+      <textarea id="updateDescription" name="description" class="form-control"></textarea>
+    </div>
 
-          <div class="mb-3">
-            <label for="updateCreatedAt" class="form-label">Created At</label>
-            <input type="datetime-local" id="updateCreatedAt" name="created_at" class="form-control">
-          </div>
-        </div>
+    <div class="mb-3">
+      <label for="updateCreatedAt" class="form-label">
+        <i class="fa-solid fa-calendar-days me-1"></i> Created At
+      </label>
+      <input type="datetime-local" id="updateCreatedAt" name="created_at" class="form-control">
+    </div>
+  </div>
 
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Save Changes</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </form>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success">
+      <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+    </button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      <i class="fa-solid fa-xmark me-1"></i> Cancel
+    </button>
+  </div>
+</form>
+
 
     </div>
   </div>
@@ -290,9 +305,10 @@ function view_user(userId) {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll('.toggle-password').forEach(icon => {
-    icon.addEventListener('click', function () {
-      const input = this.previousElementSibling; // input before icon
+  document.querySelectorAll(".toggle-password").forEach(icon => {
+    icon.addEventListener("click", function () {
+      const input = this.previousElementSibling; // always the input before icon
+
       if (input.type === "password") {
         input.type = "text";
         this.classList.replace("fa-eye-slash", "fa-eye");
@@ -308,40 +324,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<script>
-  document.getElementById("togglePassword").addEventListener("click", function () {
-    const passwordInput = document.getElementById("password");
-    const icon = this.querySelector("i");
-
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      icon.classList.remove("fa-eye-slash");
-      icon.classList.add("fa-eye");
-    } else {
-      passwordInput.type = "password";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
-    }
-  });
-</script>
 
 
-<script>
-document.querySelectorAll('.toggle-password').forEach(toggle => {
-  toggle.addEventListener('click', function () {
-    const input = this.closest('.input-group').querySelector('input');
-    const icon = this.querySelector("i");
 
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.replace("fa-eye-slash", "fa-eye");
-    } else {
-      input.type = "password";
-      icon.classList.replace("fa-eye", "fa-eye-slash");
-    }
-  });
-});
-</script>
+
+
 
 
 
