@@ -185,52 +185,56 @@ table.dataTable tbody tr:hover {
   gap: 14px;
 }
 
-/* ====== Top Controls (Show entries + Search) ====== */
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter {
+/* ====== Wrapper Layout Fix ====== */
+.dataTables_wrapper .top-controls {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-}
-
-.dataTables_wrapper .dataTables_length {
-  justify-content: flex-start; /* stays on left */
-}
-
-.dataTables_wrapper .dataTables_filter {
-  justify-content: flex-end;   /* pushed to right corner */
   margin-bottom: 12px;
 }
 
-.dataTables_wrapper .dataTables_length label,
-.dataTables_wrapper .dataTables_filter label {
-  font-weight: 600;
-  font-size: 14px;
-
+.dataTables_wrapper .bottom-controls {
+  display: flex;
+  justify-content: space-between;  /* info left, pagination right */
+  align-items: center;
+  margin-top: 12px;
 }
 
-/* ====== Dropdown (Show entries) ====== */
+/* ====== Show Entries (Dropdown) ====== */
+.dataTables_wrapper .dataTables_length {
+  margin: 0;
+}
 .dataTables_wrapper .dataTables_length select {
   border: 1px solid #ccc;
-  border-radius: 50px; /* pill look */
+  border-radius: 50px;
   padding: 6px 14px;
   margin-left: 6px;
- 
-  cursor: pointer;
-  transition: all 0.3s ease;
+  background: #fff;
+  transition: 0.3s;
 }
 .dataTables_wrapper .dataTables_length select:focus {
-  
+  border-color: #1e3c72;
   box-shadow: 0 0 5px rgba(30, 60, 114, 0.3);
 }
+/* Force Show Entries to left corner */
+.dataTables_wrapper .dataTables_length {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;  /* ✅ stick to left */
+  margin: 0;
+}
+
 
 /* ====== Search Box ====== */
+.dataTables_wrapper .dataTables_filter {
+  margin: 0;
+}
 .dataTables_wrapper .dataTables_filter input {
   border: 1px solid #ccc;
-  border-radius: 50px; /* pill shape */
+  border-radius: 50px;
   padding: 8px 18px;
-  margin-left: 10px;
-
-  transition: all 0.3s ease;
+  margin-left: 8px;
+  transition: 0.3s;
 }
 .dataTables_wrapper .dataTables_filter input:focus {
   
@@ -239,39 +243,63 @@ table.dataTable tbody tr:hover {
 
 /* ====== Info Text ====== */
 .dataTables_wrapper .dataTables_info {
-  margin-top: 6px;
   font-size: 13px;
   font-weight: 500;
+  color: #555;
+  margin: 0;
+}
+/* Force Info text to left corner */
+.dataTables_wrapper .dataTables_info {
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  margin: 0;
+  text-align: left;      /* make sure text is left aligned */
+  padding-left: 0;       /* remove any padding */
+  display: flex;         
+  align-items: center;   /* vertically center */
+  justify-content: flex-start; /* snap left */
 }
 
-/* ====== Pagination ====== */
+/* ====== Pagination (Right Corner) ====== */
 .dataTables_wrapper .dataTables_paginate {
-  margin-top: 8px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;  /* ✅ right aligned */
+  align-items: center;
   gap: 6px;
+  margin: 0;
 }
 
+/* ====== Numbered Buttons ====== */
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   border-radius: 8px;
   padding: 6px 12px;
   font-size: 14px;
-
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-
-  color: #fff !important;
+  
   font-weight: 600;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+/* ====== First / Prev / Next / Last (plain text only) ====== */
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next,
+.dataTables_wrapper .dataTables_paginate .paginate_button.first,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last {
   
-  color: #fff !important;
+  
+  font-weight: 500;
+  text-decoration: none !important;   /* ✅ no underline */
+
+  padding: 6px 10px; /* keep spacing consistent */
 }
+
+
+
+
+
 
 
 
