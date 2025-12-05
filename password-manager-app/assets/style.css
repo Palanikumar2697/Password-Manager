@@ -169,13 +169,57 @@ table.dataTable tbody tr:hover {
   flex-direction: column;
   gap: 14px;
 }
-
 /* LENGTH & SEARCH */
 .dataTables_wrapper .dataTables_length,
 .dataTables_wrapper .dataTables_filter {
+    font-weight: 600;   /* keep your local style */
+    margin-bottom: 12px;
+}
+
+/* Wrapper Layout Fix */
+.dataTables_wrapper .top-controls {
+    display: flex;               /* incoming change */
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;                   /* optional but improves spacing */
+}
+
+
+.dataTables_wrapper .bottom-controls {
+  display: flex;
+  justify-content: space-between;  /* info left, pagination right */
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* ====== Show Entries (Dropdown) ====== */
+.dataTables_wrapper .dataTables_length {
+  margin: 0;
+}
+.dataTables_wrapper .dataTables_length select {
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  padding: 6px 14px;
+  margin-left: 6px;
+  background: #fff;
+  transition: 0.3s;
+}
+.dataTables_wrapper .dataTables_length select:focus {
+  border-color: #1e3c72;
+  box-shadow: 0 0 5px rgba(30, 60, 114, 0.3);
+}
+/* Force Show Entries to left corner */
+.dataTables_wrapper .dataTables_length {
   display: flex;
   align-items: center;
-  font-weight: 600;
+  justify-content: flex-start;  /* ✅ stick to left */
+  margin: 0;
+}
+
+
+/* ====== Search Box ====== */
+.dataTables_wrapper .dataTables_filter {
+  margin: 0;
 }
 
 .dataTables_wrapper .dataTables_filter input {
@@ -192,12 +236,14 @@ table.dataTable tbody tr:hover {
 
 /* PAGINATION */
 .dataTables_wrapper .dataTables_paginate {
-  margin-top: 8px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;  /* ✅ right aligned */
+  align-items: center;
   gap: 6px;
+  margin: 0;
 }
 
+/* ====== Numbered Buttons ====== */
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   border-radius: 8px;
   padding: 6px 12px;
