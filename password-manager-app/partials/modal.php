@@ -178,11 +178,11 @@
     <i class="fa-solid fa-lock me-1"></i> Password
   </label>
 
- <div class="position-relative">
-  <input type="password" class="form-control" id="updatePassword" name="password" placeholder="Enter Password">
-  <i class="fa-solid fa-eye-slash toggle-password"
-     style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
-</div>
+  <div class="position-relative">
+    <input type="password" class="form-control" id="updatePassword" name="password">
+    <i class="fa-solid fa-eye-slash toggle-password"
+       style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+  </div>
 </div>
 
 
@@ -256,50 +256,44 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 <script>
 function view_user(userId) {
-    console.log("Opening View User Modal for ID:", userId);
+    let name  = document.getElementById("userName-" + userId)?.innerText.trim();
+    let phone = document.getElementById("userPhone-" + userId)?.innerText.trim();
+    let email = document.getElementById("userEmail-" + userId)?.innerText.trim();
+    let username = document.getElementById("userUsername-" + userId)?.innerText.trim();
+    let password = document.getElementById("userPassword-" + userId)?.innerText.trim();
 
-    // Get hidden values
-    let name      = document.getElementById("userName-" + userId)?.innerText.trim();
-    let phone     = document.getElementById("userPhone-" + userId)?.innerText.trim();
-    let email     = document.getElementById("userEmail-" + userId)?.innerText.trim();
-    let username  = document.getElementById("userUsername-" + userId)?.innerText.trim();
-    let password  = document.getElementById("userPassword-" + userId)?.innerText.trim();
-
-    if (!name || !email) {
-        console.warn("⚠️ Could not fetch user data for ID:", userId);
+    if (!name) {
         alert("User details not found. Please check hidden spans in PHP.");
         return;
     }
 
-    // Fill modal fields
-    document.getElementById("userID").value = userId;
+    // 🔥 Correct IDs (match your modal)
     document.getElementById("name").value = name;
     document.getElementById("phoneNumber").value = phone;
     document.getElementById("emailAddress").value = email;
     document.getElementById("createUsername").value = username;
+    document.getElementById("createPassword").value = password;
 
-    // ✅ FIX: use correct ID for password input
-    let passInput = document.getElementById("createPassword");
-    if (passInput) passInput.value = password;
+    // 🔥 Set hidden userID
+    document.getElementById("userID").value = userId;
 
     // Show modal
-    $("#viewUserModal").modal("show");
+    let modal = new bootstrap.Modal(document.getElementById("viewUserModal"));
+    modal.show();
 }
 </script>
 
 
+<script>
+$(document).on("click", ".toggle-password", function () {
+    let input = $(this).prev("input");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    if (input.attr("type") === "password") {
+        input.attr("type", "text");
+        $(this).removeClass("fa-eye-slash").addClass("fa-eye");
+    } else {
+        input.attr("type", "password");
+        $(this).removeClass("fa-eye").addClass("fa-eye-slash");
+    }
+});
+</script>

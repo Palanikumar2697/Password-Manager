@@ -1,124 +1,134 @@
 <?php
 include('../conn/conn.php');
-
+include('../endpoint/modal_helper.php');  
 session_start();
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $accountID   = $_POST['tbl_account_id'];
-        $accountName = $_POST['account_name'];
-        $username    = $_POST['username'];
-        $password    = $_POST['password'];
-        $link        = $_POST['link'];
-        $description = $_POST['description'];
-        $created_at_time = $_POST['created_at'];
+if (!isset($_SESSION['user_id'])) {
+    showModal("Authentication Required", "⚠️ Please log in first.", "warning", "../index.php");
+    exit;
+}
 
-        if (!empty($_POST['created_at'])) {
-            $created_at = date("Y-m-d H:i:s", strtotime($_POST['created_at']));
-        } else {
-            $created_at = date("Y-m-d H:i:s");
-        }
+$user_id = $_SESSION['user_id'];
 
-        try {
-            $stmt = $conn->prepare("SELECT `tbl_account_id` FROM `tbl_accounts` WHERE `tbl_account_id` = :accountID AND `tbl_user_id` = :user_id");
-            $stmt->execute([
-                'accountID' => $accountID,
-                'user_id'   => $user_id
-            ]);
-            $accountExists = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    showModal("Update Failed", "❌ Invalid request method.", "danger", "../home.php");
+    exit;
+}
 
-            if (!empty($accountExists)) {
-                $conn->beginTransaction();
+/* -----------------------------------------
+   VALIDATION
+----------------------------------------- */
+$accountID   = trim($_POST['tbl_account_id'] ?? '');
+$accountName = trim($_POST['account_name'] ?? '');
+$username    = trim($_POST['username'] ?? '');
+$password    = trim($_POST['password'] ?? '');
+$link        = trim($_POST['link'] ?? '');
+$description = trim($_POST['description'] ?? '');
+$created_at_input = trim($_POST['created_at'] ?? '');
 
-                $updateStmt = $conn->prepare("
-                    UPDATE `tbl_accounts` 
-                    SET `account_name` = :account_name, 
-                        `username` = :username, 
-                        `password` = :password, 
-                        `link` = :link, 
-                        `description` = :description,
-                        `created_at` = :created_at  
-                    WHERE `tbl_account_id` = :accountID 
-                      AND `tbl_user_id` = :user_id
-                ");
-                $updateStmt->bindParam(':account_name', $accountName, PDO::PARAM_STR);
-                $updateStmt->bindParam(':username', $username, PDO::PARAM_STR);
-                $updateStmt->bindParam(':password', $password, PDO::PARAM_STR);
-                $updateStmt->bindParam(':link', $link, PDO::PARAM_STR);
-                $updateStmt->bindParam(':description', $description, PDO::PARAM_STR);
-                $updateStmt->bindParam(':created_at', $created_at, PDO::PARAM_STR);
-                $updateStmt->bindParam(':accountID', $accountID, PDO::PARAM_INT);
-                $updateStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                $updateStmt->execute();
+$errors = [];
 
-                $conn->commit();
+// Validate Account ID
+if (empty($accountID) || !is_numeric($accountID)) {
+    $errors[] = "Invalid Account ID.";
+}
 
-                $title    = "Update Status";
-                $message  = "✅ Account Updated Successfully. Redirecting to Home...";
-                $type     = "success";
-                $redirect = "../home.php";
+// Validate account name
+if (empty($accountName)) {
+    $errors[] = "Account name is required.";
+}
 
-            } else {
-                $title    = "Update Status";
-                $message  = "⚠️ Account not found or does not belong to the current user.";
-                $type     = "warning";
-                $redirect = "../home.php";
-            }
+// Validate username
+if (empty($username)) {
+    $errors[] = "Username is required.";
+}
 
-        } catch (PDOException $e) {
-            $title    = "Database Error";
-            $message  = "❌ " . $e->getMessage();
-            $type     = "danger";
-            $redirect = "../home.php";
-        }
+// Validate password
+if (empty($password)) {
+    $errors[] = "Password cannot be empty.";
+}
 
+// Validate link if provided
+if (!empty($link) && !filter_var($link, FILTER_VALIDATE_URL)) {
+    $errors[] = "Link is not a valid URL.";
+}
+
+// Validate created_at date
+if (!empty($created_at_input)) {
+    $timestamp = strtotime($created_at_input);
+    if ($timestamp === false) {
+        $errors[] = "Invalid date format.";
     } else {
-        $title    = "Update Failed";
-        $message  = "❌ Account Update Failed!";
-        $type     = "danger";
-        $redirect = "../home.php";
+        $created_at = date("Y-m-d H:i:s", $timestamp);
+    }
+} else {
+    $created_at = date("Y-m-d H:i:s");
+}
+
+// If validation fails
+if (!empty($errors)) {
+    showModal("Validation Error", implode("<br>", $errors), "warning", "../home.php");
+    exit;
+}
+
+/* -----------------------------------------
+   CHECK IF ACCOUNT BELONGS TO USER
+----------------------------------------- */
+try {
+    $stmt = $conn->prepare("
+        SELECT tbl_account_id 
+        FROM tbl_accounts 
+        WHERE tbl_account_id = :accountID AND tbl_user_id = :user_id
+    ");
+    $stmt->execute([
+        'accountID' => $accountID,
+        'user_id'   => $user_id
+    ]);
+
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+        setModal("Update Failed", "⚠️ Account not found or unauthorized access.", "warning", "../home.php");
+        exit;
     }
 
-} else {
-    $title    = "Authentication Required";
-    $message  = "⚠️ User not logged in. Please log in before updating an account.";
-    $type     = "warning";
-    $redirect = "../index.php";
+    /* -----------------------------------------
+       UPDATE ACCOUNT
+    ----------------------------------------- */
+    $conn->beginTransaction();
+
+    $updateStmt = $conn->prepare("
+        UPDATE tbl_accounts SET
+            account_name = :account_name,
+            username     = :username,
+            password     = :password,
+            link         = :link,
+            description  = :description,
+            created_at   = :created_at
+        WHERE tbl_account_id = :accountID 
+          AND tbl_user_id    = :user_id
+    ");
+
+    $updateStmt->execute([
+        ':account_name' => $accountName,
+        ':username'     => $username,
+        ':password'     => $password,
+        ':link'         => $link,
+        ':description'  => $description,
+        ':created_at'   => $created_at,
+        ':accountID'    => $accountID,
+        ':user_id'      => $user_id
+    ]);
+
+    $conn->commit();
+
+    showModal(
+        "Update Successful",
+        "✅ Account Updated Successfully. Redirecting to Home...",
+        "success",
+        "../home.php"
+    );
+
+} catch (PDOException $e) {
+    $conn->rollBack();
+    showModal("Database Error", "❌ " . $e->getMessage(), "danger", "../home.php");
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title><?php echo $title; ?></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-dark d-flex justify-content-center align-items-center" style="height:100vh;">
-
-  <!-- Modal -->
-  <div class="modal fade show" id="statusModal" tabindex="-1" aria-hidden="true" style="display:block; background: rgba(0,0,0,0.6);">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center">
-        <div class="modal-header bg-<?php echo $type; ?> text-white">
-          <h5 class="modal-title"><?php echo $title; ?></h5>
-        </div>
-        <div class="modal-body">
-          <?php echo $message; ?><br>
-          <small class="text-muted">Redirecting in 3 seconds...</small>
-        </div>
-        <div class="modal-footer">
-          <a href="<?php echo $redirect; ?>" class="btn btn-<?php echo $type; ?>">OK</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Auto redirect after 3 seconds
-    setTimeout(function() {
-        window.location.href = "<?php echo $redirect; ?>";
-    }, 3000);
-  </script>
-</body>
-</html>

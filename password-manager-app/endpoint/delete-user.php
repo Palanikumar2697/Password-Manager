@@ -1,6 +1,6 @@
 <?php
 include('../conn/conn.php');
-
+include('../endpoint/modal_helper.php');  // <-- USE THE HELPER, NOT status.php
 if (isset($_GET['user'])) {
     $userID = $_GET['user'];
 

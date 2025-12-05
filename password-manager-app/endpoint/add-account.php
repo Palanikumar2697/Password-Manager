@@ -1,5 +1,6 @@
 <?php
 include ('../conn/conn.php');
+include('../endpoint/modal_helper.php');  // <-- USE THE HELPER, NOT status.php
 session_start();
 
 if (isset($_SESSION['user_id'])) {
@@ -75,38 +76,4 @@ if (isset($_SESSION['user_id'])) {
     $redirect = "../index.php";
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title><?php echo $title; ?></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-dark d-flex justify-content-center align-items-center" style="height:100vh;">
 
-  <!-- Modal -->
-  <div class="modal fade show" id="statusModal" tabindex="-1" aria-hidden="true" style="display:block; background: rgba(0,0,0,0.6);">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center">
-        <div class="modal-header bg-<?php echo $type; ?> text-white">
-          <h5 class="modal-title"><?php echo $title; ?></h5>
-        </div>
-        <div class="modal-body">
-          <?php echo $message; ?><br>
-          <small class="text-muted">Redirecting in 3 seconds...</small>
-        </div>
-        <div class="modal-footer">
-          <a href="<?php echo $redirect; ?>" class="btn btn-<?php echo $type; ?>">OK</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Auto redirect after 3 seconds
-    setTimeout(function() {
-        window.location.href = "<?php echo $redirect; ?>";
-    }, 3000);
-  </script>
-</body>
-</html>

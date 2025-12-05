@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+
+/* GLOBAL FONT */
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
 }
 
-
-
-/* ====== Variables ====== */
+/* ===== VARIABLES ===== */
 :root {
   --primary: #1e3c72;
   --primary-dark: #16345e;
@@ -18,35 +17,32 @@
   --shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
-
-
-
-/* ====== Body ====== */
+/* ===== BODY ===== */
 body {
   background-color: #d2d2d2 !important;
   color: #333;
 }
 
-/* ====== Layout ====== */
+/* ===== LAYOUT ===== */
 .main {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 20px;
+  padding: 30px;
   width: 100%;
   margin: 0 auto;
 }
 
-/* ====== Card (Login / Accounts) ====== */
+/* ===== LOGIN CONTAINER ===== */
 .login-container {
   max-width: 600px;
   width: 100%;
   margin: 80px auto;
   padding: 40px 30px;
   background: #fff;
-  border: 2px solid #ddd;
-  border-radius: 12px;
+  border: 4px solid #ddd;
+  border-radius: 14px;
   box-shadow: var(--shadow);
   transition: 0.3s ease;
 }
@@ -56,7 +52,11 @@ body {
   box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
 
-/* ====== Inputs ====== */
+/* ===== INPUT FIELDS ===== */
+.input-container {
+  position: relative;
+}
+
 .login-container input,
 .input-container input {
   width: 100%;
@@ -72,10 +72,6 @@ body {
 .input-container input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 6px rgba(0,123,255,0.4);
-}
-
-.input-container {
-  position: relative;
 }
 
 .input-container .input-icon {
@@ -102,7 +98,12 @@ body {
   color: var(--accent);
 }
 
-/* ====== Accounts Section ====== */
+.required {
+  color: red;
+  font-weight: bold;
+}
+
+/* ===== ACCOUNTS CONTAINER ===== */
 .accounts-container {
   min-height: 100vh;
   height: auto;
@@ -125,34 +126,18 @@ body {
   margin: 20px auto;
 }
 
-/* ====== Table ====== */
+/* ===== DATATABLE STYLING ===== */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
   margin-top: 15px;
 }
 
-/* Center text + sort icons in DataTables header */
 table.dataTable thead th {
   text-align: center !important;
   vertical-align: middle !important;
-  position: relative;
-  padding-right: 24px; /* space for sort arrows */
+  padding-right: 24px;
 }
-
-/* Force DataTables sort icons to center with text */
-table.dataTable thead th.sorting,
-table.dataTable thead th.sorting_asc,
-table.dataTable thead th.sorting_desc {
-  text-align: center !important;
-}
-
-table.dataTable thead th::after,
-table.dataTable thead th::before {
-  right: 50% !important;
-  margin-right: -8px !important; /* adjust for perfect centering */
-}
-
 
 table.dataTable tbody tr {
   background-color: var(--light-bg) !important;
@@ -175,7 +160,7 @@ table.dataTable tbody tr:hover {
   border-bottom: 1px solid #ddd;
 }
 
-/* ====== DataTables Wrapper ====== */
+/* WRAPPER */
 .dataTables_wrapper {
   width: 100%;
   margin-top: 10px;
@@ -185,66 +170,27 @@ table.dataTable tbody tr:hover {
   gap: 14px;
 }
 
-/* ====== Top Controls (Show entries + Search) ====== */
+/* LENGTH & SEARCH */
 .dataTables_wrapper .dataTables_length,
 .dataTables_wrapper .dataTables_filter {
   display: flex;
   align-items: center;
-}
-
-.dataTables_wrapper .dataTables_length {
-  justify-content: flex-start; /* stays on left */
-}
-
-.dataTables_wrapper .dataTables_filter {
-  justify-content: flex-end;   /* pushed to right corner */
-  margin-bottom: 12px;
-}
-
-.dataTables_wrapper .dataTables_length label,
-.dataTables_wrapper .dataTables_filter label {
   font-weight: 600;
-  font-size: 14px;
-
 }
 
-/* ====== Dropdown (Show entries) ====== */
-.dataTables_wrapper .dataTables_length select {
-  border: 1px solid #ccc;
-  border-radius: 50px; /* pill look */
-  padding: 6px 14px;
-  margin-left: 6px;
- 
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.dataTables_wrapper .dataTables_length select:focus {
-  
-  box-shadow: 0 0 5px rgba(30, 60, 114, 0.3);
-}
-
-/* ====== Search Box ====== */
 .dataTables_wrapper .dataTables_filter input {
   border: 1px solid #ccc;
-  border-radius: 50px; /* pill shape */
+  border-radius: 50px;
   padding: 8px 18px;
   margin-left: 10px;
-
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
+
 .dataTables_wrapper .dataTables_filter input:focus {
-  
   box-shadow: 0 0 6px rgba(30, 60, 114, 0.3);
 }
 
-/* ====== Info Text ====== */
-.dataTables_wrapper .dataTables_info {
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* ====== Pagination ====== */
+/* PAGINATION */
 .dataTables_wrapper .dataTables_paginate {
   margin-top: 8px;
   display: flex;
@@ -256,26 +202,10 @@ table.dataTable tbody tr:hover {
   border-radius: 8px;
   padding: 6px 12px;
   font-size: 14px;
-
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-
-  color: #fff !important;
-  font-weight: 600;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-  
-  color: #fff !important;
-}
-
-
-
-/* ====== Buttons ====== */
+/* ===== BUTTONS ===== */
 .btn {
   border-radius: 50px !important;
   padding: 8px 18px;
@@ -292,26 +222,9 @@ table.dataTable tbody tr:hover {
   box-shadow: var(--shadow);
 }
 
-.btn:active {
-  transform: scale(0.95);
-  box-shadow: none;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* Button Variants */
 .btn-add-account {
   background: linear-gradient(135deg, var(--success), #2e7d32);
   color: #fff;
-}
-
-.btn-add-account:hover {
-  background: linear-gradient(135deg, #66bb6a, #388e3c);
 }
 
 .btn-edit {
@@ -319,20 +232,12 @@ table.dataTable tbody tr:hover {
   color: #fff;
 }
 
-.btn-edit:hover {
-  background: #0056b3;
-}
-
 .btn-delete {
   background: var(--danger);
   color: #fff;
 }
 
-.btn-delete:hover {
-  background: #a71d2a;
-}
-
-/* ====== Icon-Only Buttons ====== */
+/* ===== ICON BUTTONS ===== */
 .btn-icon {
   width: 36px;
   height: 36px;
@@ -342,4 +247,95 @@ table.dataTable tbody tr:hover {
   align-items: center;
   padding: 0;
   font-size: 16px;
+}
+
+/* ===== NAVBAR (Cleaned, No Duplicates) ===== */
+.navbar {
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
+}
+
+.navbar .dropdown-menu {
+  border-radius: 12px;
+  padding: 8px 0;
+}
+
+.dropdown-item {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(30, 60, 114, 0.15);
+}
+
+.nav-link, .navbar-brand {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.navbar-brand i {
+  color: #fff;
+}
+/* DataTables Search Box Styling */
+.dataTables_filter {
+    margin-bottom: 15px;
+}
+
+.dataTables_filter label {
+    font-weight: 600;
+    color: #444;
+}
+
+/* Align search box to right */
+.dataTables_filter {
+    float: right !important;
+    text-align: right !important;
+}
+
+/* Entries dropdown → Left (default but explicit) */
+.dataTables_length {
+    float: left !important;
+}
+
+/* Info text (“Showing x to y...”) → Left */
+.dataTables_info {
+    float: left !important;
+    margin-top: 10px;
+}
+/* Pagination → Right */
+.dataTables_paginate {
+    float: right !important;
+    text-align: right !important;
+    margin-top: 10px;
+}
+
+/* Optional: style pagination for better UI */
+.dataTables_paginate .paginate_button {
+    padding: 6px 12px !important;
+    margin: 0 2px;
+    border-radius: 6px;
+}
+/* Search input styling */
+.dataTables_filter input[type="search"] {
+    width: 260px !important;
+    padding: 8px 14px;
+    margin-left: 10px;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fafafa;
+    transition: all 0.3s ease;
+}
+
+/* Focus effect */
+.dataTables_filter input[type="search"]:focus {
+    border-color: #4A90E2;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
+}
+
+
+.dataTables_filter input[type="search"]:hover {
+    background: #f0f0f0;
 }

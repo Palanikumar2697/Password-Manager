@@ -25,26 +25,12 @@
 <!-- Your custom script -->
 <script src="http://localhost/PM/password-manager-app/assets/script.js"></script>
 
-<script>
-$(document).ready(function () {
-    // ✅ Initialize DataTable only once
-    if (!$.fn.DataTable.isDataTable('#accountsTable')) {
-        $('#accountsTable').DataTable({
-            "pageLength": 5,
-            "lengthMenu": [5, 10, 25, 50],
-            "ordering": true,
-            "searching": true
-        });
-    }
-}); // ✅ missing bracket fixed here
 
-
-</script>
 
 
 
 <script>
-document.querySelectorAll('.toggle-password').forEach(icon => {
+document.querySelectorAll('.registerPassword').forEach(icon => {
     icon.addEventListener('click', function () {
         let input = this.previousElementSibling; // get the input just before the icon
         if (input.type === "password") {
@@ -77,7 +63,21 @@ document.querySelectorAll('.password-field').forEach(input => {
 });
 </script>
 
+<script>
+  // Select the elements
+  const togglePassword = document.querySelector('.toggle-password');
+  const passwordInput = document.getElementById('createPassword');
 
+  togglePassword.addEventListener('click', function() {
+    // Toggle the type attribute
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    
+    // Toggle the eye / eye-slash icon
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+  </script>
 
 
 

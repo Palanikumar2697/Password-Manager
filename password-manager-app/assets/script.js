@@ -4,16 +4,24 @@
 document.addEventListener('DOMContentLoaded', function () {
   const loginForm        = document.querySelector('.login-form');
   const registrationForm = document.querySelector('.registration-form');
-  const toRegisterLink   = document.querySelector('.show-login-form');          // "No Account? Register Here!"
-  const toLoginLink      = document.querySelector('.show-registration-form');   // "Already have an account? Log in here!"
+  const toRegisterLink   = document.querySelector('.to-register');
+  const toLoginLink      = document.querySelector('.to-login');
 
   if (!loginForm || !registrationForm) return;
 
-  // Show login by default
-  loginForm.style.display = 'block';
-  registrationForm.style.display = 'none';
+  // Read "?show=register" from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const showForm = urlParams.get('show');
 
-  // When clicking "No Account? Register Here!" → show Registration form
+  if (showForm === "register") {
+    loginForm.style.display = 'none';
+    registrationForm.style.display = 'block';
+  } else {
+    loginForm.style.display = 'block';
+    registrationForm.style.display = 'none';
+  }
+
+  // Switch to Registration
   if (toRegisterLink) {
     toRegisterLink.addEventListener('click', function (e) {
       e.preventDefault();
@@ -22,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // When clicking "Already have an account? Log in here!" → show Login form
+  // Switch to Login
   if (toLoginLink) {
     toLoginLink.addEventListener('click', function (e) {
       e.preventDefault();
@@ -31,6 +39,60 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+
+/*
+document.querySelector("registration-form").addEventListener("submit", function (e) {
+
+    const name = document.querySelector("input[name='name']").value.trim();
+    const phone = document.querySelector("input[name='phone_number']").value.trim();
+    const email = document.querySelector("input[name='email_address']").value.trim();
+    const username = document.querySelector("input[name='username']").value.trim();
+    const pass = document.getElementById("registerPassword").value.trim();
+    const cpass = document.getElementById("confirmPassword").value.trim();
+
+    
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) {
+        alert("Phone number must be exactly 10 digits");
+        e.preventDefault();
+        return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert("Enter a valid email address");
+        e.preventDefault();
+        return;
+    }
+
+    // Username validation
+    const userRegex = /^[a-zA-Z0-9_]{4,16}$/;
+    if (!userRegex.test(username)) {
+        alert("Username must be 4–16 characters (letters, numbers, underscore)");
+        e.preventDefault();
+        return;
+    }
+
+    // Password validation
+    if (pass.length < 6) {
+        alert("Password must be at least 6 characters");
+        e.preventDefault();
+        return;
+    }
+
+    if (pass !== cpass) {
+        alert("Passwords do not match");
+        e.preventDefault();
+        return;
+    }
+});
+
+
+*/
 
 
 function editDetails() {

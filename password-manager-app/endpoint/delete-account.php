@@ -1,5 +1,6 @@
 <?php
 include('../conn/conn.php');
+include('../endpoint/modal_helper.php');  // <-- USE THE HELPER, NOT status.php
 session_start();
 
 header('Content-Type: application/json'); // ✅ tell browser we return JSON

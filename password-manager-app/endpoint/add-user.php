@@ -1,98 +1,155 @@
 <?php
-include ('../conn/conn.php');
+session_start();
+include('../conn/conn.php');               // your PDO $conn
+include('../endpoint/modal_helper.php');  // provides showModal(), maybe keepFormData() in your project
 
-$message = "";
-$type = ""; // success | danger | warning
-$redirect = "http://localhost/PM/password-manager-app/index.php"; // default
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $phoneNumber = $_POST['phone_number'];
-    $emailAddress = $_POST['email_address'];
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $confirmPassword = $_POST['confirm_password'];
-
-    try {
-        $stmt = $conn->prepare("SELECT `username` FROM `tbl_user` WHERE `username` = :username");
-        $stmt->execute(['username' => $username]);
-        $userExists = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (empty($userExists)) {
-            $conn->beginTransaction();
-
-            $insertStmt = $conn->prepare("
-                INSERT INTO `tbl_user` 
-                (`tbl_user_id`, `name`, `phone_number`, `email_address`, `username`, `password`) 
-                VALUES (NULL, :name, :phone_number, :email_address, :username, :password)
-            ");
-            $insertStmt->bindParam(':name', $name, PDO::PARAM_STR);
-            $insertStmt->bindParam(':phone_number', $phoneNumber, PDO::PARAM_STR);
-            $insertStmt->bindParam(':email_address', $emailAddress, PDO::PARAM_STR);
-            $insertStmt->bindParam(':username', $username, PDO::PARAM_STR);
-            $insertStmt->bindParam(':password', $password, PDO::PARAM_STR);
-            $insertStmt->execute();
-
-            $conn->commit();
-
-            $message = "✅ User Registered Successfully!";
-            $type = "success";
-            $redirect = "http://localhost/PM/password-manager-app/index.php";
-        } else {
-            $message = "⚠️ User Already Exists!";
-            $type = "warning";
-            $redirect = "http://localhost/PM/password-manager-app/index.php";
-        }
-    } catch (PDOException $e) {
-        $message = "❌ Error: " . $e->getMessage();
-        $type = "danger";
-        $redirect = "http://localhost/PM/password-manager-app/index.php";
-    }
-} else {
-    $message = "❌ Account Registration Failed!";
-    $type = "danger";
-    $redirect = "http://localhost/PM/password-manager-app/index.php";
+// --------------------
+// Helper functions
+// --------------------
+function setFieldError($field, $message) {
+    if (!isset($_SESSION['errors'])) $_SESSION['errors'] = [];
+    $_SESSION['errors'][$field] = $message;
 }
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Registration Status</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-dark d-flex justify-content-center align-items-center" style="height:100vh;">
 
-  <!-- Modal -->
-  <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center">
-        <div class="modal-header bg-<?php echo $type; ?> text-white">
-          <h5 class="modal-title" id="statusModalLabel">Registration Status</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <?php echo $message; ?><br>
-          <small class="text-muted">Redirecting in 3 seconds...</small>
-        </div>
-        <div class="modal-footer">
-          <a href="<?php echo $redirect; ?>" class="btn btn-<?php echo $type; ?>">OK</a>
-        </div>
-      </div>
-    </div>
-  </div>
+function keepFormData() {
+    $_SESSION['form_data'] = $_POST;
+}
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
-    myModal.show();
+// --------------------
+// Redirect after success (used if showModal accepts redirect)
+$redirectSuccess = "../index.php";
 
-    // Auto redirect after 3 seconds
-    setTimeout(function() {
-        window.location.href = "<?php echo $redirect; ?>";
-    }, 3000);
-  </script>
-</body>
-</html>
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    // invalid access
+    keepFormData();
+    $_SESSION['show_registration'] = true;
+    setFieldError('general', 'Invalid request method.');
+    showModal("Error", "❌ Invalid request!", "danger");
+    exit();
+}
 
+// Trim inputs
+$name            = trim($_POST['name'] ?? '');
+$phoneNumber     = trim($_POST['phone_number'] ?? '');
+$emailAddress    = trim($_POST['email_address'] ?? '');
+$username        = trim($_POST['username'] ?? '');
+$password        = trim($_POST['password'] ?? '');
+$confirmPassword = trim($_POST['confirmpassword'] ?? '');
+
+// make sure registration form opens on redirect
+$_SESSION['show_registration'] = true;
+
+// --------------------
+// VALIDATION (set field errors & show modal)
+// --------------------
+
+// Name: Unicode letters + spaces, 2–50 chars
+if (!preg_match("/^[\p{L}\s]{2,50}$/u", $name)) {
+    keepFormData();
+    setFieldError('name', 'Name must contain only letters and spaces (2–50 chars).');
+    showModal("Warning", "⚠️ Name must contain only letters and spaces!", "warning");
+    exit();
+}
+
+// Phone number: exactly 10 digits
+if (!preg_match("/^[0-9]{10}$/", $phoneNumber)) {
+    keepFormData();
+    setFieldError('phone_number', 'Enter a valid 10-digit phone number.');
+    showModal("Warning", "⚠️ Invalid Mobile Number!", "warning");
+    exit();
+}
+
+// Email required
+if (empty($emailAddress)) {
+    keepFormData();
+    setFieldError('email_address', 'Email address is required.');
+    showModal("Warning", "⚠️ Email address is required!", "warning");
+    exit();
+}
+
+// Email format
+if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+    keepFormData();
+    setFieldError('email_address', 'Invalid email format.');
+    showModal("Warning", "⚠️ Invalid Email Address!", "warning");
+    exit();
+}
+
+// Username: letters & numbers only, min 5 chars
+if (!preg_match('/^[a-zA-Z0-9]{5,}$/', $username)) {
+    keepFormData();
+    setFieldError('username', 'Minimum 5 characters, letters & numbers only.');
+    showModal("Warning", "⚠️ Username must be at least 5 characters and contain only letters & numbers!", "warning");
+    exit();
+}
+
+// Password min length
+if (strlen($password) < 8) {
+    keepFormData();
+    setFieldError('password', 'Password must be at least 8 characters.');
+    showModal("Warning", "⚠️ Password must be at least 8 characters long!", "warning");
+    exit();
+}
+
+// Confirm password
+if ($password !== $confirmPassword) {
+    keepFormData();
+    setFieldError('confirmpassword', 'Passwords do not match.');
+    showModal("Warning", "⚠️ Password and Confirm Password do not match!", "warning");
+    exit();
+}
+
+// --------------------
+// DUPLICATE CHECKS & INSERT
+// --------------------
+try {
+    $stmt = $conn->prepare("SELECT username, email_address FROM tbl_user WHERE username = :username OR email_address = :email LIMIT 1");
+    $stmt->execute(['username' => $username, 'email' => $emailAddress]);
+
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        keepFormData();
+        if (strcasecmp($row['username'], $username) === 0) {
+            setFieldError('username', 'This username is already taken.');
+            showModal("Warning", "⚠️ Username already exists!", "warning");
+            exit();
+        } else {
+            setFieldError('email_address', 'This email is already registered.');
+            showModal("Warning", "⚠️ Email already registered!", "warning");
+            exit();
+        }
+    }
+
+    // Hash password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insert new user
+    $insert = $conn->prepare("
+        INSERT INTO tbl_user (name, phone_number, email_address, username, password)
+        VALUES (:name, :phone, :email, :username, :password)
+    ");
+
+    $insert->execute([
+        'name'     => $name,
+        'phone'    => $phoneNumber,
+        'email'    => $emailAddress,
+        'username' => $username,
+        'password' => $hashedPassword
+    ]);
+
+    // Clear any form data and errors on success
+    unset($_SESSION['form_data']);
+    unset($_SESSION['errors']);
+    unset($_SESSION['show_registration']);
+
+    // Success (if showModal supports redirect param)
+    showModal("Success", "✅ User Registered Successfully!", "success", $redirectSuccess);
+    exit();
+
+} catch (PDOException $e) {
+    // keep user inputs so they can correct
+    keepFormData();
+    setFieldError('general', 'A server error occurred. Please try again later.');
+    error_log("Registration DB Error: " . $e->getMessage());
+    showModal("Error", "❌ Something went wrong. Please try again later.", "danger");
+    exit();
+}
