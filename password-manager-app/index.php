@@ -14,7 +14,7 @@ unset($_SESSION['modal']);
 
 
 <div class="main d-flex justify-content-center align-items-center min-vh-100">
-    <div class="login-container card shadow p-4" style="max-width: 800px; width: 100%;">
+    <div class="login-container card shadow p-4" style="max-width: 500px; width: 100%;">
         <div class="text-center mb-4">
             <i class="fa-solid fa-user-lock lock-icon fa-3x mb-3"></i>
             <h5>Password Manager App</h5>

@@ -1,8 +1,10 @@
 
 
-/* GLOBAL FONT */
+
+
 * {
   font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 /* ===== VARIABLES ===== */
@@ -33,105 +35,138 @@ body {
   width: 100%;
   margin: 0 auto;
 }
-
-/* ===== LOGIN CONTAINER ===== */
+/* ===========================
+   MODERN LOGIN CONTAINER
+=========================== */
 .login-container {
-  max-width: 600px;
+  max-width: 450px;
   width: 100%;
   margin: 80px auto;
-  padding: 40px 30px;
-  background: #fff;
-  border: 4px solid #ddd;
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  transition: 0.3s ease;
+  padding: 40px 35px;
+  background: #ffffffee;                  /* soft white */
+  border-radius: 22px;
+  border: none;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12); /* smooth premium shadow */
+  transition: all 0.35s ease;
 }
 
 .login-container:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
 }
 
-/* ===== INPUT FIELDS ===== */
+/* ===========================
+   INPUT GROUP (Modern Material)
+=========================== */
 .input-container {
   position: relative;
+  margin: 18px 0;
 }
 
 .login-container input,
 .input-container input {
   width: 100%;
-  padding: 10px 14px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  outline: none;
-  transition: 0.3s;
+  padding: 14px 48px;                     /* left/right space for icons */
+  border: 1.5px solid #d0d7df;
+  border-radius: 14px;
+  background: #f4f7fb;
+  font-size: 15px;
+  transition: all 0.25s ease-in-out;
 }
 
+/* Hover */
+.login-container input:hover,
+.input-container input:hover {
+  background: #ffffff;
+  border-color: #b7c2cc;
+}
+
+/* Focus (Modern Blue Accent) */
 .login-container input:focus,
 .input-container input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 6px rgba(0,123,255,0.4);
+  background: #ffffff;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.18);
+  outline: none;
 }
 
+/* ===========================
+   ICON INSIDE INPUT
+=========================== */
 .input-container .input-icon {
   position: absolute;
-  left: 12px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
-  color: #555;
+  font-size: 18px;
+  color: #6a7889;
+  pointer-events: none;
 }
 
+/* ===========================
+   PASSWORD TOGGLE EYE
+=========================== */
 .input-container .toggle-password {
   position: absolute;
-  right: 12px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 16px;
-  color: #555;
-  transition: 0.3s;
+  font-size: 18px;
+  color: #6a7889;
+  transition: 0.25s;
 }
 
 .input-container .toggle-password:hover {
-  color: var(--accent);
+  color: #4A90E2;
 }
 
+/* Required Asterisk */
 .required {
-  color: red;
-  font-weight: bold;
+  color: #ff3b3b;
+  font-weight: 700;
+  margin-left: 3px;
 }
 
-/* ===== ACCOUNTS CONTAINER ===== */
+
+/* Premium Glass Effect Container */
 .accounts-container {
   min-height: 100vh;
-  height: auto;
-  text-align: center;
-  background-color: var(--light-alt);
-  padding: 40px;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  box-shadow: var(--shadow);
+  padding: 45px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
 }
 
+/* Gold Glass Title */
 .accounts-container h4 {
-  background-color: goldenrod;
-  color: white;
-  padding: 8px 25px;
-  border-radius: 50px;
-  display: inline-block;
-  font-weight: 600;
-  font-size: 16px;
-  margin: 20px auto;
+  background: rgba(218,165,32,0.85);
+  color: #fff;
+  padding: 10px 35px;
+  border-radius: 40px;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.6px;
+  backdrop-filter: blur(3px);
 }
+
 
 /* ===== DATATABLE STYLING ===== */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
-  margin-top: 15px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #ffffff90;        /* soft white */
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
+
+
 
 table.dataTable thead th {
   text-align: center !important;
@@ -141,7 +176,7 @@ table.dataTable thead th {
 
 table.dataTable tbody tr {
   background-color: var(--light-bg) !important;
-  font-size: 15px;
+  font-size: 14px;
   transition: background-color 0.2s ease;
 }
 
@@ -191,6 +226,27 @@ table.dataTable tbody tr:hover {
   align-items: center;
   margin-top: 12px;
 }
+/* Modern Table Header */
+table.dataTable thead.table-dark {
+  background: linear-gradient(135deg, #1f2937, #111827); /* Dark modern gradient */
+  color: #fff !important;
+  border-radius: 12px 12px 0 0;
+}
+
+table.dataTable thead.table-dark th {
+  padding: 14px 18px;
+  font-weight: 600;
+  text-align: center;
+  border: none !important;     /* Remove divider lines */
+  letter-spacing: 0.5px;
+  font-size: 14px;
+}
+
+/* Optional subtle glow on hover */
+table.dataTable thead.table-dark th:hover {
+  background: rgba(255,255,255,0.05);
+  cursor: default;
+}
 
 /* ====== Show Entries (Dropdown) ====== */
 .dataTables_wrapper .dataTables_length {
@@ -215,23 +271,53 @@ table.dataTable tbody tr:hover {
   justify-content: flex-start;  /* ✅ stick to left */
   margin: 0;
 }
+/* ===== REMOVE ALL INNER TABLE LINES (MODERN LOOK) ===== */
+table.dataTable,
+table.dataTable th,
+table.dataTable td {
+  border: none !important;        /* remove all lines */
+}
+
+table.dataTable tbody tr td {
+  border-bottom: none !important; /* remove horizontal line */
+}
+
+/* keep row hover + striping intact */
 
 
-/* ====== Search Box ====== */
+/* ====== Search Box (Modern Pill) ====== */
 .dataTables_wrapper .dataTables_filter {
   margin: 0;
 }
 
 .dataTables_wrapper .dataTables_filter input {
-  border: 1px solid #ccc;
-  border-radius: 50px;
-  padding: 8px 18px;
-  margin-left: 10px;
-  transition: 0.3s ease;
+  border: 2px solid #d0d0d0;
+  border-radius: 30px;          /* ← true pill */
+  padding: 10px 20px;           /* more height */
+  margin-left: 12px;
+  font-size: 14px;
+  background: #f7f7f7;
+  outline: none;
+  transition: 0.25s ease;
 }
 
+/* Hover effect */
+.dataTables_wrapper .dataTables_filter input:hover {
+  background: #fff;
+  border-color: #bdbdbd;
+}
+
+/* Focus effect */
 .dataTables_wrapper .dataTables_filter input:focus {
-  box-shadow: 0 0 6px rgba(30, 60, 114, 0.3);
+  background: #fff;
+  border-color: #4A90E2;
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.35);
+}
+
+/* Add spacing between rows */
+table.dataTable {
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;   /* 10px space between two rows */
 }
 
 /* PAGINATION */
