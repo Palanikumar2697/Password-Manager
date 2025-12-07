@@ -128,8 +128,8 @@ unset($_SESSION['modal']);
             <div class="position-relative">
                 <input type="password" class="form-control <?= isset($_SESSION['errors']['password']) ? 'is-invalid' : '' ?>"
                        id="registerPassword" name="password" placeholder="Enter Password" required minlength="8" autocomplete="new-password">
-                <i class="fa-solid fa-eye-slash toggle-password" data-target="registerPassword"
-                   style="position:absolute;top:50%;right:12px;transform:translateY(-50%);cursor:pointer;color:#666;"></i>
+                
+                       
                 <?php if (isset($_SESSION['errors']['password'])): ?>
                     <div class="invalid-feedback d-block">
                         <?= htmlspecialchars($_SESSION['errors']['password'], ENT_QUOTES) ?>
@@ -146,8 +146,7 @@ unset($_SESSION['modal']);
             <div class="position-relative">
                 <input type="password" class="form-control <?= isset($_SESSION['errors']['confirmpassword']) ? 'is-invalid' : '' ?>"
                        id="confirmPassword" name="confirmpassword" placeholder="Confirm Password" required minlength="8" autocomplete="new-password">
-                <i class="fa-solid fa-eye-slash toggle-password" data-target="confirmPassword"
-                   style="position:absolute;top:50%;right:12px;transform:translateY(-50%);cursor:pointer;color:#666;"></i>
+               
                 <?php if (isset($_SESSION['errors']['confirmpassword'])): ?>
                     <div class="invalid-feedback d-block">
                         <?= htmlspecialchars($_SESSION['errors']['confirmpassword'], ENT_QUOTES) ?>
@@ -226,7 +225,16 @@ unset($_SESSION['modal']);
             }
         });
     });
-    
+   
+
+document.querySelectorAll("#registerPassword, #confirmPassword").forEach(input => {
+    input.addEventListener("click", () => {
+        input.type = (input.type === "password") ? "text" : "password";
+    });
+});
+
+
+
 </script>
 
 <?php

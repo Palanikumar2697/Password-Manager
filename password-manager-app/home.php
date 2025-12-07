@@ -162,15 +162,16 @@ document.addEventListener("DOMContentLoaded", function() {
       <strong><?= htmlspecialchars($user_name) ?>'s Accounts</strong>
     </h4>
 
-    <!-- Add Account Button -->
+  
+
+    <!-- Accounts Table -->
+    <div class="table-responsive">
+      <!-- Add Account Button -->
     <div class="d-flex justify-content-end mb-3">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
         <i class="fa-solid fa-users me-2"></i> Add Account
       </button>
     </div>
-
-    <!-- Accounts Table -->
-    <div class="table-responsive">
       <table id="accountsTable" class="table table-bordered table-hover align-middle text-center">
         <thead class="table-dark">
           <tr>
@@ -187,15 +188,29 @@ document.addEventListener("DOMContentLoaded", function() {
         </thead>
         <tbody>
         <?php
-        $stmt = $conn->prepare("
-          SELECT a.*, u.name AS created_by_name
-          FROM tbl_accounts a
-          LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
-          WHERE a.tbl_user_id = :user_id
-          ORDER BY a.created_at DESC
-        ");
-        $stmt->execute(['user_id' => $user_id]);
-        $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $user_role = $row['role'] ?? 'Admin'; // Make sure you store role in session or DB
+
+if ($user_role === 'Admin') {
+    // Admin sees all
+    $stmt = $conn->prepare("
+        SELECT a.*, u.name AS created_by_name
+        FROM tbl_accounts a
+        LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
+        ORDER BY a.created_at DESC
+    ");
+    $stmt->execute();
+} else {
+    // User sees only own accounts
+    $stmt = $conn->prepare("
+        SELECT a.*, u.name AS created_by_name
+        FROM tbl_accounts a
+        LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
+        WHERE a.tbl_user_id = :user_id
+        ORDER BY a.created_at DESC
+    ");
+    $stmt->execute(['user_id' => $user_id]);
+}
+$accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($accounts) {
           foreach ($accounts as $acct):
@@ -234,10 +249,10 @@ document.addEventListener("DOMContentLoaded", function() {
           <td>
             <div class="d-flex justify-content-center gap-2 table-actions">
               <button class="btn btn-sm btn-warning" onclick="update_account(<?= $accountID ?>)" title="Edit">
-                <i class="fa-solid fa-pen me-1"></i>Edit
+                <i class="fa-solid fa-pen me-1"></i>
               </button>
               <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
-                <i class="fa-solid fa-trash me-1"></i>Delete
+                <i class="fa-solid fa-trash me-1"></i>
               </button>
             </div>
           </td>

@@ -288,6 +288,7 @@ table.dataTable tbody tr td {
 /* ====== Search Box (Modern Pill) ====== */
 .dataTables_wrapper .dataTables_filter {
   margin: 0;
+  
 }
 
 .dataTables_wrapper .dataTables_filter input {
@@ -320,22 +321,6 @@ table.dataTable {
   border-spacing: 0 10px !important;   /* 10px space between two rows */
 }
 
-/* PAGINATION */
-.dataTables_wrapper .dataTables_paginate {
-  display: flex;
-  justify-content: flex-end;  /* ✅ right aligned */
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-}
-
-/* ====== Numbered Buttons ====== */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 14px;
-  transition: 0.3s ease;
-}
 
 /* ===== BUTTONS ===== */
 .btn {
@@ -447,13 +432,13 @@ table.dataTable {
     margin: 0 2px;
     border-radius: 6px;
 }
-/* Search input styling */
+/* Search input styling - Rounded Pill */
 .dataTables_filter input[type="search"] {
     width: 260px !important;
-    padding: 8px 14px;
+    padding: 10px 18px;
     margin-left: 10px;
-    border: 3px solid #ccc;
-    border-radius: 10px;
+    border: 2px solid #ccc;
+    border-radius: 50px !important;   /* <<< Fully rounded pill */
     font-size: 14px;
     background: #fafafa;
     transition: all 0.3s ease;
@@ -464,10 +449,23 @@ table.dataTable {
     border-color: #4A90E2;
     background: #fff;
     outline: none;
-    box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
+    box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
 }
 
-
+/* Hover effect */
 .dataTables_filter input[type="search"]:hover {
     background: #f0f0f0;
 }
+
+/* Wrapper for password fields */
+.password-field {
+    position: relative;
+}
+
+/* Add space inside input for the eye icon */
+.password-field input {
+    padding-right: 45px !important;
+}
+
+
+
