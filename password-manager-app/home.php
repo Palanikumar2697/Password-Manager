@@ -166,12 +166,71 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <!-- Accounts Table -->
     <div class="table-responsive">
-      <!-- Add Account Button -->
-    <div class="d-flex justify-content-end mb-3">
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
+      
+    <!-- Buttons Container -->
+<div class="d-flex justify-content-end gap-2 mb-3">
+
+    <!-- Filters Button -->
+    <button class="btn btn-outline-secondary" id="filterToggleBtn">
+        <i class="fa-solid fa-filter me-2"></i> Filters
+    </button>
+
+    <!-- Add Account Button -->
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
         <i class="fa-solid fa-users me-2"></i> Add Account
-      </button>
+    </button>
+
+</div>
+
+<!-- FILTER PANEL (Moved OUTSIDE the button row) -->
+<div id="filterPanel"
+     class="border rounded p-3 mb-3"
+     style="display:none; width:100%;">
+
+    <h6 class="fw-bold mb-3">Filter Options</h6>
+
+    <!-- DATE RANGE -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Date Range</label>
+        <div class="d-flex gap-2">
+            <input type="date" id="fDateFrom" class="form-control">
+            <input type="date" id="fDateTo" class="form-control">
+        </div>
     </div>
+
+    <!-- ACCOUNT NAME -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Account Name</label>
+        <input type="text" id="fAccountName" class="form-control" placeholder="Type...">
+    </div>
+
+    <!-- USERNAME -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Username</label>
+        <select id="fUserName" class="form-select">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <!-- CREATED BY -->
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Created By</label>
+        <select id="fCreateBy" class="form-select">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between mt-3">
+        <button class="btn btn-light btn-sm px-3" id="resetFilters">Reset</button>
+        <button class="btn btn-primary btn-sm px-3" id="applyFilters">Apply</button>
+    </div>
+</div>
+
+</div>
+
+
+    
       <table id="accountsTable" class="table table-bordered table-hover align-middle text-center">
         <thead class="table-dark">
           <tr>
@@ -311,6 +370,35 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+
+// Toggle SHOW / HIDE filter panel
+document.getElementById("filterToggleBtn").addEventListener("click", function () {
+    const panel = document.getElementById("filterPanel");
+
+    // Toggle display
+    if (panel.style.display === "none" || panel.style.display === "") {
+        panel.style.display = "block";
+    } else {
+        panel.style.display = "none";
+    }
+});
+
+// Close filter panel after clicking APPLY
+document.getElementById("applyFilters").addEventListener("click", function () {
+    document.getElementById("filterPanel").style.display = "none";
+});
+
+// Reset filter values (optional)
+document.getElementById("resetFilters").addEventListener("click", function () {
+    document.getElementById("fDateFrom").value = "";
+    document.getElementById("fDateTo").value = "";
+    document.getElementById("fAccountName").value = "";
+    document.getElementById("fUserName").value = "";
+    document.getElementById("fCreateBy").value = "";
+});
+
+
 // Confirm delete with SweetAlert and fetch delete endpoint
 function confirmDelete(id, accountName) {
     Swal.fire({
