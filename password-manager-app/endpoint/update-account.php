@@ -1,6 +1,8 @@
 <?php
 include('../conn/conn.php');
 include('../endpoint/modal_helper.php');  
+include('../config/crypto.php'); // if you encrypt account passwords
+
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -43,10 +45,7 @@ if (empty($username)) {
     $errors[] = "Username is required.";
 }
 
-// Validate password
-if (empty($password)) {
-    $errors[] = "Password cannot be empty.";
-}
+
 
 // Validate link if provided
 if (!empty($link) && !filter_var($link, FILTER_VALIDATE_URL)) {
@@ -93,7 +92,12 @@ try {
     /* -----------------------------------------
        UPDATE ACCOUNT
     ----------------------------------------- */
-    $conn->beginTransaction();
+    
+  $conn->beginTransaction();
+
+if (!empty($password)) {
+    // User entered new password → encrypt & update
+    $encryptedPassword = encryptPassword($password);
 
     $updateStmt = $conn->prepare("
         UPDATE tbl_accounts SET
@@ -110,7 +114,7 @@ try {
     $updateStmt->execute([
         ':account_name' => $accountName,
         ':username'     => $username,
-        ':password'     => $password,
+        ':password'     => $encryptedPassword,
         ':link'         => $link,
         ':description'  => $description,
         ':created_at'   => $created_at,
@@ -118,7 +122,32 @@ try {
         ':user_id'      => $user_id
     ]);
 
-    $conn->commit();
+} else {
+    // Password not changed
+    $updateStmt = $conn->prepare("
+        UPDATE tbl_accounts SET
+            account_name = :account_name,
+            username     = :username,
+            link         = :link,
+            description  = :description,
+            created_at   = :created_at
+        WHERE tbl_account_id = :accountID 
+          AND tbl_user_id    = :user_id
+    ");
+
+    $updateStmt->execute([
+        ':account_name' => $accountName,
+        ':username'     => $username,
+        ':link'         => $link,
+        ':description'  => $description,
+        ':created_at'   => $created_at,
+        ':accountID'    => $accountID,
+        ':user_id'      => $user_id
+    ]);
+}
+
+$conn->commit();
+
 
     showModal(
         "Update Successful",

@@ -1,6 +1,7 @@
 <?php
 include('../conn/conn.php');
 include('../endpoint/modal_helper.php');
+include('../config/crypto.php'); // if you encrypt account passwords
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -27,17 +28,21 @@ try {
     }
 
     // Get POST data
-    $name         = $_POST['name'] ?? '';
-    $phoneNumber  = $_POST['phoneNumber'] ?? '';
-    $emailAddress = $_POST['emailAddress'] ?? '';
-    $username     = $_POST['username'] ?? '';
-    $password     = $_POST['password'] ?? '';
+$name         = $_POST['name'] ?? '';
+$phoneNumber  = $_POST['phoneNumber'] ?? '';
+$emailAddress = $_POST['emailAddress'] ?? '';
+$username     = $_POST['username'] ?? '';
+$newPassword  = $_POST['password'] ?? '';
 
-    // ====== IMPORTANT PART ======
-    // If password field is empty → keep old password
-    if (empty($password)) {
-        $password = $user['password'];
-    }
+// ✅ Password handling
+if (empty($newPassword)) {
+    // keep old hashed password
+    $finalPassword = $user['password'];
+} else {
+    // hash new password
+    $finalPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+}
+
     // ============================
 
     $conn->beginTransaction();
@@ -54,13 +59,14 @@ try {
     ");
 
     $update->execute([
-        ':name'         => $name,
-        ':phoneNumber'  => $phoneNumber,
-        ':emailAddress' => $emailAddress,
-        ':username'     => $username,
-        ':password'     => $password,  // no hashing as requested
-        ':user_id'      => $user_id
-    ]);
+    ':name'         => $name,
+    ':phoneNumber'  => $phoneNumber,
+    ':emailAddress' => $emailAddress,
+    ':username'     => $username,
+    ':password'     => $finalPassword,
+    ':user_id'      => $user_id
+]);
+
 
     $conn->commit();
 

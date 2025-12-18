@@ -7,6 +7,30 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+
+date_default_timezone_set('Asia/Kolkata');
+
+$timeout = 600; // 10 minutes
+
+// Set login time once
+if (!isset($_SESSION['login_time'])) {
+    $_SESSION['login_time'] = time();
+}
+
+// Track last activity
+$_SESSION['last_activity'] = $_SESSION['last_activity'] ?? time();
+
+// Auto logout
+if (time() - $_SESSION['last_activity'] > $timeout) {
+    session_unset();
+    session_destroy();
+    header("../index.php?timeout=1");
+    exit;
+}
+
+
+
+
 // Read & clear flash message (login success, etc.)
 $flashStatus = $_SESSION['flash_status'] ?? null;
 $flashMsg    = $_SESSION['flash_msg'] ?? null;
@@ -18,6 +42,8 @@ unset($_SESSION['modal']);
 
 // DB connection
 include('./conn/conn.php');
+require_once __DIR__ . '/config/crypto.php';
+
 
 // Fetch user details
 $row = null;
@@ -161,8 +187,51 @@ document.addEventListener("DOMContentLoaded", function() {
     <h4 class="text-center mb-4">
       <strong><?= htmlspecialchars($user_name) ?>'s Accounts</strong>
     </h4>
+    <?php
+date_default_timezone_set('Asia/Kolkata');
+?>
 
-  
+    <?php if (!empty($_SESSION['login_time'])): ?>
+
+<!-- Current session login -->
+<p class="text-center text-muted mb-2" style="font-size: 0.9rem;">
+    <i class="fa-regular fa-clock me-1"></i>
+    Logged in at:
+    <strong><?= date('d M Y, h:i A', $_SESSION['login_time']) ?></strong>
+</p>
+
+<!-- Previous login from DB -->
+<?php if (!empty($row['last_login'])): ?>
+<p class="text-center text-muted mb-2" style="font-size: 0.85rem;">
+    <i class="fa-solid fa-rotate-left me-1"></i>
+    Last login:
+    <strong><?= date('d M Y, h:i A', strtotime($row['last_login'])) ?></strong>
+</p>
+<?php endif; ?>
+
+<!-- Session duration -->
+<p class="text-center text-muted mb-3" style="font-size: 0.85rem;">
+    <i class="fa-solid fa-hourglass-half me-1"></i>
+    Session duration:
+    <strong><span id="sessionTimer">00:00:00</span></strong>
+</p>
+
+<p class="text-center text-muted mb-2" style="font-size:0.85rem;">
+    <i class="fa-solid fa-clock-rotate-left me-1"></i>
+    Session expires in:
+    <strong><span id="sessionExpire">10:00</span></strong>
+</p>
+
+<p class="text-center mb-3" style="font-size:0.85rem;">
+    <i id="statusIcon" class="fa-solid fa-circle text-success me-1"></i>
+    Status:
+    <strong><span id="userStatus">Online</span></strong>
+</p>
+
+
+
+<?php endif; ?>
+
 
     <!-- Accounts Table -->
     <div class="table-responsive">
@@ -277,7 +346,7 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $created_at  = $acct['created_at'];
             $accountName = $acct['account_name'];
             $uname       = $acct['username'];
-            $pwd         = $acct['password'];
+            $pwd = decryptPassword($acct['password']);
             $link        = $acct['link'];
             $description = $acct['description'];
             $created_by  = $acct['created_by_name'];
@@ -370,6 +439,121 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+const loginTime = <?= $_SESSION['login_time'] * 1000 ?>;
+
+function updateSessionTimer() {
+    const now = new Date().getTime();
+    let diff = Math.floor((now - loginTime) / 1000);
+
+    const hrs = String(Math.floor(diff / 3600)).padStart(2, '0');
+    diff %= 3600;
+    const mins = String(Math.floor(diff / 60)).padStart(2, '0');
+    const secs = String(diff % 60).padStart(2, '0');
+
+    document.getElementById("sessionTimer").textContent =
+        `${hrs}:${mins}:${secs}`;
+}
+
+setInterval(updateSessionTimer, 1000);
+updateSessionTimer();
+
+const SESSION_TIMEOUT = 600; // seconds
+let lastActivity = <?= $_SESSION['last_activity'] * 1000 ?>;
+
+function updateExpiryTimer() {
+    const now = Date.now();
+    let remaining = SESSION_TIMEOUT - Math.floor((now - lastActivity) / 1000);
+
+    if (remaining <= 0) {
+        location.href = "index.php?timeout=1";
+        return;
+    }
+
+    const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
+    const secs = String(remaining % 60).padStart(2, '0');
+
+    document.getElementById("sessionExpire").textContent =
+        `${mins}:${secs}`;
+}
+
+setInterval(updateExpiryTimer, 1000);
+updateExpiryTimer();
+
+
+let lastUserAction = Date.now();
+
+function setStatus(active) {
+    const status = document.getElementById("userStatus");
+    const icon = document.getElementById("statusIcon");
+
+    if (active) {
+        status.textContent = "Online";
+        icon.className = "fa-solid fa-circle text-success me-1";
+    } else {
+        status.textContent = "Idle";
+        icon.className = "fa-solid fa-circle text-warning me-1";
+    }
+}
+
+// Track activity
+['mousemove','keydown','click','scroll'].forEach(evt => {
+    document.addEventListener(evt, () => {
+        lastUserAction = Date.now();
+        setStatus(true);
+    });
+});
+
+// Idle checker (1 min)
+setInterval(() => {
+    if (Date.now() - lastUserAction > 60000) {
+        setStatus(false);
+    }
+}, 5000);
+
+
+
+const WARNING_TIME = 60; // 1 minute before logout
+let warningShown = false;
+
+function checkSessionWarning() {
+    const now = Date.now();
+    const lastActivity = <?= $_SESSION['last_activity'] * 1000 ?>;
+    const elapsed = Math.floor((now - lastActivity) / 1000);
+    const remaining = SESSION_TIMEOUT - elapsed;
+
+    // Show warning at 1 minute remaining
+    if (remaining <= WARNING_TIME && remaining > 0 && !warningShown) {
+        warningShown = true;
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Session Expiring Soon!',
+            html: `You will be logged out in <b>${remaining}</b> seconds.<br><br>Do you want to stay logged in?`,
+            showCancelButton: true,
+            confirmButtonText: 'Stay Logged In',
+            cancelButtonText: 'Logout Now',
+            confirmButtonColor: '#0d6efd',
+            cancelButtonColor: '#dc3545',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Refresh session
+                fetch("endpoint/keep-alive.php")
+    .then(() => {
+        lastActivity = Date.now(); // ✅ reset JS timer
+        warningShown = false;
+                    });
+            } else {
+                window.location.href = "endpoint/logout.php";
+            }
+        });
+    }
+}
+
+setInterval(checkSessionWarning, 5000);
+
 
 
 // Toggle SHOW / HIDE filter panel

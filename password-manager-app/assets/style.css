@@ -1,13 +1,6 @@
-
-
-
-
-* {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.5px;
-}
-
-/* ===== VARIABLES ===== */
+/* ===============================
+   ROOT VARIABLES
+================================ */
 :root {
   --primary: #1e3c72;
   --primary-dark: #16345e;
@@ -19,325 +12,119 @@
   --shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
-/* ===== BODY ===== */
-body {
-  background-color: #d2d2d2 !important;
-  color: #333;
+
+/* ===============================
+   GLOBAL RESET & BASE
+================================ */
+* {
+  font-family:'Open Sans', sans-serif;
+  box-sizing: border-box;
+  font-size: 14px;
 }
 
-/* ===== LAYOUT ===== */
+body {
+
+  background-color: #d2d2d2;
+  color: #333;
+  
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
 .main {
+  min-height: 100vh;
+  padding: 30px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 100vh;
-  padding: 30px;
-  width: 100%;
-  margin: 0 auto;
 }
-/* ===========================
-   MODERN LOGIN CONTAINER
-=========================== */
+
+/* ===============================
+   LOGIN CONTAINER
+================================ */
 .login-container {
   max-width: 450px;
   width: 100%;
   margin: 80px auto;
   padding: 40px 35px;
-  background: #ffffffee;                  /* soft white */
+  background: rgba(255,255,255,0.93);
   border-radius: 22px;
-  border: none;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12); /* smooth premium shadow */
-  transition: all 0.35s ease;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  transition: transform 0.25s ease;
+  will-change: transform;
 }
 
-.login-container:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+@media (hover: hover) {
+  .login-container:hover {
+    transform: translateY(-4px);
+  }
 }
 
-/* ===========================
-   INPUT GROUP (Modern Material)
-=========================== */
+/* ===============================
+   INPUTS
+================================ */
 .input-container {
   position: relative;
   margin: 18px 0;
 }
 
-.login-container input,
 .input-container input {
   width: 100%;
-  padding: 14px 48px;                     /* left/right space for icons */
-  border: 1.5px solid #d0d7df;
+  padding: 14px 48px;
   border-radius: 14px;
+  border: 1.5px solid #d0d7df;
   background: #f4f7fb;
   font-size: 15px;
-  transition: all 0.25s ease-in-out;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover */
-.login-container input:hover,
-.input-container input:hover {
-  background: #ffffff;
-  border-color: #b7c2cc;
-}
-
-/* Focus (Modern Blue Accent) */
-.login-container input:focus,
 .input-container input:focus {
-  background: #ffffff;
   border-color: #4A90E2;
-  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.18);
+  box-shadow: 0 0 0 4px rgba(74,144,226,0.18);
   outline: none;
+  background: #fff;
 }
 
-/* ===========================
-   ICON INSIDE INPUT
-=========================== */
-.input-container .input-icon {
+.input-icon {
   position: absolute;
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px;
-  color: #6a7889;
+  color: #4b5563;
   pointer-events: none;
 }
 
-/* ===========================
-   PASSWORD TOGGLE EYE
-=========================== */
-.input-container .toggle-password {
+.toggle-password {
   position: absolute;
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 18px;
-  color: #6a7889;
-  transition: 0.25s;
+  color: #4b5563;
+  user-select: none;
 }
 
-.input-container .toggle-password:hover {
-  color: #4A90E2;
-}
-
-/* Required Asterisk */
-.required {
-  color: #ff3b3b;
-  font-weight: 700;
-  margin-left: 3px;
-}
-
-
-/* Premium Glass Effect Container */
-.accounts-container {
-  min-height: 100vh;
-  padding: 45px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-}
-
-/* Gold Glass Title */
-.accounts-container h4 {
-  background: rgba(218,165,32,0.85);
-  color: #fff;
-  padding: 10px 35px;
-  border-radius: 40px;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.6px;
-  backdrop-filter: blur(3px);
-}
-
-
-/* ===== DATATABLE STYLING ===== */
-.table-responsive {
-  width: 100%;
-    overflow: visible !important;
-    position: relative !important;
-  margin-top: 20px;
-  padding: 20px;
-  background: #ffffff90;        /* soft white */
-  border-radius: 14px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
-
-
-
-table.dataTable thead th {
-  text-align: center !important;
-  vertical-align: middle !important;
-  padding-right: 24px;
-}
-
-table.dataTable tbody tr {
-  background-color: var(--light-bg) !important;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
-}
-
-table.dataTable tbody tr:nth-child(even) {
-  background-color: var(--light-alt) !important;
-}
-
-table.dataTable tbody tr:hover {
-  background-color: #e2e8f0 !important;
-}
-
-.table td {
-  text-align: center;
-  vertical-align: middle;
-  padding: 10px 14px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* WRAPPER */
-.dataTables_wrapper {
-  width: 100%;
-  margin-top: 10px;
-  font-size: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-/* LENGTH & SEARCH */
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter {
-    font-weight: 600;   /* keep your local style */
-    margin-bottom: 12px;
-}
-
-/* Wrapper Layout Fix */
-.dataTables_wrapper .top-controls {
-    display: flex;               /* incoming change */
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;                   /* optional but improves spacing */
-}
-
-
-.dataTables_wrapper .bottom-controls {
-  display: flex;
-  justify-content: space-between;  /* info left, pagination right */
-  align-items: center;
-  margin-top: 12px;
-}
-/* Modern Table Header */
-table.dataTable thead.table-dark {
-  background: linear-gradient(135deg, #1f2937, #111827); /* Dark modern gradient */
-  color: #fff !important;
-  border-radius: 12px 12px 0 0;
-}
-
-table.dataTable thead.table-dark th {
-  padding: 14px 18px;
-  font-weight: 600;
-  text-align: center;
-  border: none !important;     /* Remove divider lines */
-  letter-spacing: 0.5px;
-  font-size: 14px;
-}
-
-/* Optional subtle glow on hover */
-table.dataTable thead.table-dark th:hover {
-  background: rgba(255,255,255,0.05);
-  cursor: default;
-}
-
-/* ====== Show Entries (Dropdown) ====== */
-.dataTables_wrapper .dataTables_length {
-  margin: 0;
-}
-.dataTables_wrapper .dataTables_length select {
-  border: 1px solid #ccc;
-  border-radius: 50px;
-  padding: 6px 14px;
-  margin-left: 6px;
-  background: #fff;
-  transition: 0.3s;
-}
-.dataTables_wrapper .dataTables_length select:focus {
-  border-color: #1e3c72;
-  box-shadow: 0 0 5px rgba(30, 60, 114, 0.3);
-}
-/* Force Show Entries to left corner */
-.dataTables_wrapper .dataTables_length {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;  /* ✅ stick to left */
-  margin: 0;
-}
-/* ===== REMOVE ALL INNER TABLE LINES (MODERN LOOK) ===== */
-table.dataTable,
-table.dataTable th,
-table.dataTable td {
-  border: none !important;        /* remove all lines */
-}
-
-table.dataTable tbody tr td {
-  border-bottom: none !important; /* remove horizontal line */
-}
-
-/* keep row hover + striping intact */
-
-
-/* ====== Search Box (Modern Pill) ====== */
-.dataTables_wrapper .dataTables_filter {
-  margin: 0;
-  
-}
-
-.dataTables_wrapper .dataTables_filter input {
-  border: 2px solid #d0d0d0;
-  border-radius: 30px;          /* ← true pill */
-  padding: 10px 20px;           /* more height */
-  margin-left: 12px;
-  font-size: 14px;
-  background: #f7f7f7;
-  outline: none;
-  transition: 0.25s ease;
-}
-
-/* Hover effect */
-.dataTables_wrapper .dataTables_filter input:hover {
-  background: #fff;
-  border-color: #bdbdbd;
-}
-
-/* Focus effect */
-.dataTables_wrapper .dataTables_filter input:focus {
-  background: #fff;
-  border-color: #4A90E2;
-  box-shadow: 0 0 6px rgba(74, 144, 226, 0.35);
-}
-
-/* Add spacing between rows */
-table.dataTable {
-  border-collapse: separate !important;
-  border-spacing: 0 10px !important;   /* 10px space between two rows */
-}
-
-
-/* ===== BUTTONS ===== */
+/* ===============================
+   BUTTONS
+================================ */
 .btn {
-  border-radius: 50px !important;
-  padding: 8px 18px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.3s;
-  border: none;
+  min-height: 38px;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  transition: transform 0.2s ease;
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
 }
 
 .btn-add-account {
@@ -345,203 +132,168 @@ table.dataTable {
   color: #fff;
 }
 
-.btn-edit {
-  background: var(--accent);
-  color: #fff;
-}
+.btn-edit { background: var(--accent); color: #fff; }
+.btn-delete { background: var(--danger); color: #fff; }
 
-.btn-delete {
-  background: var(--danger);
-  color: #fff;
-}
-
-/* ===== ICON BUTTONS ===== */
 .btn-icon {
   width: 36px;
   height: 36px;
-  border-radius: 50% !important;
+  border-radius: 50%;
   display: inline-flex;
-  justify-content: center;
   align-items: center;
-  padding: 0;
-  font-size: 16px;
+  justify-content: center;
 }
 
-/* ===== NAVBAR (Cleaned, No Duplicates) ===== */
+/* ===============================
+   NAVBAR
+================================ */
 .navbar {
   background: linear-gradient(90deg, #1e3c72, #2a5298);
 }
 
-.navbar .dropdown-menu {
-  border-radius: 12px;
-  padding: 8px 0;
+.nav-link,
+.navbar-brand {
+  font-weight: 600;
+  color: #fff;
 }
 
-.dropdown-item {
-  padding: 10px 18px;
-  font-size: 0.95rem;
+/* ===============================
+   ACCOUNTS CONTAINER
+================================ */
+.accounts-container {
+  min-height: 100vh;
+  padding: 45px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  will-change: transform;
 }
 
-.dropdown-item:hover {
-  background-color: rgba(30, 60, 114, 0.15);
+.accounts-container h4 {
+  background: rgba(218,165,32,0.85);
+  color: #fff;
+  padding: 10px 35px;
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
-.nav-link, .navbar-brand {
-  font-family: 'Poppins', sans-serif;
+/* ===============================
+   DATATABLE WRAPPER
+================================ */
+.dataTables_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 10px;
+}
+
+.dataTables_length {
+  float: left;
   font-weight: 600;
 }
 
-.navbar-brand i {
+.dataTables_filter {
+  float: right;
+  text-align: right;
+  font-weight: 200;
+}
+
+.dataTables_filter input {
+  width: 260px;
+  padding: 10px 18px;
+  border-radius: 50px;
+  border: 2px solid #ccc;
+  background: #fafafa;
+}
+
+.dataTables_filter input:focus {
+  border-color: #4A90E2;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(74,144,226,0.4);
+}
+
+/* ===============================
+   DATATABLE TABLE
+================================ */
+.table-responsive {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 14px;
+}
+
+table.dataTable {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+table.dataTable thead {
+  background: linear-gradient(135deg, #1f2937, #111827);
   color: #fff;
 }
-/* DataTables Search Box Styling */
-.dataTables_filter {
-    margin-bottom: 15px;
+
+table.dataTable th,
+table.dataTable td {
+  text-align: center;
+  padding: 12px;
+  border: none;
 }
 
-.dataTables_filter label {
-    font-weight: 600;
-    color: #444;
+table.dataTable tbody tr {
+  background: var(--light-bg);
+  transition: background-color 0.2s ease;
 }
 
-/* Align search box to right */
-.dataTables_filter {
-    float: right !important;
-    text-align: right !important;
+table.dataTable tbody tr:nth-child(even) {
+  background: var(--light-alt);
 }
 
-/* Entries dropdown → Left (default but explicit) */
-.dataTables_length {
-    float: left !important;
+table.dataTable tbody tr:hover {
+  background: #e2e8f0;
 }
 
-/* Info text (“Showing x to y...”) → Left */
-.dataTables_info {
-    float: left !important;
-    margin-top: 10px;
-}
-/* Pagination → Right */
-.dataTables_paginate {
-    float: right !important;
-    text-align: right !important;
-    margin-top: 10px;
-}
-
-/* Optional: style pagination for better UI */
-.dataTables_paginate .paginate_button {
-    padding: 6px 12px !important;
-    margin: 0 2px;
-    border-radius: 6px;
-}
-/* Search input styling - Rounded Pill */
-.dataTables_filter input[type="search"] {
-    width: 260px !important;
-    padding: 10px 18px;
-    margin-left: 10px;
-    border: 2px solid #ccc;
-    border-radius: 50px !important;   /* <<< Fully rounded pill */
-    font-size: 14px;
-    background: #fafafa;
-    transition: all 0.3s ease;
-}
-
-/* Focus effect */
-.dataTables_filter input[type="search"]:focus {
-    border-color: #4A90E2;
-    background: #fff;
-    outline: none;
-    box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
-}
-
-/* Hover effect */
-.dataTables_filter input[type="search"]:hover {
-    background: #f0f0f0;
-}
-
-/* Wrapper for password fields */
-.password-field {
-    position: relative;
-}
-
-/* Add space inside input for the eye icon */
-.password-field input {
-    padding-right: 45px !important;
-}
-.table-responsive {
-    overflow: visible !important;
-    position: relative !important;
-}
-
-.dropdown-menu {
-  transform: translate3d(0, 0, 0) !important;
-    position: absolute !important;
-    z-index: 3000 !important;
-}
-
-.dropdown-menu.show {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-
-
-/* FILTER PANEL STYLE */
+/* ===============================
+   FILTER PANEL
+================================ */
 #filterPanel {
-    background: #ffffff;
-    border: 1px solid #d9d9d9 !important;
-    border-radius: 10px !important;
-    padding: 20px !important;
-    animation: fadeDown 0.25s ease;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
-/* Smooth reveal animation */
-@keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Labels */
 #filterPanel .form-label {
-    font-size: 0.90rem;
-    font-weight: 600;
-    color: #333;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-/* Inputs / Select */
-#filterPanel .form-control,
-#filterPanel .form-select {
-    border-radius: 8px !important;
-    padding: 6px 10px;
+/* ===============================
+   ACCESSIBILITY
+================================ */
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(74,144,226,0.6);
+  outline-offset: 2px;
 }
 
-/* Buttons */
-#filterPanel .btn-sm {
-    padding: 5px 16px !important;
-    border-radius: 6px !important;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none;
+    transition: none;
+  }
 }
 
-#filterToggleBtn {
-    border-radius: 8px !important;
-}
+/* ===============================
+   MOBILE OPTIMIZATION
+================================ */
+@media (max-width: 768px) {
+  .login-container {
+    margin: 30px 15px;
+    padding: 30px 20px;
+  }
 
-#filterToggleBtn i {
-    margin-right: 6px;
+  .accounts-container {
+    padding: 20px;
+  }
 }
-
-/* Reset button hover */
-#resetFilters:hover {
-    background: #f0f0f0 !important;
-    border-color: #d3d3d3 !important;
-}
-
-/* Add spacing inside panel */
-#filterPanel .mb-3 {
-    margin-bottom: 16px !important;
-}
-
-/* Date inputs side by side */
-#filterPanel .d-flex.gap-2 input {
-    min-width: 140px;
-}
-
