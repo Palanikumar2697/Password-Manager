@@ -18,13 +18,15 @@ if (!isset($_SESSION['login_time'])) {
 }
 
 // Track last activity
-$_SESSION['last_activity'] = $_SESSION['last_activity'] ?? time();
+if (!isset($_SESSION['last_activity'])) {
+    $_SESSION['last_activity'] = time();
+}
 
 // Auto logout
 if (time() - $_SESSION['last_activity'] > $timeout) {
     session_unset();
     session_destroy();
-    header("../index.php?timeout=1");
+    header("Location: ../index.php?timeout=1");
     exit;
 }
 
@@ -191,46 +193,59 @@ document.addEventListener("DOMContentLoaded", function() {
 date_default_timezone_set('Asia/Kolkata');
 ?>
 
-    <?php if (!empty($_SESSION['login_time'])): ?>
+<?php if (!empty($_SESSION['login_time'])): ?>
 
-<!-- Current session login -->
-<p class="text-center text-muted mb-2" style="font-size: 0.9rem;">
-    <i class="fa-regular fa-clock me-1"></i>
-    Logged in at:
-    <strong><?= date('d M Y, h:i A', $_SESSION['login_time']) ?></strong>
-</p>
+<div class="session-pill active p-3 mb-3">
 
-<!-- Previous login from DB -->
-<?php if (!empty($row['last_login'])): ?>
-<p class="text-center text-muted mb-2" style="font-size: 0.85rem;">
-    <i class="fa-solid fa-rotate-left me-1"></i>
-    Last login:
-    <strong><?= date('d M Y, h:i A', strtotime($row['last_login'])) ?></strong>
-</p>
+    <!-- User Status -->
+    <div class="d-flex justify-content-end align-items-center small mb-2 user-status">
+        <span class="me-2 fw-semibold text-muted">User Status:</span>
+        <i id="statusIcon" class="fa-solid fa-circle text-success me-1"></i>
+        <strong id="userStatus">Online</strong>
+    </div>
+
+    <!-- Login Info -->
+    <div class="row text-muted small mb-2">
+        <div class="col-md-6 text-start text-center text-md-start">
+            <i class="fa-regular fa-clock me-1"></i>
+            Logged in at:
+            <strong><?= date('d M Y, h:i A', $_SESSION['login_time']) ?></strong>
+        </div>
+
+        <?php if (!empty($row['last_login'])): ?>
+        <div class="col-md-6 text-end text-center text-md-end">
+            <i class="fa-solid fa-rotate-left me-1"></i>
+            Last login:
+            <strong><?= date('d M Y, h:i A', strtotime($row['last_login'])) ?></strong>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Session Timers -->
+    <div class="text-center text-muted small mb-1">
+        <i class="fa-solid fa-hourglass-half me-1"></i>
+        Session duration:
+        <strong><span id="sessionTimer">00:00:00</span></strong>
+    </div>
+
+    <div class="text-center text-muted small mb-2">
+        <i class="fa-solid fa-clock-rotate-left me-1"></i>
+        Session expires in:
+        <strong><span id="sessionExpire">10:00</span></strong>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="session-progress-wrapper mt-3">
+    <div class="session-progress">
+        <div id="sessionProgress"></div>
+    </div>
+</div>
+
+</div>
+
 <?php endif; ?>
 
-<!-- Session duration -->
-<p class="text-center text-muted mb-3" style="font-size: 0.85rem;">
-    <i class="fa-solid fa-hourglass-half me-1"></i>
-    Session duration:
-    <strong><span id="sessionTimer">00:00:00</span></strong>
-</p>
 
-<p class="text-center text-muted mb-2" style="font-size:0.85rem;">
-    <i class="fa-solid fa-clock-rotate-left me-1"></i>
-    Session expires in:
-    <strong><span id="sessionExpire">10:00</span></strong>
-</p>
-
-<p class="text-center mb-3" style="font-size:0.85rem;">
-    <i id="statusIcon" class="fa-solid fa-circle text-success me-1"></i>
-    Status:
-    <strong><span id="userStatus">Online</span></strong>
-</p>
-
-
-
-<?php endif; ?>
 
 
     <!-- Accounts Table -->
@@ -459,29 +474,46 @@ setInterval(updateSessionTimer, 1000);
 updateSessionTimer();
 
 const SESSION_TIMEOUT = 600; // seconds
-let lastActivity = <?= $_SESSION['last_activity'] * 1000 ?>;
+let lastActivityTS = <?= $_SESSION['last_activity'] * 1000 ?>;
+
 
 function updateExpiryTimer() {
     const now = Date.now();
-    let remaining = SESSION_TIMEOUT - Math.floor((now - lastActivity) / 1000);
+    let remaining = SESSION_TIMEOUT - Math.floor((now - lastActivityTS) / 1000);
 
     if (remaining <= 0) {
-        location.href = "index.php?timeout=1";
+        window.location.href = "../index.php?timeout=1";
         return;
     }
 
     const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
     const secs = String(remaining % 60).padStart(2, '0');
 
-    document.getElementById("sessionExpire").textContent =
-        `${mins}:${secs}`;
+    document.getElementById("sessionExpire").textContent = `${mins}:${secs}`;
 }
 
 setInterval(updateExpiryTimer, 1000);
 updateExpiryTimer();
 
+const progressBar = document.getElementById("sessionProgress");
+
+function updateSessionProgress() {
+    const now = Date.now();
+    const elapsed = Math.floor((now - lastActivityTS) / 1000);
+    const percent = Math.max(0, 100 - (elapsed / SESSION_TIMEOUT) * 100);
+
+    progressBar.style.width = percent + "%";
+}
+
+
+setInterval(updateSessionProgress, 1000);
+updateSessionProgress();
+
+
 
 let lastUserAction = Date.now();
+
+const sessionPill = document.querySelector(".session-pill");
 
 function setStatus(active) {
     const status = document.getElementById("userStatus");
@@ -490,11 +522,18 @@ function setStatus(active) {
     if (active) {
         status.textContent = "Online";
         icon.className = "fa-solid fa-circle text-success me-1";
+
+        sessionPill.classList.add("active");
+        sessionPill.classList.remove("idle");
     } else {
         status.textContent = "Idle";
         icon.className = "fa-solid fa-circle text-warning me-1";
+
+        sessionPill.classList.add("idle");
+        sessionPill.classList.remove("active");
     }
 }
+
 
 // Track activity
 ['mousemove','keydown','click','scroll'].forEach(evt => {
@@ -506,10 +545,15 @@ function setStatus(active) {
 
 // Idle checker (1 min)
 setInterval(() => {
-    if (Date.now() - lastUserAction > 60000) {
+    const idleTime = Date.now() - lastUserAction;
+
+    if (idleTime > 60000) {
         setStatus(false);
+    } else {
+        setStatus(true);
     }
 }, 5000);
+
 
 
 
@@ -518,8 +562,8 @@ let warningShown = false;
 
 function checkSessionWarning() {
     const now = Date.now();
-    const lastActivity = <?= $_SESSION['last_activity'] * 1000 ?>;
-    const elapsed = Math.floor((now - lastActivity) / 1000);
+    const elapsed = Math.floor((Date.now() - lastActivityTS) / 1000);
+    const elapsed1 = Math.floor((now - lastActivity) / 1000);
     const remaining = SESSION_TIMEOUT - elapsed;
 
     // Show warning at 1 minute remaining
@@ -567,6 +611,16 @@ document.getElementById("filterToggleBtn").addEventListener("click", function ()
         panel.style.display = "none";
     }
 });
+
+fetch("endpoint/keep-alive.php").then(() => {
+    lastActivityTS = Date.now();
+    lastUserAction = Date.now();
+    warningShown = false;
+    setStatus(true);
+});
+
+
+
 
 // Close filter panel after clicking APPLY
 document.getElementById("applyFilters").addEventListener("click", function () {
