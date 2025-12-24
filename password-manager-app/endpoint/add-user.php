@@ -35,6 +35,7 @@ $emailAddress    = trim($_POST['email_address'] ?? '');
 $username        = trim($_POST['username'] ?? '');
 $password        = trim($_POST['password'] ?? '');
 $confirmPassword = trim($_POST['confirmpassword'] ?? '');
+$created_by = $_SESSION['user_id'];
 
 // make sure registration form opens on redirect
 $_SESSION['show_registration'] = true;

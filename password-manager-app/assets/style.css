@@ -5,7 +5,8 @@
   --primary: #1e3c72;
   --primary-dark: #16345e;
   --accent: #007bff;
-  --success: #4caf50;
+  --success: #198754;
+  --warning: #ffc107;
   --danger: #dc3545;
   --light-bg: #f9f9f9;
   --light-alt: #f1f5f9;
@@ -15,20 +16,43 @@
 /* ===============================
    GLOBAL RESET & BASE
 ================================ */
-* {
-  font-family: 'Open Sans', sans-serif;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
   font-size: 14px;
 }
 
 body {
-  background-color: #d2d2d2;
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--light-alt);
   color: #333;
+  line-height: 1.5;
+  margin: 0;
 }
 
 img {
   max-width: 100%;
   height: auto;
+  content-visibility: auto;
+}
+
+/* ===============================
+   ACCESSIBILITY
+================================ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ===============================
@@ -77,9 +101,13 @@ img {
   font-size: 15px;
 }
 
+.input-container input::placeholder {
+  color: #9ca3af;
+}
+
 .input-container input:focus {
-  border-color: #4A90E2;
-  box-shadow: 0 0 0 4px rgba(74,144,226,0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0,123,255,0.18);
   outline: none;
   background: #fff;
 }
@@ -108,7 +136,7 @@ img {
   min-height: 38px;
   font-size: 14px;
   letter-spacing: 0.4px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover {
@@ -116,13 +144,30 @@ img {
   box-shadow: var(--shadow);
 }
 
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-add-account {
   background: linear-gradient(135deg, var(--success), #2e7d32);
   color: #fff;
 }
 
-.btn-edit { background: var(--accent); color: #fff; }
-.btn-delete { background: var(--danger); color: #fff; }
+.btn-edit {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-delete {
+  background: var(--danger);
+  color: #fff;
+}
 
 .btn-icon {
   width: 36px;
@@ -137,7 +182,7 @@ img {
    NAVBAR
 ================================ */
 .navbar {
-  background: linear-gradient(90deg, #1e3c72, #2a5298);
+  background: linear-gradient(90deg, var(--primary), #2a5298);
 }
 
 .nav-link,
@@ -188,9 +233,14 @@ table.dataTable thead {
 
 table.dataTable th,
 table.dataTable td {
-  text-align: center;
   padding: 12px;
   border: none;
+  text-align: center;
+}
+
+table.dataTable th.text-left,
+table.dataTable td.text-left {
+  text-align: left;
 }
 
 table.dataTable tbody tr {
@@ -206,6 +256,36 @@ table.dataTable tbody tr:hover {
 }
 
 /* ===============================
+   DATATABLE TYPOGRAPHY FIX
+================================ */
+/* ===============================
+   DATATABLE TYPOGRAPHY (FIXED)
+================================ */
+table.dataTable {
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  letter-spacing: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+table.dataTable thead th {
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  text-transform: none;
+}
+
+table.dataTable tbody td {
+  font-weight: 400;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+
+
+/* ===============================
    FILTER PANEL
 ================================ */
 #filterPanel {
@@ -215,68 +295,130 @@ table.dataTable tbody tr:hover {
 }
 
 /* ===============================
-   Session Container (Rectangular)
+   SESSION CONTAINER
 ================================ */
 .session-pill {
-    width: 100%;
-    padding: 1.2rem 1.5rem;
-    border-radius: 14px; /* rectangular card */
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    background: rgba(255, 255, 255, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    transition: background 0.4s ease, border-color 0.4s ease;
+  position: relative;
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255,255,255,0.45);
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
-/* ACTIVE (Online) */
+.session-pill::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  height: 80%;
+  width: 4px;
+  border-radius: 4px;
+  background: transparent;
+}
+
 .session-pill.active {
-    background: rgba(25, 135, 84, 0.18);
-    border-color: rgba(25, 135, 84, 0.45);
+  background: rgba(25,135,84,0.18);
+  border-color: rgba(25,135,84,0.45);
 }
 
-/* IDLE */
+.session-pill.active::before {
+  background: var(--success);
+}
+
 .session-pill.idle {
-    background: rgba(255, 193, 7, 0.20);
-    border-color: rgba(255, 193, 7, 0.45);
+  background: rgba(255,193,7,0.2);
+  border-color: rgba(255,193,7,0.45);
+}
+
+.session-pill.idle::before {
+  background: var(--warning);
 }
 
 /* ===============================
-   Progress Wrapper
+   SESSION PROGRESS
+================================ */
+/* ===============================
+   SESSION PROGRESS (IMPROVED)
+================================ */
+/* ===============================
+   SESSION PROGRESS (WIDTH + %)
 ================================ */
 .session-progress-wrapper {
-    margin-top: 12px;
+  margin-top: 16px;
 }
 
-/* ===============================
-   Progress Bar Container
-================================ */
 .session-progress {
-    height: 8px;
+  position: relative;
+  height: 12px; /* increased height */
+  width: 100%;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+#sessionProgress {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  transition: width 0.6s ease;
+  box-shadow: 0 0 8px rgba(46, 204, 113, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* IDLE / WARNING */
+.session-pill.idle #sessionProgress {
+  background: linear-gradient(90deg, #f1c40f, #f39c12);
+  box-shadow: 0 0 8px rgba(241, 196, 15, 0.5);
+}
+
+
+
+/* ===============================
+   MOBILE ADJUSTMENTS
+================================ */
+@media (max-width: 576px) {
+  .session-pill {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+}
+@keyframes progressPulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+  100% { filter: brightness(1); }
+}
+
+.session-pill.active #sessionProgress {
+  animation: progressPulse 2.5s infinite;
+}
+.session-progress {
     width: 100%;
-    background: rgba(0, 0, 0, 0.08);
-    border-radius: 6px;
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 12px;
     overflow: hidden;
 }
 
-/* ===============================
-   Actual Progress Bar
-================================ */
 #sessionProgress {
     height: 100%;
-    width: 100%;
-    border-radius: 6px;
-    background-color: #198754;
-    transition: width 0.8s linear, background-color 0.4s ease;
-    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.6);
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    border-radius: 12px;
+    transition: width 0.5s ease;
 }
 
-/* ===============================
-   Mobile Adjustments
-================================ */
-@media (max-width: 576px) {
-    .session-pill {
-        padding: 1rem;
-        border-radius: 10px;
-    }
-}

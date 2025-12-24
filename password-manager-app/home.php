@@ -23,10 +23,11 @@ if (!isset($_SESSION['last_activity'])) {
 }
 
 // Auto logout
-if (time() - $_SESSION['last_activity'] > $timeout) {
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+
     session_unset();
     session_destroy();
-    header("Location: ../index.php?timeout=1");
+    header("Location: /PM/password-manager-app/index.php?timeout=1");
     exit;
 }
 
@@ -234,12 +235,12 @@ date_default_timezone_set('Asia/Kolkata');
         <strong><span id="sessionExpire">10:00</span></strong>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="session-progress-wrapper mt-3">
+  <div class="session-progress-wrapper mt-3">
     <div class="session-progress">
-        <div id="sessionProgress"></div>
+        <div id="sessionProgress">100%</div>
     </div>
 </div>
+
 
 </div>
 
@@ -482,7 +483,7 @@ function updateExpiryTimer() {
     let remaining = SESSION_TIMEOUT - Math.floor((now - lastActivityTS) / 1000);
 
     if (remaining <= 0) {
-        window.location.href = "../index.php?timeout=1";
+        window.location.href = "/PM/password-manager-app/index.php?timeout=1";
         return;
     }
 
@@ -500,10 +501,20 @@ const progressBar = document.getElementById("sessionProgress");
 function updateSessionProgress() {
     const now = Date.now();
     const elapsed = Math.floor((now - lastActivityTS) / 1000);
-    const percent = Math.max(0, 100 - (elapsed / SESSION_TIMEOUT) * 100);
+    const percent = Math.max(0, Math.min(100, 100 - (elapsed / SESSION_TIMEOUT) * 100));
 
-    progressBar.style.width = percent + "%";
+    const rounded = Math.ceil(percent);
+
+    progressBar.style.width = rounded + "%";
+    progressBar.textContent = rounded + "%";
+
+    /* Change color when almost expired */
+    if (rounded <= 20) {
+        progressBar.style.background = "linear-gradient(90deg, #dc3545, #b02a37)";
+        progressBar.style.boxShadow = "0 0 8px rgba(220,53,69,0.6)";
+    }
 }
+
 
 
 setInterval(updateSessionProgress, 1000);
@@ -532,6 +543,13 @@ function setStatus(active) {
         sessionPill.classList.add("idle");
         sessionPill.classList.remove("active");
     }
+
+    if (active) {
+    progressBar.style.background = "linear-gradient(90deg, #2ecc71, #27ae60)";
+} else {
+    progressBar.style.background = "linear-gradient(90deg, #f1c40f, #f39c12)";
+}
+
 }
 
 
@@ -563,7 +581,7 @@ let warningShown = false;
 function checkSessionWarning() {
     const now = Date.now();
     const elapsed = Math.floor((Date.now() - lastActivityTS) / 1000);
-    const elapsed1 = Math.floor((now - lastActivity) / 1000);
+  
     const remaining = SESSION_TIMEOUT - elapsed;
 
     // Show warning at 1 minute remaining
@@ -584,11 +602,13 @@ function checkSessionWarning() {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Refresh session
-                fetch("endpoint/keep-alive.php")
-    .then(() => {
-        lastActivity = Date.now(); // ✅ reset JS timer
-        warningShown = false;
-                    });
+               fetch("endpoint/keep-alive.php")
+.then(() => {
+    lastActivityTS = Date.now(); // ✅ correct
+    lastUserAction = Date.now();
+    warningShown = false;
+    setStatus(true);
+});
             } else {
                 window.location.href = "endpoint/logout.php";
             }
@@ -598,6 +618,30 @@ function checkSessionWarning() {
 
 setInterval(checkSessionWarning, 5000);
 
+let keepAliveTimer = null;
+
+function pingServer() {
+    fetch("endpoint/keep-alive.php", { method: "GET" })
+        .then(() => {
+            lastActivityTS = Date.now(); // sync JS with PHP
+        });
+}
+
+// Call keep-alive every 30 seconds ONLY if user is active
+['mousemove','keydown','click','scroll'].forEach(evt => {
+    document.addEventListener(evt, () => {
+        lastUserAction = Date.now();
+        setStatus(true);
+
+        // throttle server pings
+        if (!keepAliveTimer) {
+            keepAliveTimer = setTimeout(() => {
+                pingServer();
+                keepAliveTimer = null;
+            }, 30000); // 30 sec
+        }
+    });
+});
 
 
 // Toggle SHOW / HIDE filter panel
@@ -612,12 +656,7 @@ document.getElementById("filterToggleBtn").addEventListener("click", function ()
     }
 });
 
-fetch("endpoint/keep-alive.php").then(() => {
-    lastActivityTS = Date.now();
-    lastUserAction = Date.now();
-    warningShown = false;
-    setStatus(true);
-});
+
 
 
 
