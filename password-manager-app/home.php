@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
+$_SESSION['last_activity'] = $_SESSION['last_activity'] ?? time();
 date_default_timezone_set('Asia/Kolkata');
 
 $timeout = 600; // 10 minutes
@@ -265,6 +265,11 @@ date_default_timezone_set('Asia/Kolkata');
         <i class="fa-solid fa-users me-2"></i> Add Account
     </button>
 
+   <button type="button" class="btn btn-primary" onclick="window.location.href='http://localhost/PM/Expense_Tracker/'">
+    <i class="fa-solid fa-users me-2"></i> Expense Tracker
+</button>
+
+
 </div>
 
 <!-- FILTER PANEL (Moved OUTSIDE the button row) -->
@@ -475,6 +480,7 @@ setInterval(updateSessionTimer, 1000);
 updateSessionTimer();
 
 const SESSION_TIMEOUT = 600; // seconds
+const sessionStartTS = <?= $_SESSION['login_time'] * 1000 ?>;
 let lastActivityTS = <?= $_SESSION['last_activity'] * 1000 ?>;
 
 
@@ -500,20 +506,32 @@ const progressBar = document.getElementById("sessionProgress");
 
 function updateSessionProgress() {
     const now = Date.now();
-    const elapsed = Math.floor((now - lastActivityTS) / 1000);
-    const percent = Math.max(0, Math.min(100, 100 - (elapsed / SESSION_TIMEOUT) * 100));
 
-    const rounded = Math.ceil(percent);
+    const elapsedSinceLastActivity =
+        Math.floor((now - lastActivityTS) / 1000);
 
-    progressBar.style.width = rounded + "%";
-    progressBar.textContent = rounded + "%";
+    const remaining =
+        Math.max(0, SESSION_TIMEOUT - elapsedSinceLastActivity);
 
-    /* Change color when almost expired */
-    if (rounded <= 20) {
-        progressBar.style.background = "linear-gradient(90deg, #dc3545, #b02a37)";
-        progressBar.style.boxShadow = "0 0 8px rgba(220,53,69,0.6)";
+    const percent =
+        Math.round((remaining / SESSION_TIMEOUT) * 100);
+
+    progressBar.style.width = percent + "%";
+    progressBar.textContent = percent + "%";
+
+    // Color handling
+    if (percent <= 20) {
+        progressBar.style.background =
+            "linear-gradient(90deg, #dc3545, #b02a37)";
+        progressBar.style.boxShadow =
+            "0 0 8px rgba(220,53,69,0.6)";
+    } else {
+        progressBar.style.background =
+            "linear-gradient(90deg, #2ecc71, #27ae60)";
+        progressBar.style.boxShadow = "none";
     }
 }
+
 
 
 
