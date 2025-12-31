@@ -229,16 +229,7 @@ date_default_timezone_set('Asia/Kolkata');
         <strong><span id="sessionTimer">00:00:00</span></strong>
     </div>
 
-    <div class="text-center text-muted small mb-2">
-        <i class="fa-solid fa-clock-rotate-left me-1"></i>
-        Session expires in:
-        <strong><span id="sessionExpire">10:00</span></strong>
-    </div>
-
-  <div class="session-progress-wrapper mt-3">
-    <div class="session-progress">
-        <div id="sessionProgress">100%</div>
-    </div>
+   
 </div>
 
 
@@ -265,9 +256,13 @@ date_default_timezone_set('Asia/Kolkata');
         <i class="fa-solid fa-users me-2"></i> Add Account
     </button>
 
-   <button type="button" class="btn btn-primary" onclick="window.location.href='http://localhost/PM/Expense_Tracker/'">
+  <button type="button"
+        class="btn btn-primary"
+        onclick="window.location.href='http://localhost/PM/password-manager-app/Expense_Dashboard.php'">
     <i class="fa-solid fa-users me-2"></i> Expense Tracker
 </button>
+
+
 
 
 </div>
@@ -337,28 +332,19 @@ date_default_timezone_set('Asia/Kolkata');
         </thead>
         <tbody>
         <?php
-        $user_role = $row['role'] ?? 'Admin'; // Make sure you store role in session or DB
+      $user_id = (int) $_SESSION['user_id'];
 
-if ($user_role === 'Admin') {
-    // Admin sees all
-    $stmt = $conn->prepare("
-        SELECT a.*, u.name AS created_by_name
-        FROM tbl_accounts a
-        LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
-        ORDER BY a.created_at DESC
-    ");
-    $stmt->execute();
-} else {
-    // User sees only own accounts
-    $stmt = $conn->prepare("
-        SELECT a.*, u.name AS created_by_name
-        FROM tbl_accounts a
-        LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
-        WHERE a.tbl_user_id = :user_id
-        ORDER BY a.created_at DESC
-    ");
-    $stmt->execute(['user_id' => $user_id]);
-}
+$stmt = $conn->prepare("
+    SELECT a.*, u.name AS created_by_name
+    FROM tbl_accounts a
+    LEFT JOIN tbl_user u ON a.tbl_user_id = u.tbl_user_id
+    WHERE a.tbl_user_id = :user_id
+    ORDER BY a.created_at DESC
+");
+
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+
 $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($accounts) {
@@ -458,13 +444,14 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap 5 bundle (includes Popper) - ensure your partial/header.php doesn't duplicate -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-
+/* ===============================
+   SESSION DURATION
+================================ */
 const loginTime = <?= $_SESSION['login_time'] * 1000 ?>;
 
 function updateSessionTimer() {
-    const now = new Date().getTime();
+    const now = Date.now();
     let diff = Math.floor((now - loginTime) / 1000);
 
     const hrs = String(Math.floor(diff / 3600)).padStart(2, '0');
@@ -479,69 +466,10 @@ function updateSessionTimer() {
 setInterval(updateSessionTimer, 1000);
 updateSessionTimer();
 
-const SESSION_TIMEOUT = 600; // seconds
-const sessionStartTS = <?= $_SESSION['login_time'] * 1000 ?>;
-let lastActivityTS = <?= $_SESSION['last_activity'] * 1000 ?>;
-
-
-function updateExpiryTimer() {
-    const now = Date.now();
-    let remaining = SESSION_TIMEOUT - Math.floor((now - lastActivityTS) / 1000);
-
-    if (remaining <= 0) {
-        window.location.href = "/PM/password-manager-app/index.php?timeout=1";
-        return;
-    }
-
-    const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
-    const secs = String(remaining % 60).padStart(2, '0');
-
-    document.getElementById("sessionExpire").textContent = `${mins}:${secs}`;
-}
-
-setInterval(updateExpiryTimer, 1000);
-updateExpiryTimer();
-
-const progressBar = document.getElementById("sessionProgress");
-
-function updateSessionProgress() {
-    const now = Date.now();
-
-    const elapsedSinceLastActivity =
-        Math.floor((now - lastActivityTS) / 1000);
-
-    const remaining =
-        Math.max(0, SESSION_TIMEOUT - elapsedSinceLastActivity);
-
-    const percent =
-        Math.round((remaining / SESSION_TIMEOUT) * 100);
-
-    progressBar.style.width = percent + "%";
-    progressBar.textContent = percent + "%";
-
-    // Color handling
-    if (percent <= 20) {
-        progressBar.style.background =
-            "linear-gradient(90deg, #dc3545, #b02a37)";
-        progressBar.style.boxShadow =
-            "0 0 8px rgba(220,53,69,0.6)";
-    } else {
-        progressBar.style.background =
-            "linear-gradient(90deg, #2ecc71, #27ae60)";
-        progressBar.style.boxShadow = "none";
-    }
-}
-
-
-
-
-setInterval(updateSessionProgress, 1000);
-updateSessionProgress();
-
-
-
+/* ===============================
+   ONLINE / IDLE STATUS
+================================ */
 let lastUserAction = Date.now();
-
 const sessionPill = document.querySelector(".session-pill");
 
 function setStatus(active) {
@@ -551,25 +479,15 @@ function setStatus(active) {
     if (active) {
         status.textContent = "Online";
         icon.className = "fa-solid fa-circle text-success me-1";
-
         sessionPill.classList.add("active");
         sessionPill.classList.remove("idle");
     } else {
         status.textContent = "Idle";
         icon.className = "fa-solid fa-circle text-warning me-1";
-
         sessionPill.classList.add("idle");
         sessionPill.classList.remove("active");
     }
-
-    if (active) {
-    progressBar.style.background = "linear-gradient(90deg, #2ecc71, #27ae60)";
-} else {
-    progressBar.style.background = "linear-gradient(90deg, #f1c40f, #f39c12)";
 }
-
-}
-
 
 // Track activity
 ['mousemove','keydown','click','scroll'].forEach(evt => {
@@ -579,122 +497,31 @@ function setStatus(active) {
     });
 });
 
-// Idle checker (1 min)
+// Idle check (1 minute)
 setInterval(() => {
-    const idleTime = Date.now() - lastUserAction;
-
-    if (idleTime > 60000) {
-        setStatus(false);
-    } else {
-        setStatus(true);
-    }
+    setStatus(Date.now() - lastUserAction < 60000);
 }, 5000);
 
-
-
-
-const WARNING_TIME = 60; // 1 minute before logout
-let warningShown = false;
-
-function checkSessionWarning() {
-    const now = Date.now();
-    const elapsed = Math.floor((Date.now() - lastActivityTS) / 1000);
-  
-    const remaining = SESSION_TIMEOUT - elapsed;
-
-    // Show warning at 1 minute remaining
-    if (remaining <= WARNING_TIME && remaining > 0 && !warningShown) {
-        warningShown = true;
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Session Expiring Soon!',
-            html: `You will be logged out in <b>${remaining}</b> seconds.<br><br>Do you want to stay logged in?`,
-            showCancelButton: true,
-            confirmButtonText: 'Stay Logged In',
-            cancelButtonText: 'Logout Now',
-            confirmButtonColor: '#0d6efd',
-            cancelButtonColor: '#dc3545',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Refresh session
-               fetch("endpoint/keep-alive.php")
-.then(() => {
-    lastActivityTS = Date.now(); // ✅ correct
-    lastUserAction = Date.now();
-    warningShown = false;
-    setStatus(true);
-});
-            } else {
-                window.location.href = "endpoint/logout.php";
-            }
-        });
-    }
-}
-
-setInterval(checkSessionWarning, 5000);
-
-let keepAliveTimer = null;
-
-function pingServer() {
-    fetch("endpoint/keep-alive.php", { method: "GET" })
-        .then(() => {
-            lastActivityTS = Date.now(); // sync JS with PHP
-        });
-}
-
-// Call keep-alive every 30 seconds ONLY if user is active
-['mousemove','keydown','click','scroll'].forEach(evt => {
-    document.addEventListener(evt, () => {
-        lastUserAction = Date.now();
-        setStatus(true);
-
-        // throttle server pings
-        if (!keepAliveTimer) {
-            keepAliveTimer = setTimeout(() => {
-                pingServer();
-                keepAliveTimer = null;
-            }, 30000); // 30 sec
-        }
-    });
-});
-
-
-// Toggle SHOW / HIDE filter panel
-document.getElementById("filterToggleBtn").addEventListener("click", function () {
+/* ===============================
+   FILTER PANEL
+================================ */
+document.getElementById("filterToggleBtn").addEventListener("click", () => {
     const panel = document.getElementById("filterPanel");
-
-    // Toggle display
-    if (panel.style.display === "none" || panel.style.display === "") {
-        panel.style.display = "block";
-    } else {
-        panel.style.display = "none";
-    }
+    panel.style.display = (panel.style.display === "block") ? "none" : "block";
 });
 
-
-
-
-
-
-// Close filter panel after clicking APPLY
-document.getElementById("applyFilters").addEventListener("click", function () {
+document.getElementById("applyFilters").addEventListener("click", () => {
     document.getElementById("filterPanel").style.display = "none";
 });
 
-// Reset filter values (optional)
-document.getElementById("resetFilters").addEventListener("click", function () {
-    document.getElementById("fDateFrom").value = "";
-    document.getElementById("fDateTo").value = "";
-    document.getElementById("fAccountName").value = "";
-    document.getElementById("fUserName").value = "";
-    document.getElementById("fCreateBy").value = "";
+document.getElementById("resetFilters").addEventListener("click", () => {
+    ["fDateFrom","fDateTo","fAccountName","fUserName","fCreateBy"]
+        .forEach(id => document.getElementById(id).value = "");
 });
 
-
-// Confirm delete with SweetAlert and fetch delete endpoint
+/* ===============================
+   DELETE ACCOUNT
+================================ */
 function confirmDelete(id, accountName) {
     Swal.fire({
         title: "Delete Account?",
@@ -704,92 +531,37 @@ function confirmDelete(id, accountName) {
         confirmButtonText: "Yes, delete it!",
         cancelButtonText: "Cancel",
         confirmButtonColor: "#d33"
-    }).then((result) => {
+    }).then(result => {
         if (result.isConfirmed) {
-            fetch("endpoint/delete-account.php?id=" + encodeURIComponent(id))
+            fetch("endpoint/delete-account.php?id=" + id)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === "success") {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Deleted!",
-                            text: data.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
+                        Swal.fire("Deleted!", data.message, "success");
                         document.getElementById("row-" + data.id)?.remove();
                     } else {
-                        Swal.fire("Oops!", data.message, data.status);
+                        Swal.fire("Error", data.message, "error");
                     }
-                })
-                .catch(err => {
-                    console.error(err);
-                    Swal.fire("Error", "Something went wrong!", "error");
                 });
         }
     });
 }
 
-// Populate update modal fields and show modal
-function update_account(id) {
-    // Ensure update modal element exists
-    const updateModalEl = document.getElementById("updateAccountModal");
-    if (!updateModalEl) {
-        console.warn("updateAccountModal not found in DOM.");
-        return;
-    }
-    const modal = new bootstrap.Modal(updateModalEl);
-    // Populate values safely
-    const accountName = document.getElementById("accountName-" + id)?.textContent.trim() || "";
-    const username = document.getElementById("username-" + id)?.textContent.trim() || "";
-    const link = document.getElementById("link-" + id)?.textContent.trim() || "";
-    const description = document.getElementById("description-" + id)?.textContent.trim() || "";
-
-    // Set fields if they exist
-    const setIf = (selector, value) => {
-        const el = document.querySelector(selector);
-        if (el) el.value = value;
-    };
-
-    setIf("#updateAccountID", id);
-    setIf("#updateAccountName", accountName);
-    setIf("#updateUsername", username);
-    // Password field might be hidden; we attempt to fetch data-password from .real-password span
-    const pwdSpan = document.querySelector("#row-" + id + " .real-password");
-    if (pwdSpan) setIf("#updatePassword", pwdSpan.getAttribute("data-password") || "");
-
-    setIf("#updateLink", link);
-    setIf("#updateDescription", description);
-
-    // created_at handling (if present)
-    const createdAt = document.getElementById("created_at-" + id)?.textContent.trim();
-    if (createdAt) {
-        const formatted = createdAt.replace(" ", "T").slice(0, 16);
-        setIf("#updateCreatedAt", formatted);
-    }
-
-    modal.show();
-}
-</script>
-
-
-<script>
-document.querySelectorAll('.password-field').forEach(function(input){
-  input.addEventListener('click', function(){
-    const cell = this.closest('.password-cell');
-    const realPasswordSpan = cell.querySelector('.real-password');
-    const realPassword = realPasswordSpan.getAttribute('data-password');
-
-    if(this.type === 'password'){
-      // Show real password
-      this.type = 'text';
-      this.value = realPassword;
-    } else {
-      // Hide password (bullets)
-      this.type = 'password';
-      this.value = '••••••';
-    }
-  });
+/* ===============================
+   PASSWORD TOGGLE
+================================ */
+document.querySelectorAll('.password-field').forEach(input => {
+    input.addEventListener('click', () => {
+        const span = input.closest('.password-cell')
+                          .querySelector('.real-password');
+        if (input.type === 'password') {
+            input.type = 'text';
+            input.value = span.dataset.password;
+        } else {
+            input.type = 'password';
+            input.value = '••••••';
+        }
+    });
 });
 </script>
 

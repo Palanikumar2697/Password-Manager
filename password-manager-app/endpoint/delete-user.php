@@ -1,85 +1,74 @@
 <?php
+session_start();
+
 include('../conn/conn.php');
-include('../endpoint/modal_helper.php');  // <-- USE THE HELPER, NOT status.php
-if (isset($_GET['user'])) {
-    $userID = $_GET['user'];
+include('../endpoint/modal_helper.php');
 
-    try {
-        $stmt = $conn->prepare("SELECT `tbl_user_id` FROM `tbl_user` WHERE `tbl_user_id` = :userID");
-        $stmt->execute(['userID' => $userID]);
-        $userExists = $stmt->fetch(PDO::FETCH_ASSOC);
+/* ---------------- AUTH CHECK ---------------- */
+if (!isset($_SESSION['user_id'])) {
+    showModal(
+        "Authentication Required",
+        "⚠️ Please log in first.",
+        "warning",
+        "../index.php"
+    );
+    exit;
+}
 
-        if (!empty($userExists)) {
-            $conn->beginTransaction();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    showModal(
+        "Invalid Request",
+        "❌ Invalid request method.",
+        "danger",
+        "../home.php"
+    );
+    exit;
+}
 
-            $deleteUserStmt = $conn->prepare("DELETE FROM `tbl_user` WHERE `tbl_user_id` = :userID ");
-            $deleteUserStmt->bindParam(':userID', $userID, PDO::PARAM_INT);
-            $deleteUserStmt->execute();
+$userID = (int) $_SESSION['user_id'];
 
-            $deleteAccountsStmt = $conn->prepare("DELETE FROM `tbl_accounts` WHERE `tbl_user_id` = :userID");
-            $deleteAccountsStmt->bindParam(':userID', $userID, PDO::PARAM_INT);
-            $deleteAccountsStmt->execute();
+try {
+    $conn->beginTransaction();
 
-            $conn->commit();
+    /* ---------------- DELETE USER ACCOUNTS FIRST ---------------- */
+    $deleteAccounts = $conn->prepare("
+        DELETE FROM tbl_accounts
+        WHERE tbl_user_id = :userID
+    ");
+    $deleteAccounts->execute([':userID' => $userID]);
 
-            $title    = "Account Status";
-            $message  = "✅ User Deleted Successfully. Redirecting to Login...";
-            $type     = "success";
-            $redirect = "../index.php";
+    /* ---------------- DELETE USER ---------------- */
+    $deleteUser = $conn->prepare("
+        DELETE FROM tbl_user
+        WHERE tbl_user_id = :userID
+    ");
+    $deleteUser->execute([':userID' => $userID]);
 
-        } else {
-            $title    = "Account Status";
-            $message  = "⚠️ User account not found.";
-            $type     = "warning";
-            $redirect = "../home.php";
-        }
+    $conn->commit();
 
-    } catch (PDOException $e) {
-        $title    = "Database Error";
-        $message  = "❌ " . $e->getMessage();
-        $type     = "danger";
-        $redirect = "../home.php";
+    /* ---------------- LOGOUT ---------------- */
+    session_destroy();
+
+    showModal(
+        "Account Deleted",
+        "✅ Your account has been permanently deleted.",
+        "success",
+        "../index.php"
+    );
+    exit;
+
+} catch (PDOException $e) {
+    if ($conn->inTransaction()) {
+        $conn->rollBack();
     }
 
-} else {
-    $title    = "Invalid Request";
-    $message  = "❌ Please select a user to delete.";
-    $type     = "danger";
-    $redirect = "../home.php";
+    error_log("User Delete Error: " . $e->getMessage());
+
+    showModal(
+        "Database Error",
+        "❌ Something went wrong. Please try again later.",
+        "danger",
+        "../home.php"
+    );
+    exit;
 }
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title><?php echo $title; ?></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-dark d-flex justify-content-center align-items-center" style="height:100vh;">
-
-  <!-- Modal -->
-  <div class="modal fade show" id="statusModal" tabindex="-1" aria-hidden="true" style="display:block; background: rgba(0,0,0,0.6);">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center">
-        <div class="modal-header bg-<?php echo $type; ?> text-white">
-          <h5 class="modal-title"><?php echo $title; ?></h5>
-        </div>
-        <div class="modal-body">
-          <?php echo $message; ?><br>
-          <small class="text-muted">Redirecting in 3 seconds...</small>
-        </div>
-        <div class="modal-footer">
-          <a href="<?php echo $redirect; ?>" class="btn btn-<?php echo $type; ?>">OK</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Auto redirect after 3 seconds
-    setTimeout(function() {
-        window.location.href = "<?php echo $redirect; ?>";
-    }, 3000);
-  </script>
-</body>
-</html>

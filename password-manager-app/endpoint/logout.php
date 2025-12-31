@@ -1,21 +1,35 @@
 <?php
 session_start();
-require_once('../endpoint/modal_helper.php'); // only if you use modal_helper, else remove
 
-// Clear all session variables
+/* ---------------- CLEAR SESSION DATA ---------------- */
 $_SESSION = [];
 
-// Destroy the session completely
+/* ---------------- DELETE SESSION COOKIE ---------------- */
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
+    );
+}
+
+/* ---------------- DESTROY SESSION ---------------- */
 session_destroy();
 
-// Start a new session to store the modal message
+/* ---------------- START NEW SESSION FOR FLASH MESSAGE ---------------- */
 session_start();
+
 $_SESSION['modal'] = [
-    "type" => "success",
-    "title" => "Logged Out",
-    "message" => "You have been logged out successfully!"
+    'type'    => 'success',
+    'title'   => 'Logged Out',
+    'message' => 'You have been logged out successfully!'
 ];
 
-// Redirect back to login page (index.php)
+/* ---------------- REDIRECT ---------------- */
 header("Location: ../index.php");
 exit;

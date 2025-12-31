@@ -2,13 +2,13 @@
 session_start();
 
 include('../conn/conn.php');
-require_once __DIR__ . '/../config/crypto.php'; // ✅ REQUIRED
+require_once __DIR__ . '/../config/crypto.php';
 include('../endpoint/modal_helper.php');
 
 if (!isset($_SESSION['user_id'])) {
     showModal(
-        "Authentication",
-        "⚠️ User not logged in. Please log in before adding an account.",
+        "Authentication Required",
+        "⚠️ Please log in before adding an account.",
         "warning",
         "../index.php"
     );
@@ -18,29 +18,42 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     showModal(
         "Account Status",
-        "❌ Invalid request method!",
+        "❌ Invalid request method.",
         "danger",
         "../home.php"
     );
     exit;
 }
 
-$user_id     = $_SESSION['user_id'];
+$user_id = (int) $_SESSION['user_id'];
+
+/* ---------------- INPUT ---------------- */
 $accountName = trim($_POST['account_name'] ?? '');
 $username    = trim($_POST['username'] ?? '');
 $password    = trim($_POST['password'] ?? '');
 $link        = trim($_POST['link'] ?? '');
 $description = trim($_POST['description'] ?? '');
 
-$created_at = !empty($_POST['created_at'])
-    ? date("Y-m-d H:i:s", strtotime($_POST['created_at']))
-    : date("Y-m-d H:i:s");
-
 /* ---------------- VALIDATION ---------------- */
-if ($accountName === '' || $username === '' || $password === '') {
+$errors = [];
+
+if ($accountName === '') {
+    $errors[] = "Account name is required.";
+}
+if ($username === '') {
+    $errors[] = "Username is required.";
+}
+if ($password === '') {
+    $errors[] = "Password is required.";
+}
+if ($link !== '' && !filter_var($link, FILTER_VALIDATE_URL)) {
+    $errors[] = "Invalid URL format.";
+}
+
+if ($errors) {
     showModal(
         "Validation Error",
-        "⚠️ Account name, username and password are required.",
+        implode("<br>", $errors),
         "warning",
         "../home.php"
     );
@@ -51,18 +64,22 @@ if ($accountName === '' || $username === '' || $password === '') {
 $encryptedPassword = encryptPassword($password);
 
 try {
-    // Check duplicate username
+    /* ---------------- DUPLICATE CHECK (USER-SCOPED) ---------------- */
     $stmt = $conn->prepare("
-        SELECT tbl_account_id 
-        FROM tbl_accounts 
+        SELECT tbl_account_id
+        FROM tbl_accounts
         WHERE username = :username
+          AND tbl_user_id = :user_id
     ");
-    $stmt->execute(['username' => $username]);
+    $stmt->execute([
+        ':username' => $username,
+        ':user_id'  => $user_id
+    ]);
 
     if ($stmt->fetch()) {
         showModal(
-            "Account Status",
-            "⚠️ Username already exists!",
+            "Account Exists",
+            "⚠️ You already have an account with this username.",
             "warning",
             "../home.php"
         );
@@ -71,39 +88,44 @@ try {
 
     $conn->beginTransaction();
 
+    /* ---------------- INSERT ---------------- */
     $insertStmt = $conn->prepare("
-        INSERT INTO tbl_accounts 
+        INSERT INTO tbl_accounts
         (tbl_user_id, account_name, username, password, link, description, created_at)
         VALUES
-        (:user_id, :account_name, :username, :password, :link, :description, :created_at)
+        (:user_id, :account_name, :username, :password, :link, :description, NOW())
     ");
 
     $insertStmt->execute([
         ':user_id'      => $user_id,
         ':account_name' => $accountName,
         ':username'     => $username,
-        ':password'     => $encryptedPassword, // ✅ encrypted value
+        ':password'     => $encryptedPassword,
         ':link'         => $link,
-        ':description'  => $description,
-        ':created_at'   => $created_at
+        ':description'  => $description
     ]);
 
     $conn->commit();
 
     showModal(
-        "Account Status",
-        "✅ Account Created Successfully!",
+        "Account Created",
+        "✅ Account added successfully.",
         "success",
         "../home.php"
     );
+    exit;
 
 } catch (PDOException $e) {
-    $conn->rollBack();
+    if ($conn->inTransaction()) {
+        $conn->rollBack();
+    }
 
+    // Log error internally in real apps
     showModal(
         "Database Error",
-        "❌ " . $e->getMessage(),
+        "❌ Something went wrong. Please try again.",
         "danger",
         "../home.php"
     );
+    exit;
 }
