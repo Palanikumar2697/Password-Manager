@@ -29,7 +29,7 @@ if ($username === '' || $password === '') {
 
 /* ---------------- FETCH USER ---------------- */
 $stmt = $conn->prepare("
-    SELECT tbl_user_id, password
+    SELECT tbl_user_id, password, last_login
     FROM tbl_user
     WHERE username = :username
     LIMIT 1
@@ -59,7 +59,10 @@ if (!password_verify($password, $user['password'])) {
 }
 
 /* ---------------- LOGIN SUCCESS ---------------- */
-session_regenerate_id(true); // ✅ prevent session fixation
+session_regenerate_id(true);
+
+/* Store PREVIOUS login */
+$_SESSION['previous_login'] = $user['last_login'];
 
 $_SESSION['user_id']       = (int) $user['tbl_user_id'];
 $_SESSION['username']      = $username;

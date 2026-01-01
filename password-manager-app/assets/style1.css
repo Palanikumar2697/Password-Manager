@@ -188,3 +188,11 @@ canvas {
         font-size: 0.8rem;
     }
 }
+.card-header .btn {
+    transition: all 0.2s ease;
+}
+
+.card-header .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}

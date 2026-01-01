@@ -36,10 +36,16 @@ include('conn/conn1.php');
 <!-- ================= CATEGORY PANEL ================= -->
 <div class="col-lg-5">
 <div class="card">
-<div class="card-header d-flex justify-content-between">
-    Expense Categories
-    <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#addCategoryModal">+ Category</button>
+<div class="card-header d-flex justify-content-between align-items-center">
+    <span class="fw-semibold">Expense Categories</span>
+
+    <button class="btn btn-sm btn-primary rounded-pill px-3"
+            data-toggle="modal"
+            data-target="#addCategoryModal">
+        <i class="fa-solid fa-plus me-1"></i> Category
+    </button>
 </div>
+
 <div class="card-body">
 <table class="table table-hover">
 <thead>
@@ -85,10 +91,16 @@ $totalBudget += $row['category_budget'];
 <!-- ================= EXPENSE PANEL ================= -->
 <div class="col-lg-7">
 <div class="card">
-<div class="card-header d-flex justify-content-between">
-    Expenses
-    <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#addExpenseModal">+ Expense</button>
+<div class="card-header d-flex justify-content-between align-items-center">
+    <span class="fw-semibold">Expenses</span>
+
+    <button class="btn btn-sm btn-success rounded-pill px-3"
+            data-toggle="modal"
+            data-target="#addExpenseModal">
+        <i class="fa-solid fa-plus me-1"></i> Expense
+    </button>
 </div>
+
 <div class="card-body">
     <form method="GET" class="form-inline mb-3">
     <input type="date" name="from_date" class="form-control mr-2"

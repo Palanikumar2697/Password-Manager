@@ -1,35 +1,20 @@
 <?php
-// home.php - cleaned & ready
-// --------------------------------------------------
-// Session, flash, and modal handling
+// home.php – no auto logout
 // --------------------------------------------------
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$_SESSION['last_activity'] = $_SESSION['last_activity'] ?? time();
 date_default_timezone_set('Asia/Kolkata');
-
-$timeout = 600; // 10 minutes
 
 // Set login time once
 if (!isset($_SESSION['login_time'])) {
     $_SESSION['login_time'] = time();
 }
 
-// Track last activity
-if (!isset($_SESSION['last_activity'])) {
-    $_SESSION['last_activity'] = time();
-}
+// Update last activity (for info only, not logout)
+$_SESSION['last_activity'] = time();
 
-// Auto logout
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
-
-    session_unset();
-    session_destroy();
-    header("Location: /PM/password-manager-app/index.php?timeout=1");
-    exit;
-}
 
 
 
@@ -213,13 +198,20 @@ date_default_timezone_set('Asia/Kolkata');
             <strong><?= date('d M Y, h:i A', $_SESSION['login_time']) ?></strong>
         </div>
 
-        <?php if (!empty($row['last_login'])): ?>
-        <div class="col-md-6 text-end text-center text-md-end">
-            <i class="fa-solid fa-rotate-left me-1"></i>
-            Last login:
-            <strong><?= date('d M Y, h:i A', strtotime($row['last_login'])) ?></strong>
-        </div>
-        <?php endif; ?>
+       <?php if (!empty($_SESSION['previous_login'])): ?>
+<div class="col-md-6 text-end text-center text-md-end">
+    <i class="fa-solid fa-rotate-left me-1"></i>
+    Last login:
+    <strong><?= date('d M Y, h:i A', strtotime($_SESSION['previous_login'])) ?></strong>
+</div>
+<?php else: ?>
+<div class="col-md-6 text-end text-center text-md-end">
+    <i class="fa-solid fa-rotate-left me-1"></i>
+    Last login:
+    <strong>First login</strong>
+</div>
+<?php endif; ?>
+
     </div>
 
     <!-- Session Timers -->
@@ -243,27 +235,28 @@ date_default_timezone_set('Asia/Kolkata');
     <!-- Accounts Table -->
     <div class="table-responsive">
       
-    <!-- Buttons Container -->
-<div class="d-flex justify-content-end gap-2 mb-3">
+  <!-- Buttons Container -->
+<div class="d-flex justify-content-end gap-2 mb-3 flex-wrap">
 
-    <!-- Filters Button -->
-    <button class="btn btn-outline-secondary" id="filterToggleBtn">
-        <i class="fa-solid fa-filter me-2"></i> Filters
-    </button>
-
-    <!-- Add Account Button -->
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
-        <i class="fa-solid fa-users me-2"></i> Add Account
-    </button>
-
-  <button type="button"
-        class="btn btn-primary"
-        onclick="window.location.href='http://localhost/PM/password-manager-app/Expense_Dashboard.php'">
-    <i class="fa-solid fa-users me-2"></i> Expense Tracker
+   <button class="btn btn-outline-secondary rounded-pill px-4"
+        id="filterToggleBtn">
+    <i class="fa-solid fa-filter me-2"></i> Filters
 </button>
 
 
+    <!-- Add Account Button -->
+    <button class="btn btn-success rounded-pill px-4"
+            data-bs-toggle="modal"
+            data-bs-target="#addAccountModal">
+        <i class="fa-solid fa-plus me-2"></i> Add Account
+    </button>
 
+    <!-- Expense Tracker Button -->
+    <button type="button"
+            class="btn btn-primary rounded-pill px-4"
+            onclick="window.location.href='http://localhost/PM/password-manager-app/Expense_Dashboard.php'">
+        <i class="fa-solid fa-chart-line me-2"></i> Expense Tracker
+    </button>
 
 </div>
 
