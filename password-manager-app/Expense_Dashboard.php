@@ -12,13 +12,215 @@ include('conn/conn1.php');
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <!-- Your custom CSS -->
-<link rel="stylesheet" href="assets/style1.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
 
 </head>
 
-<body>
 
+<body>
+<style>
+    /* ===============================
+   ROOT VARIABLES
+================================ */
+:root {
+    --primary: #343a40;
+    --primary-light: #495057;
+    --accent: #007bff;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --bg-light: #f4f6f9;
+    --card-bg: #ffffff;
+    --border: #dee2e6;
+    --shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   GLOBAL
+================================ */
+body {
+    
+    background-color: var(--bg-light);
+font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+    color: #343a40;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+.navbar {
+    box-shadow: var(--shadow);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* ===============================
+   CARDS
+================================ */
+.card {
+    border: none;
+    border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+/* ===============================
+   TABLES
+================================ */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #f1f3f5;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn {
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--primary);
+    color: #fff;
+}
+
+.action-btns button {
+    margin-right: 5px;
+}
+
+/* ===============================
+   FILTER BAR
+================================ */
+.form-inline input[type="date"] {
+    min-width: 160px;
+}
+
+/* ===============================
+   TOTALS
+================================ */
+.total-remaining {
+    font-weight: 600;
+}
+
+.total-remaining.warning {
+    color: var(--danger);
+}
+
+/* ===============================
+   MODALS
+================================ */
+.modal-content {
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+}
+
+.modal-body input,
+.modal-body select {
+    border-radius: 8px;
+}
+
+/* ===============================
+   CHARTS
+================================ */
+canvas {
+    max-width: 100%;
+}
+
+/* ===============================
+   EXPORT BUTTONS
+================================ */
+.btn-success.btn-sm {
+    padding: 6px 12px;
+    font-weight: 500;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 992px) {
+    .form-inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-inline input,
+    .form-inline button,
+    .form-inline a {
+        margin-bottom: 8px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-header {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+    }
+}
+.card-header .btn {
+    transition: all 0.2s ease;
+}
+
+.card-header .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+</style>
 <nav class="navbar navbar-dark bg-dark px-3 d-flex justify-content-between">
     <span class="navbar-brand">Expense Tracker Dashboard</span>
 
@@ -37,7 +239,9 @@ include('conn/conn1.php');
 <div class="col-lg-5">
 <div class="card">
 <div class="card-header d-flex justify-content-between align-items-center">
-    <span class="fw-semibold">Expense Categories</span>
+   <span class="font-weight-bold">Expense Categories</span>
+
+
 
     <button class="btn btn-sm btn-primary rounded-pill px-3"
             data-toggle="modal"
@@ -92,7 +296,8 @@ $totalBudget += $row['category_budget'];
 <div class="col-lg-7">
 <div class="card">
 <div class="card-header d-flex justify-content-between align-items-center">
-    <span class="fw-semibold">Expenses</span>
+    <span class="font-weight-bold">Expenses</span>
+
 
     <button class="btn btn-sm btn-success rounded-pill px-3"
             data-toggle="modal"
@@ -104,19 +309,28 @@ $totalBudget += $row['category_budget'];
 <div class="card-body">
     <form method="GET" class="form-inline mb-3">
     <input type="date" name="from_date" class="form-control mr-2"
-           value="<?= $_GET['from_date'] ?? '' ?>">
-    <input type="date" name="to_date" class="form-control mr-2"
-           value="<?= $_GET['to_date'] ?? '' ?>">
+           value="<?= $_GET['from_date'] ?? '' ?>" required>
 
-    <button class="btn btn-primary mr-2">
+    <input type="date" name="to_date" class="form-control mr-2"
+           value="<?= $_GET['to_date'] ?? '' ?>" required>
+
+    <button class="btn btn-primary mr-2" type="submit">
         <i class="fa fa-filter"></i> Filter
     </button>
 
     <a href="index.php" class="btn btn-secondary">
         Reset
     </a>
-    
 </form>
+<?php if (!empty($_GET['from_date']) && !empty($_GET['to_date'])): ?>
+<div class="alert alert-info py-2">
+    Showing expenses from
+    <strong><?= htmlspecialchars($_GET['from_date']) ?></strong>
+    to
+    <strong><?= htmlspecialchars($_GET['to_date']) ?></strong>
+</div>
+<?php endif; ?>
+
 
 <div class="mb-3">
     <a href="export/monthly_excel.php" class="btn btn-success btn-sm">
@@ -325,10 +539,11 @@ ksort($dailyExpenses);
 
 
 <!-- ================= JS ================= -->
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 function editCategory(id) {

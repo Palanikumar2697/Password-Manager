@@ -244,6 +244,14 @@ date_default_timezone_set('Asia/Kolkata');
 </button>
 
 
+<button type="button"
+            class="btn btn-warning rounded-pill px-4"
+            id="exportBtn">
+        <i class="fa-solid fa-file-export me-2"></i> Export
+    </button>
+
+
+
     <!-- Add Account Button -->
     <button class="btn btn-success rounded-pill px-4"
             data-bs-toggle="modal"
@@ -353,9 +361,11 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
         <tr id="row-<?= $accountID ?>">
           <td><?= $accountID ?></td>
-       <td id="created_at-<?= $accountID ?>">
-    <?= htmlspecialchars($created_at) ?>
+   <td data-order="<?= date('Y-m-d', strtotime($created_at)) ?>">
+    <?= date('d-m-Y', strtotime($created_at)) ?>
 </td>
+
+
 
           <td id="accountName-<?= $accountID ?>"><?= htmlspecialchars($accountName) ?></td>
           <td id="username-<?= $accountID ?>"><?= htmlspecialchars($uname) ?></td>
@@ -434,7 +444,7 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <!-- JS scripts -->
-<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <!-- Bootstrap 5 bundle (includes Popper) - ensure your partial/header.php doesn't duplicate -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -504,13 +514,33 @@ document.getElementById("filterToggleBtn").addEventListener("click", () => {
 });
 
 document.getElementById("applyFilters").addEventListener("click", () => {
+    table.draw(); // 🔥 REQUIRED
     document.getElementById("filterPanel").style.display = "none";
 });
+
 
 document.getElementById("resetFilters").addEventListener("click", () => {
     ["fDateFrom","fDateTo","fAccountName","fUserName","fCreateBy"]
         .forEach(id => document.getElementById(id).value = "");
+
+    table.draw(); // 🔥 REQUIRED
 });
+function populateFilters() {
+    let users = new Set();
+    let creators = new Set();
+
+    table.rows().every(function () {
+        const data = this.data();
+        users.add(data[3]);
+        creators.add(data[7]);
+    });
+
+    users.forEach(u => $("#fUserName").append(`<option value="${u}">${u}</option>`));
+    creators.forEach(c => $("#fCreateBy").append(`<option value="${c}">${c}</option>`));
+}
+
+populateFilters();
+
 
 /* ===============================
    DELETE ACCOUNT

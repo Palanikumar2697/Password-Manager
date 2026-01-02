@@ -12,7 +12,10 @@
   --light-alt: #f1f5f9;
   --shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
+*{
 
+  font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+}
 /* ===============================
    GLOBAL RESET & BASE
 ================================ */
@@ -23,11 +26,12 @@
 }
 
 html {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
   font-size: 14px;
 }
 
 body {
+    
   background-color: var(--light-alt);
   color: #333;
   line-height: 1.5;
