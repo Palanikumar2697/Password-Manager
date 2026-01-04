@@ -385,14 +385,16 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <td id="description-<?= $accountID ?>"><?= htmlspecialchars($description) ?></td>
           <td><?= htmlspecialchars($created_by) ?></td>
           <td>
-            <div class="d-flex justify-content-center gap-2 table-actions">
-              <button class="btn btn-sm btn-warning" onclick="update_account(<?= $accountID ?>)" title="Edit">
-                <i class="fa-solid fa-pen me-1"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
-                <i class="fa-solid fa-trash me-1"></i>
-              </button>
-            </div>
+           <div class="d-flex justify-content-center gap-2 table-actions">
+  <button class="btn btn-sm btn-warning" onclick="update_account(<?= $accountID ?>)" title="Edit">
+    <i class="fa-solid fa-pen me-1"></i> Edit
+  </button>
+
+  <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(<?= $accountID ?>, '<?= addslashes($accountName) ?>')" title="Delete">
+    <i class="fa-solid fa-trash me-1"></i> Delete
+  </button>
+</div>
+
           </td>
         </tr>
         <?php

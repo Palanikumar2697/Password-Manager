@@ -31,12 +31,19 @@ html {
 }
 
 body {
-    
-  background-color: var(--light-alt);
+  min-height: 100vh;
+  margin: 0;
   color: #333;
   line-height: 1.5;
-  margin: 0;
+
+  /* 🔐 Password Manager Background */
+  background:
+    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+    url("../assets/images/img2.jpg") no-repeat center center fixed;
+
+  background-size: cover;
 }
+
 
 img {
   max-width: 100%;
@@ -67,7 +74,7 @@ img {
   padding: 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center; /* 👈 center card vertically */
 }
 
 
@@ -77,17 +84,26 @@ img {
 .login-container {
   max-width: 450px;
   width: 100%;
-  margin: 80px auto;
+  margin: 0 auto;
   padding: 40px 35px;
-  background: rgba(255,255,255,0.93);
+
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
   border-radius: 22px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
   transition: transform 0.25s ease;
 }
 
 .login-container:hover {
   transform: translateY(-4px);
 }
+
+.lock-icon {
+  color: var(--accent);
+}
+
 
 /* ===============================
    INPUTS
@@ -224,11 +240,15 @@ img {
 .btn-add-pill {
   background: linear-gradient(135deg, var(--success), #2e7d32);
   color: #fff;
+  box-shadow: 0 6px 16px rgba(25,135,84,0.45);
 }
 
 .btn-search-pill {
   background: linear-gradient(135deg, var(--accent), #0056b3);
   color: #fff;
+}
+.password-field:hover input {
+  filter: blur(0);
 }
 
 /* ===============================
@@ -247,12 +267,21 @@ img {
 /* ===============================
    ACCOUNTS CONTAINER
 ================================ */
-.accounts-container {
-  padding: 45px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+.accounts-container h4 {
+  padding: 8px 22px;     /* reduced */
+  font-size: 16px;       /* consistent with table header */
+  letter-spacing: 0.4px;
 }
+.session-pill.active {
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 rgba(25,135,84,0.4); }
+  50% { box-shadow: 0 0 14px rgba(25,135,84,0.6); }
+  100% { box-shadow: 0 0 0 rgba(25,135,84,0.4); }
+}
+
 
 
 /* ===============================
@@ -274,6 +303,11 @@ table.dataTable {
 table.dataTable thead {
   background: linear-gradient(135deg, #1f2937, #111827);
   color: #fff;
+}
+table.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 table.dataTable th,
@@ -414,4 +448,46 @@ table.dataTable tbody tr:hover {
     padding: 10px 24px;
     border-radius: 50px;      /* 👈 pill shape */
     display: inline-block;   /* 👈 prevents full width */
+}
+/* ===============================
+   DATATABLE TOP CONTROLS ALIGNMENT
+================================ */
+
+/* Wrapper row */
+.dataTables_wrapper .row:first-child {
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Show entries (left) */
+.dataTables_length {
+  display: flex;
+  align-items: center;
+}
+
+/* Search box (right) */
+.dataTables_filter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Search input spacing fix */
+.dataTables_filter input {
+  margin-left: 8px;
+  height: 36px;
+}
+@media (max-width: 576px) {
+  .dataTables_length,
+  .dataTables_filter {
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .dataTables_filter input {
+    width: 100%;
+  }
+}
+.dataTables_wrapper .row:first-child {
+  margin-top: 20px;   /* 👈 adjust: 16–24px */
 }

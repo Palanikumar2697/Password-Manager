@@ -8,9 +8,7 @@ unset($_SESSION['modal']);
 
 <?php include('./partials/header.php') ?>
 
-<?php if ($modal): ?>
-    <?php include "./endpoint/status.php"; ?>
-<?php endif; ?>
+
 
 
 <div class="main d-flex justify-content-center align-items-center min-vh-100">
@@ -253,4 +251,8 @@ if (isset($_SESSION['show_registration'])) {
 
 <?php include('./partials/footer.php') 
 
+
 ?>
+<?php if ($modal): ?>
+    <?php include "./endpoint/status.php"; ?>
+<?php endif; ?>

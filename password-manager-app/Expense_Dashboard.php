@@ -41,11 +41,22 @@ include('conn/conn1.php');
    GLOBAL
 ================================ */
 body {
-    
-    background-color: var(--bg-light);
-font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
     color: #343a40;
+
+    /* 💰 Expense Tracker Background */
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.55)
+        ),
+        url("assets/images/img4.jpg") no-repeat center center fixed;
+
+    background-size: cover;
 }
+
 
 a {
     text-decoration: none;
@@ -71,12 +82,11 @@ a {
    CARDS
 ================================ */
 .card {
-    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
     border-radius: 16px;
-    background: var(--card-bg);
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
 }
+
 
 .card-header {
     background-color: #f8f9fa;
@@ -270,13 +280,15 @@ $totalBudget += $row['category_budget'];
 <td id="cat-name-<?= $row['tbl_expense_category_id'] ?>"><?= htmlspecialchars($row['category_name']) ?></td>
 <td id="cat-budget-<?= $row['tbl_expense_category_id'] ?>"><?= $row['category_budget'] ?></td>
 <td class="action-btns">
-<button class="btn btn-sm btn-outline-primary" onclick="editCategory(<?= $row['tbl_expense_category_id'] ?>)">
-<i class="fa fa-pencil"></i>
-</button>
-<button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(<?= $row['tbl_expense_category_id'] ?>)">
-<i class="fa fa-trash"></i>
-</button>
+  <button class="btn btn-sm btn-outline-primary" onclick="editCategory(<?= $row['tbl_expense_category_id'] ?>)">
+    <i class="fa fa-pencil me-1"></i> Edit
+  </button>
+
+  <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(<?= $row['tbl_expense_category_id'] ?>)">
+    <i class="fa fa-trash me-1"></i> Delete
+  </button>
 </td>
+
 </tr>
 
 <?php endforeach; ?>
@@ -383,10 +395,11 @@ $totalSpent += $e['expense_spent'];
 <td><?= $e['expense_date'] ?></td>
 <td><?= $e['expense_spent'] ?></td>
 <td>
-<button class="btn btn-sm btn-outline-danger" onclick="deleteExpense(<?= $e['tbl_expense_id'] ?>)">
-<i class="fa fa-trash"></i>
-</button>
+  <button class="btn btn-sm btn-outline-danger" onclick="deleteExpense(<?= $e['tbl_expense_id'] ?>)">
+    <i class="fa fa-trash me-1"></i> Delete
+  </button>
 </td>
+
 </tr>
 
 <?php endforeach; ?>
