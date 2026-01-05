@@ -40,21 +40,32 @@ include('conn/conn1.php');
 /* ===============================
    GLOBAL
 ================================ */
-body {
-    min-height: 100vh;
+html, body {
+    height: 100%;
     margin: 0;
-    font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, "Helvetica Neue", Arial, sans-serif;
+
     color: #343a40;
 
-    /* 💰 Expense Tracker Background */
     background:
         linear-gradient(
             rgba(0, 0, 0, 0.55),
             rgba(0, 0, 0, 0.55)
         ),
-        url("assets/images/img4.jpg") no-repeat center center fixed;
+        url("assets/images/img4.jpg") no-repeat center center;
 
     background-size: cover;
+    background-attachment: scroll; /* 👈 FIX */
+}
+@media (min-width: 1200px) {
+    body {
+        background-attachment: fixed;
+    }
 }
 
 
@@ -230,6 +241,44 @@ canvas {
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
+.action-btns {
+    white-space: nowrap;
+}
+
+.action-btns .btn {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 50px;
+}
+
+.action-btns .btn i {
+    font-size: 0.75rem;
+}
+.table thead th {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody td {
+    font-size: 0.85rem;
+}
+.table tbody tr:last-child {
+    background: #fff3cd;
+    font-weight: 600;
+}
+.card-header span {
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+.form-inline .btn {
+    min-width: 90px;
+}
+.table-hover tbody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+
 </style>
 <nav class="navbar navbar-dark bg-dark px-3 d-flex justify-content-between">
     <span class="navbar-brand">Expense Tracker Dashboard</span>
@@ -330,9 +379,11 @@ $totalBudget += $row['category_budget'];
         <i class="fa fa-filter"></i> Filter
     </button>
 
-    <a href="index.php" class="btn btn-secondary">
-        Reset
-    </a>
+   <button type="button" id="resetFilters" class="btn btn-secondary">
+    Reset
+</button>
+
+
 </form>
 <?php if (!empty($_GET['from_date']) && !empty($_GET['to_date'])): ?>
 <div class="alert alert-info py-2">
@@ -344,13 +395,6 @@ $totalBudget += $row['category_budget'];
 <?php endif; ?>
 
 
-<div class="mb-3">
-    <a href="export/monthly_excel.php" class="btn btn-success btn-sm">
-        <i class="fa fa-file-excel"></i> Excel
-    </a>
-
-    
-</div>
 
 
 <table class="table table-hover">
@@ -513,14 +557,7 @@ $totalSpent += $e['expense_spent'];
         </div>
     </div>
 
-    <div class="col-12 mt-3">
-        <div class="card">
-            <div class="card-header">Daily Expenses</div>
-            <div class="card-body">
-                <canvas id="dailyExpenseChart" height="150"></canvas>
-            </div>
-        </div>
-    </div>
+   
 
 </div>
 <?php
@@ -621,23 +658,15 @@ new Chart(document.getElementById('categoryPieChart'), {
     options: { responsive: true }
 });
 
-/* Daily Expenses */
-new Chart(document.getElementById('dailyExpenseChart'), {
-    type: 'line',
-    data: {
-        labels: dailyDates,
-        datasets: [{
-            label: 'Daily Expense',
-            data: dailySpent,
-            fill: true,
-            borderColor: '#dc3545',
-            backgroundColor: 'rgba(220,53,69,0.2)',
-            tension: 0.3
-        }]
-    },
-    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+
+</script>
+<script>
+document.getElementById('resetFilters').addEventListener('click', function () {
+    // Reload same PHP file without GET parameters
+    window.location.href = 'Expense_Dashboard.php';
 });
 </script>
+
 
 
 </body>
