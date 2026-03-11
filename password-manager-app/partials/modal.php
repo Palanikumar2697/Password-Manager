@@ -222,6 +222,30 @@
     </div>
   </div>
 </div>
+<script>
+function update_account(id) {
+
+    const accountName = document.getElementById('accountName-' + id)?.innerText || '';
+    const username    = document.getElementById('username-' + id)?.innerText || '';
+    const link        = document.querySelector('#link-' + id + ' a')?.href || '';
+    const description = document.getElementById('description-' + id)?.innerText || '';
+    const password    = document.querySelector(`#row-${id} .real-password`)?.dataset.password || '';
+
+    // 🔥 IMPORTANT — set hidden ID for update
+    document.getElementById('updateAccountID').value = id;
+
+    // Fill modal fields
+    document.getElementById('updateAccountName').value = accountName;
+    document.getElementById('updateUsername').value    = username;
+    document.getElementById('updatePassword').value    = password;
+    document.getElementById('updateLink').value        = link;   // ✅ FIXED ID
+    document.getElementById('updateDescription').value = description;
+
+    new bootstrap.Modal(
+        document.getElementById('updateAccountModal')
+    ).show();
+}
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {

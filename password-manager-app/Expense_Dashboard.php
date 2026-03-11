@@ -52,12 +52,7 @@ body {
 
     color: #343a40;
 
-    background:
-        linear-gradient(
-            rgba(0, 0, 0, 0.55),
-            rgba(0, 0, 0, 0.55)
-        ),
-        url("assets/images/img4.jpg") no-repeat center center;
+  
 
     background-size: cover;
     background-attachment: scroll; /* 👈 FIX */

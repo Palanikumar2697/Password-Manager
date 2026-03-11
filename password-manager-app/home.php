@@ -401,9 +401,8 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
           endforeach;
         } else {
         ?>
-        <tr>
-          <td colspan="9" class="text-center">No accounts found</td>
-        </tr>
+        
+
         <?php } ?>
         </tbody>
       </table>
@@ -449,6 +448,8 @@ $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- Bootstrap 5 bundle (includes Popper) - ensure your partial/header.php doesn't duplicate -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <script>
 /* ===============================
    SESSION DURATION
